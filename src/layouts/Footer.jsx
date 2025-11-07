@@ -9,7 +9,7 @@ const Footer = () => {
   },[])
   return (
     <section className='w-full border-t-2'>
-      <footer className='w-full h-auto flex flex-col md:flex-row bg-black/20 items-center justify-around p-6 gap-12'>
+      <footer className='w-full h-auto flex flex-col md:flex-row  items-center justify-around p-6 gap-12'>
         <div>
           <a href="/" className='text-2xl font-bold'>Disibin</a>
           <p>Web & Graphics Development Studio</p>

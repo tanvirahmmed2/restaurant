@@ -9,7 +9,7 @@ const Contact = () => {
 
   return (
     <section className='w-full px-4 h-auto flex-col  flex items-center justify-center'>
-      <div className='w-full bg-white/5 h-auto flex flex-col lg:flex-row rounded-lg p-4 items-center justify-center'>
+      <div className='w-full  h-auto flex flex-col lg:flex-row rounded-lg p-4 items-center justify-center'>
 
         <div className='w-full flex flex-col gap-2 items-start justify-start'>
           <h1 className='text-xl font-semibold'>Let’s talk about your project</h1>

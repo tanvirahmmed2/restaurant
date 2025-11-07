@@ -1,11 +1,9 @@
 import { Routes, Route } from "react-router-dom";
-
 import Navbar from "./layouts/Navbar";
 import Home from "./layouts/Home";
 import Footer from "./layouts/Footer";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
-
 import Signin from "./users/Signin";
 import Signup from "./users/Signup";
 import Projects from "./pages/Projects";
@@ -22,7 +20,7 @@ import BG from './component/bgg.jpg'
 
 function App() {
   return (
-    <div className="w-full h-auto relative overflow-x-hidden">
+    <div className="w-full h-auto relative overflow-x-hidden text-white bg-sk">
       <Navbar />
       <Sidebar />
       <div className="w-full h-auto mt-20 min-h-screen flex flex-col items-center justify-center">
@@ -44,7 +42,7 @@ function App() {
         </Routes>
       </div>
       <Footer />
-      <img src={BG} alt="background" className="w-full h-screen fixed -z-30" />
+      <img src={BG} alt="background" className="w-full h-screen fixed object-cover top-0 blur-sm -z-20" />
     </div>
   );
 }

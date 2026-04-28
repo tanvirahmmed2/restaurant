@@ -1,5 +1,5 @@
 {
-  "name": "pos",
+  "name": "restaurant",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -17,8 +17,8 @@
     "framer-motion": "^12.23.26",
     "jsonwebtoken": "^9.0.3",
     "lucide-react": "^1.7.0",
-    "mongoose": "^9.0.2",
     "next": "16.1.1",
+    "pg": "^8.20.0",
     "postcss": "^8.5.8",
     "react": "19.2.3",
     "react-dom": "19.2.3",

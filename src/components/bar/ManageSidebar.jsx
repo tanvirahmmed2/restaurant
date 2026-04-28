@@ -19,14 +19,13 @@ import { Context } from '../context/Context';
 
 const ManageSidebar = () => {
   const pathname = usePathname()
-
-  const {manageSidebar, setManageSidebar}= useContext(Context)
+  const { manageSidebar, setManageSidebar, staffData } = useContext(Context)
 
   const handleLogout = async () => {
     try {
-      const res = await axios.get('/api/staff/login', { withCredentials: true })
+      const res = await axios.get('/api/user/logout', { withCredentials: true })
       toast.success(res.data.message)
-      window.location.replace('/staff-login')
+      window.location.replace('/login')
     } catch (error) {
       toast.error(error?.response?.data?.message || 'Failed to logout')
     }
@@ -38,6 +37,8 @@ const ManageSidebar = () => {
        ? 'bg-black text-white shadow-md' 
        : 'text-gray-700 hover:bg-gray-100 hover:text-black'}`
 
+  const role = staffData?.role || ''
+
   return (
     <aside className={`w-70 fixed top-14 ${!manageSidebar? '-translate-x-full':'translate-x-0'} transform duration-500 ease-in-out overflow-y-scroll pb-24 h-screen z-50 bg-white border-r shadow-sm flex flex-col justify-between p-4`}>
 
@@ -46,99 +47,96 @@ const ManageSidebar = () => {
         <h2 className="text-xl font-semibold text-gray-800 px-2">Dashboard</h2>
 
         <div className="flex flex-col gap-1">
-          <Link href="/manage" className={linkStyle('/manage')}>
+          <Link href="/dashboard" className={linkStyle('/dashboard')}>
             <IoHomeOutline /> Home
           </Link>
 
-          <Link href="/manage/sale" className={linkStyle('/manage/sale')}>
-            <MdSell /> Sale
-          </Link>
-          <Link href="/manage/pending" className={linkStyle('/manage/pending')}>
-            <AiOutlineUnorderedList /> Pending
-          </Link>
+          {(role === 'admin' || role === 'sales') && (
+            <>
+              <Link href="/dashboard/sales/sale" className={linkStyle('/dashboard/sales/sale')}>
+                <MdSell /> Sale
+              </Link>
+              <Link href="/dashboard/sales/pending" className={linkStyle('/dashboard/sales/pending')}>
+                <AiOutlineUnorderedList /> Pending
+              </Link>
+              <Link href="/dashboard/sales/delivery" className={linkStyle('/dashboard/sales/delivery')}>
+                <MdOutlineLocalOffer /> Confirmed
+              </Link>
+              <Link href="/dashboard/sales/orders" className={linkStyle('/dashboard/sales/orders')}>
+                <FaHistory /> Delivered
+              </Link>
+            </>
+          )}
 
-          <Link href="/manage/delivery" className={linkStyle('/manage/delivery')}>
-            <MdOutlineLocalOffer />Confirmed
-          </Link>
-
-          <Link href="/manage/orders" className={linkStyle('/manage/orders')}>
-            <FaHistory /> Delivered
-          </Link>
-          <Link href="/manage/history" className={linkStyle('/manage/history')}>
+          <Link href="/dashboard/manager/history" className={linkStyle('/dashboard/manager/history')}>
             <FaHistory /> History
           </Link>
         </div>
 
-        <div>
-          <p className="text-xs text-gray-400 px-2 mb-2 uppercase">Products</p>
-          <div className="flex flex-col gap-1">
-            <Link href="/manage/new-product" className={linkStyle('/manage/new-products')}>
-              <FaRegEdit /> New Product
-            </Link>
-
-            <Link href="/manage/products" className={linkStyle('/manage/products')}>
-              <FaRegEdit /> Products
-            </Link>
-
-            <Link href="/manage/new-category" className={linkStyle('/manage/new-category')}>
-              <FaRegEdit /> New Category
-            </Link>
-
-            <Link href="/manage/categories" className={linkStyle('/manage/categories')}>
-              <FaRegEdit /> Category List
-            </Link>
+        {(role === 'admin' || role === 'manager') && (
+          <div>
+            <p className="text-xs text-gray-400 px-2 mb-2 uppercase">Products</p>
+            <div className="flex flex-col gap-1">
+              <Link href="/dashboard/manager/products" className={linkStyle('/dashboard/manager/products')}>
+                <FaRegEdit /> Products
+              </Link>
+              <Link href="/dashboard/manager/categories" className={linkStyle('/dashboard/manager/categories')}>
+                <FaRegEdit /> Categories
+              </Link>
+            </div>
           </div>
-        </div>
+        )}
         
-        
-        <div>
-          <p className="text-xs text-gray-400 px-2 mb-2 uppercase">Expenses</p>
-          <div className="flex flex-col gap-1">
-            <Link href="/manage/new-expense" className={linkStyle('/manage/new-expense')}>
-              <FaRegEdit /> New Expenses
-            </Link>
-
-            <Link href="/manage/expenses" className={linkStyle('/manage/expenses')}>
-              <FaRegEdit /> Expenses
-            </Link>
-
+        {(role === 'admin' || role === 'manager') && (
+          <div>
+            <p className="text-xs text-gray-400 px-2 mb-2 uppercase">Expenses</p>
+            <div className="flex flex-col gap-1">
+              <Link href="/dashboard/manager/expenses" className={linkStyle('/dashboard/manager/expenses')}>
+                <FaRegEdit /> Expenses
+              </Link>
+            </div>
           </div>
-        </div>
+        )}
 
         <div>
           <p className="text-xs text-gray-400 px-2 mb-2 uppercase">Management</p>
           <div className="flex flex-col gap-1">
-            <Link href="/manage/people" className={linkStyle('/manage/people')}>
-              <MdManageAccounts /> People
-            </Link>
+            {role === 'admin' && (
+              <>
+                <Link href="/dashboard/admin/people" className={linkStyle('/dashboard/admin/people')}>
+                  <MdManageAccounts /> People
+                </Link>
+                <Link href="/dashboard/admin/analytics" className={linkStyle('/dashboard/admin/analytics')}>
+                  <SiGoogleanalytics /> Analytics
+                </Link>
+              </>
+            )}
 
-            <Link href="/manage/analytics" className={linkStyle('/manage/analytics')}>
-              <SiGoogleanalytics /> Analytics
-            </Link>
-
-            <Link href="/manage/reservation" className={linkStyle('/manage/reservation')}>
-              <FaRegMessage /> Reservation
-            </Link>
-
-            <Link href="/manage/support" className={linkStyle('/manage/support')}>
-              <FaRegMessage /> Support
-            </Link>
+            {(role === 'admin' || role === 'manager') && (
+              <>
+                <Link href="/dashboard/manager/reservation" className={linkStyle('/dashboard/manager/reservation')}>
+                  <FaRegMessage /> Reservation
+                </Link>
+                <Link href="/dashboard/manager/support" className={linkStyle('/dashboard/manager/support')}>
+                  <FaRegMessage /> Support
+                </Link>
+              </>
+            )}
           </div>
         </div>
 
       </div>
 
       <div className="flex flex-col gap-2 border-t pt-4">
-
         <Link href="/" className={linkStyle('/')}>
           <RiGlobalLine /> Website
         </Link>
 
-        <Link href="/manage/settings" className={linkStyle('/manage/settings')}>
-          <IoSettingsOutline /> Settings
-        </Link>
-
-        
+        {role === 'admin' && (
+          <Link href="/dashboard/admin/settings" className={linkStyle('/dashboard/admin/settings')}>
+            <IoSettingsOutline /> Settings
+          </Link>
+        )}
 
         <button
           onClick={handleLogout}

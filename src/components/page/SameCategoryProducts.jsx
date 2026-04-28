@@ -27,7 +27,7 @@ const SameCategoryProducts = ({ id }) => {
                     <div className='w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3'>
                         {
                             products.map((item) => (
-                                <Item item={item} key={item._id}/>
+                                <Item item={item} key={item.id}/>
                             ))
                         }
                     </div>

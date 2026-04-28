@@ -1,0 +1,270 @@
+never change schema
+-- =====================================================
+-- TENANTS
+-- =====================================================
+CREATE TABLE tenants (
+  tenant_id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+
+  owner_id INT REFERENCES users(user_id),
+
+  domain TEXT UNIQUE,
+  subdomain TEXT UNIQUE,
+
+  status TEXT DEFAULT 'active'
+    CHECK (status IN ('active','suspended','expired')),
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE tenant_users (
+  id SERIAL PRIMARY KEY,
+  tenant_id INT REFERENCES tenants(tenant_id),
+  user_id INT REFERENCES users(user_id),
+
+  role TEXT DEFAULT 'member'
+    CHECK (role IN ('owner','admin','member')),
+
+  created_at TIMESTAMP DEFAULT now(),
+  UNIQUE(tenant_id, user_id)
+);
+
+-- =====================================================
+-- WEBSITES
+-- =====================================================
+CREATE TABLE public.websites (
+  website_id SERIAL PRIMARY KEY,
+
+  tenant_id INTEGER REFERENCES tenants(tenant_id),
+
+  name TEXT,
+  domain TEXT UNIQUE,
+  theme TEXT,
+
+  status TEXT DEFAULT 'development'
+    CHECK (status IN ('active','development','maintenance','suspended')),
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now(),
+
+  -- Business Info
+  business_name TEXT,
+  logo TEXT,
+  favicon TEXT,
+
+  -- Contact
+  email TEXT,
+  phone TEXT,
+  address TEXT,
+  city TEXT,
+  country TEXT,
+
+  -- SEO
+  meta_title TEXT,
+  meta_description TEXT,
+
+
+  -- Social
+  facebook TEXT,
+  instagram TEXT,
+  linkedin TEXT,
+  youtube TEXT,
+
+  -- UI
+  primary_color TEXT DEFAULT '#10b981',
+  secondary_color TEXT DEFAULT '#ffffff',
+
+  -- Flags
+  is_public BOOLEAN DEFAULT TRUE,
+  is_store_enabled BOOLEAN DEFAULT TRUE
+);
+
+
+
+---
+-- 1. USER & IDENTITY MANAGEMENT
+---
+
+CREATE TABLE res_users (
+  id SERIAL PRIMARY KEY,
+  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
+
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  phone VARCHAR(50) NOT NULL,
+
+  password VARCHAR(255) NOT NULL,
+
+  role VARCHAR(50) DEFAULT 'user'
+    CHECK (role IN ('admin','manager','sales','user')),
+
+  is_banned BOOLEAN DEFAULT FALSE,
+
+  -- 🔐 FORGOT PASSWORD SYSTEM
+  reset_token TEXT,
+  reset_token_expires TIMESTAMP,
+
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE res_customers (
+  id SERIAL PRIMARY KEY,
+  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
+
+  name VARCHAR(255) DEFAULT 'guest',
+  phone VARCHAR(50)
+);
+
+
+CREATE TABLE res_categories (
+  id SERIAL PRIMARY KEY,
+  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
+
+  name VARCHAR(255) NOT NULL,
+  image TEXT,
+  image_id VARCHAR(255),
+  slug VARCHAR(255) UNIQUE,
+
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE res_items (
+  id SERIAL PRIMARY KEY,
+  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
+
+  category_id INT REFERENCES res_categories(id) ON DELETE CASCADE,
+
+  title VARCHAR(255) NOT NULL,
+  slug VARCHAR(255) UNIQUE,
+  description TEXT,
+
+  price DECIMAL(12,2) NOT NULL,
+  image TEXT,
+  image_id VARCHAR(255),
+
+  is_available BOOLEAN DEFAULT TRUE,
+  discount DECIMAL(5,2) DEFAULT 0,
+
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE res_orders (
+  id SERIAL PRIMARY KEY,
+  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
+
+  name VARCHAR(255),
+  phone VARCHAR(50),
+
+  delivery_method VARCHAR(50) DEFAULT 'takein'
+    CHECK (delivery_method IN ('takeaway','takein')),
+
+  table_no VARCHAR(50),
+
+  sub_total DECIMAL(12,2),
+  total_discount DECIMAL(12,2) DEFAULT 0,
+  total_price DECIMAL(12,2),
+
+  payment_method VARCHAR(50) DEFAULT 'cash',
+  status VARCHAR(50) DEFAULT 'pending',
+
+  transaction_id TEXT,
+  payment_status VARCHAR(50) DEFAULT 'unpaid',
+
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE res_order_items (
+  id SERIAL PRIMARY KEY,
+  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
+
+  order_id INT REFERENCES res_orders(id) ON DELETE CASCADE,
+  product_id INT REFERENCES res_items(id),
+
+  title VARCHAR(255),
+  quantity INT NOT NULL,
+  price DECIMAL(12,2),
+  discount DECIMAL(12,2)
+);
+
+
+CREATE TABLE res_payments (
+  id SERIAL PRIMARY KEY,
+  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
+
+  order_id INT REFERENCES res_orders(id),
+
+  amount DECIMAL(12,2) NOT NULL,
+  method VARCHAR(50),
+  transaction_id TEXT,
+
+  status VARCHAR(50) DEFAULT 'pending',
+
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE res_expenses (
+  id SERIAL PRIMARY KEY,
+  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
+
+  title VARCHAR(255),
+  note TEXT,
+  amount DECIMAL(12,2),
+
+  created_by INT REFERENCES res_users(id),
+
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+CREATE TABLE res_reservations (
+  id SERIAL PRIMARY KEY,
+  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
+
+  name VARCHAR(255),
+  email VARCHAR(255),
+
+  res_date TIMESTAMP,
+  member_count INT,
+
+  table_no VARCHAR(50),
+  message TEXT,
+
+  status VARCHAR(50) DEFAULT 'pending'
+);
+
+
+
+CREATE TABLE res_support_tickets (
+  id SERIAL PRIMARY KEY,
+  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
+
+  name VARCHAR(255),
+  email VARCHAR(255),
+  subject VARCHAR(255),
+  message TEXT,
+
+  status VARCHAR(50) DEFAULT 'unread',
+
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE res_reviews (
+  id SERIAL PRIMARY KEY,
+  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
+
+  name VARCHAR(255),
+  email VARCHAR(255),
+  comment TEXT,
+  rating INT CHECK (rating BETWEEN 1 AND 5)
+);
+
+
+
+CREATE INDEX idx_res_items_slug ON res_items(slug);
+CREATE INDEX idx_res_categories_slug ON res_categories(slug);
+CREATE INDEX idx_res_orders_tenant ON res_orders(tenant_id);

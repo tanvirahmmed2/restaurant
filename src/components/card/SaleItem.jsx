@@ -11,7 +11,7 @@ const SaleItem = ({item}) => {
       <div className='w-full overflow-hidden'>
         <Image src={item.image} alt={item.title} width={1000} height={1000} className='w-full aspect-square object-cover overflow-hidden rounded-lg hover:scale-110 transform ease-in-out duration-500'/>
       </div>
-      <p className='text-xs'>{item.categoryId.name}</p>
+      <p className='text-xs'>{item.category_name}</p>
       <h1 className='w-full text-center text-xl'>{item.title}</h1>
       {
         item.discount !==0 && item.discount !==null? <div>

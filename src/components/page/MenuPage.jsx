@@ -38,10 +38,10 @@ const MenuPage = () => {
           
           {categories.map((cat) => (
             <button
-              key={cat._id}
-              onClick={() => setCategoryId(cat._id)}
+              key={cat.id}
+              onClick={() => setCategoryId(cat.id)}
               className={`p-4 w-full text-center cursor-pointer shadow-sm rounded-lg transition-colors
-                ${categoryId === cat._id ? 'bg-indigo-300 text-white' : 'bg-white text-gray-700'}
+                ${categoryId === cat.id ? 'bg-indigo-300 text-white' : 'bg-white text-gray-700'}
               `}
             >
               {cat.name}
@@ -53,7 +53,7 @@ const MenuPage = () => {
           {products.length > 0 ? (
             products.map((item) => (
 
-              <SaleItem key={item._id} item={item}/>
+              <SaleItem key={item.id} item={item}/>
             ))
           ) : (
             <p className="col-span-full text-center text-gray-400">No items found in this category.</p>

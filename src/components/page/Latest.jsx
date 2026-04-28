@@ -26,7 +26,7 @@ const Latest =  () => {
         products && <div className='w-full grid grid-cols-2 h-full sm:grid-cols-3 md:grid-cols-4 gap-4'>
           {
             products.map((item) => (
-              <Item item={item} key={item._id} />
+              <Item item={item} key={item.id} />
             ))
           }
         </div>

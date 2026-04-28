@@ -1,13 +1,11 @@
 
-
-
 export const generateReceipt = (order) => {
   if (!order) return;
   const iframe = document.createElement('iframe');
   iframe.style.display = 'none';
   document.body.appendChild(iframe);
 
-  const orderDate = new Date(order.createdAt || Date.now());
+  const orderDate = new Date(order.created_at || Date.now());
   const formattedDate = orderDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
   const formattedTime = orderDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
 
@@ -16,7 +14,7 @@ export const generateReceipt = (order) => {
     <html>
       <head>
         <meta charset="UTF-8">
-        <title>Receipt #${order._id}</title>
+        <title>Receipt #${order.id}</title>
         <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
         <style>
           @page { size: 80mm auto; margin: 0; }
@@ -56,7 +54,7 @@ export const generateReceipt = (order) => {
         </div>
 
         <div class="meta-section">
-          <div class="meta-row"><span>Receipt No.</span><span class="meta-value">#${order._id.toString().slice(-6).toUpperCase()}</span></div>
+          <div class="meta-row"><span>Receipt No.</span><span class="meta-value">#${order.id.toString().slice(-6).toUpperCase()}</span></div>
           <div class="meta-row"><span>Date</span><span class="meta-value">${formattedDate}</span></div>
           <div class="meta-row"><span>Time</span><span class="meta-value">${formattedTime}</span></div>
           <div class="meta-row"><span>Customer</span><span class="meta-value">${order.name}</span></div>
@@ -68,7 +66,7 @@ export const generateReceipt = (order) => {
           <div class="item-row">
             <div>
               <span class="item-name">${item.title}</span>
-              <span class="item-price-line">@ ৳${item.price.toFixed(2)} ${item.discount > 0 ? `(-৳${item.discount})` : ''}</span>
+              <span class="item-price-line">@ ৳${Number(item.price).toFixed(2)} ${item.discount > 0 ? `(-৳${item.discount})` : ''}</span>
             </div>
             <div style="text-align:center; font-family: 'DM Mono'">${item.quantity}</div>
             <div style="text-align:right; font-family: 'DM Mono'; font-weight:600">৳${((item.price - item.discount) * item.quantity).toFixed(2)}</div>
@@ -76,11 +74,11 @@ export const generateReceipt = (order) => {
         `).join('')}
 
         <div style="margin-top: 10px">
-          <div class="total-row"><span>Subtotal</span><span>৳${order.subTotal.toFixed(2)}</span></div>
-          <div class="total-row" style="color: #dc2626"><span>Discount</span><span>-৳${order.totalDiscount.toFixed(2)}</span></div>
+          <div class="total-row"><span>Subtotal</span><span>৳${Number(order.sub_total).toFixed(2)}</span></div>
+          <div class="total-row" style="color: #dc2626"><span>Discount</span><span>-৳${Number(order.total_discount).toFixed(2)}</span></div>
           <div class="net-total-row">
             <span class="net-label">Net Total</span>
-            <span class="net-value">৳${order.totalPrice.toFixed(2)}</span>
+            <span class="net-value">৳${Number(order.total_price).toFixed(2)}</span>
           </div>
         </div>
 
@@ -88,7 +86,7 @@ export const generateReceipt = (order) => {
           <div style="height: 20px overflow: hidden">
             ${Array.from({ length: 30 }, () => `<span class="bar" style="height:${Math.floor(Math.random() * 10) + 15}px; width: ${Math.random() > 0.5 ? '1px' : '2px'}"></span>`).join('')}
           </div>
-          <div style="font-family: 'DM Mono'; font-size: 7px; color: #9ca3af; margin-top: 4px">ID: ${order._id}</div>
+          <div style="font-family: 'DM Mono'; font-size: 7px; color: #9ca3af; margin-top: 4px">ID: ${order.id}</div>
         </div>
 
         <div class="footer">

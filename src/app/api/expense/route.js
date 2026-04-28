@@ -1,94 +1,104 @@
-import { isStaff } from "@/lib/auth/staffmiddleware";
-import ConnectDB from "@/lib/database/mongo";
-import Expense from "@/lib/models/expense";
+import { pool } from "@/lib/database/pg";
+import { getTenant } from "@/lib/database/tenant";
 import { NextResponse } from "next/server";
+import { isManager } from "@/lib/auth/middleware";
 
-
-export async function GET() {
-    try {
-        const auth= await isStaff()
-        if(!auth.success){
-            return NextResponse.json({
-                success:false, message:auth.message
-            },{status:400})
-        }
-        await ConnectDB()
-        const expenses=await Expense.find({}).sort({createdAt:-1})
-        return NextResponse.json({
-            success:true, message:'Successfully fetched data', payload:expenses
-        }, {status:200})
-    } catch (error) {
-        return NextResponse.json({
-            success:false, message:error.message
-        },{status:500})
-        
+export async function GET(req) {
+  try {
+    const auth = await isManager();
+    if (!auth.success) {
+      return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
     }
-    
-}
 
-export async function DELETE(req) {
-    try {
-        await ConnectDB()
-        const auth= await isStaff()
-        if(!auth.success){
-            return NextResponse.json({
-                success:false, message:auth.message
-            },{status:400})
-        }
-        const {id}= await req.json()
-        if(!id){
-            return NextResponse.json({
-                success:false, message:'Id not found'
-            },{status:400})
-        }
-        const expense= await Expense.findById(id)
-        if(!expense){
-            return NextResponse.json({
-                success:false, message:'Expense data not found'
-            },{status:400})
-        }
-
-        await Expense.findByIdAndDelete(id)
-        return NextResponse.json({
-                success:true, message:'Successfully deleted record'
-            },{status:200})
-
-    } catch (error) {
-        return NextResponse.json({
-            success:false, message:error.message
-        },{status:500})
-        
+    const tenant = await getTenant(req);
+    if (!tenant) {
+      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
     }
-    
+
+    const { rows } = await pool.query(
+      "SELECT e.*, u.name as creator_name FROM res_expenses e LEFT JOIN res_users u ON e.created_by = u.id WHERE e.tenant_id = $1 ORDER BY e.created_at DESC",
+      [tenant.tenant_id]
+    );
+
+    return NextResponse.json({
+      success: true,
+      message: "Successfully fetched data",
+      payload: rows,
+    }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+  }
 }
 
 export async function POST(req) {
-    try {
-        await ConnectDB()
-        const auth= await isStaff()
-        if(!auth.success){
-            return NextResponse.json({
-                success:false, message:auth.message
-            },{status:400})
-        }
-        const {title, note, amount}= await req.json()
-        if(!title || !note || !amount){
-            return NextResponse.json({
-                success: false, message:'Please fill all data'
-            },{status:400})
-        }
-        const staff= auth.payload
-        const newRecord= new Expense({title, note, amount,madeBy:staff.email })
-        await newRecord.save()
-        return NextResponse.json({
-            success:true, message:'Successfully created record'
-        },{status:200})
-
-    }catch (error) {
-        return NextResponse.json({
-            success:false, message:error.message
-        },{status:500})
-        
+  try {
+    const auth = await isManager();
+    if (!auth.success) {
+      return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
     }
-    
+
+    const tenant = await getTenant(req);
+    if (!tenant) {
+      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
+    }
+
+    const { title, note, amount } = await req.json();
+    if (!title || !amount) {
+      return NextResponse.json({ success: false, message: "Title and amount are required" }, { status: 400 });
+    }
+
+    const user = auth.payload;
+
+    const { rows: newExpense } = await pool.query(
+      "INSERT INTO res_expenses (tenant_id, title, note, amount, created_by) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+      [tenant.tenant_id, title, note, amount, user.id]
+    );
+
+    return NextResponse.json({
+      success: true,
+      message: "Successfully created record",
+      payload: newExpense[0],
+    }, { status: 201 });
+
+  } catch (error) {
+    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+  }
 }
+
+export async function DELETE(req) {
+  try {
+    const auth = await isManager();
+    if (!auth.success) {
+      return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
+    }
+
+    const tenant = await getTenant(req);
+    if (!tenant) {
+      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
+    }
+
+    const { id } = await req.json();
+    if (!id) {
+      return NextResponse.json({ success: false, message: "Id not found" }, { status: 400 });
+    }
+
+    const { rows } = await pool.query(
+      "SELECT id FROM res_expenses WHERE id = $1 AND tenant_id = $2 LIMIT 1",
+      [id, tenant.tenant_id]
+    );
+
+    if (rows.length === 0) {
+      return NextResponse.json({ success: false, message: "Expense record not found for this tenant" }, { status: 404 });
+    }
+
+    await pool.query("DELETE FROM res_expenses WHERE id = $1", [id]);
+
+    return NextResponse.json({
+      success: true,
+      message: "Successfully deleted record",
+    }, { status: 200 });
+
+  } catch (error) {
+    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+  }
+}

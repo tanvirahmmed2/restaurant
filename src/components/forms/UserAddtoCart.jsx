@@ -1,13 +1,12 @@
+// components/forms/UserAddtoCart.jsx
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { CiShoppingCart } from "react-icons/ci";
-import { toast } from 'react-toastify';
-import axios from 'axios';
-import { useCart } from '../context/Context';
+import { Context } from '../context/Context';
 
-const UserAddtoCart = ({ product}) => {
-  const {fetchCart}= useCart()
+const UserAddtoCart = ({ product }) => {
+  const { addToCart } = useContext(Context)
   const [quantity, setQuantity] = useState(1)
 
   const decreaseQuantity = () => {
@@ -20,35 +19,38 @@ const UserAddtoCart = ({ product}) => {
     setQuantity(quantity + 1)
   }
 
-  const addtoCart = async () => {
-    try {
-      const response = await axios.post('/api/user/cart', {
-        title: product.title,
-        productId: product._id,
-        quantity: quantity
-      }, { withCredentials: true })
-      toast.success(response.data.message)
-      if (fetchCart) fetchCart()
-    } catch (error) {
-      toast.error(error?.response?.data?.message || 'Failed to add to cart')
-    }
+  const handleAddToCart = () => {
+    if (!product) return;
+    // Map to id if _id exists (for safety during migration)
+    const normalizedProduct = {
+      ...product,
+      id: product.id || product._id
+    };
+    addToCart(normalizedProduct, quantity);
   }
 
   return (
-    <div className='w-full flex flex-col items-center justify-center gap-2'>
+    <div className='w-full flex flex-col items-center justify-center gap-4 p-4 bg-gray-50 rounded-2xl'>
       <div className='w-full flex flex-row items-center justify-between'>
-        <div className='w-full'>
-          <p>Price: <span className='text-[8px] italic'>BDT</span> <span className='text-xl font-semibold'>{product.price}</span></p>
+        <div className='flex flex-col'>
+          <span className='text-[10px] text-gray-400 uppercase font-bold tracking-wider'>Unit Price</span>
+          <p className='text-2xl font-black text-gray-800'>৳{product.price}</p>
         </div>
-        <div className='w-full flex flex-row items-center justify-between'>
-          <button className='text-xl font-semibold hover:bg-black/10 p-2 rounded-full cursor-pointer' onClick={decreaseQuantity}><IoIosArrowBack /></button>
-          <p>{quantity}</p>
-          <button className='text-xl font-semibold hover:bg-black/10 p-2 rounded-full cursor-pointer' onClick={increaseQuantity}><IoIosArrowForward /></button>
+        <div className='flex flex-row items-center gap-4 bg-white px-4 py-2 rounded-full shadow-sm'>
+          <button className='text-xl font-bold hover:text-indigo-600 transition-colors cursor-pointer' onClick={decreaseQuantity}><IoIosArrowBack /></button>
+          <p className='font-black text-lg w-6 text-center'>{quantity}</p>
+          <button className='text-xl font-bold hover:text-indigo-600 transition-colors cursor-pointer' onClick={increaseQuantity}><IoIosArrowForward /></button>
         </div>
       </div>
-      <button onClick={addtoCart} className='w-full flex flex-row items-center justify-center gap-2 bg-sky-300 hover:bg-black/70 text-white rounded-lg cursor-pointer'>Cart <CiShoppingCart className='text-xl' /></button>
+      <button 
+        onClick={handleAddToCart} 
+        className='w-full flex flex-row items-center justify-center gap-3 bg-black text-white py-3 rounded-xl font-bold hover:bg-gray-800 transition-all active:scale-[0.98] shadow-lg shadow-black/10'
+      >
+        <CiShoppingCart className='text-2xl' />
+        Add to Cart
+      </button>
     </div>
   )
 }
 
-export default UserAddtoCart
+export default UserAddtoCart

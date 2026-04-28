@@ -39,7 +39,7 @@ const Review = () => {
                 <div className='relative h-87.5 flex items-center justify-center'>
                     <AnimatePresence mode='wait'>
                         <motion.div
-                            key={reviews[index]._id}
+                            key={reviews[index].id}
                             initial={{ opacity: 0, x: 50 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -50 }}

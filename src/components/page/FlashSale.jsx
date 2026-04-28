@@ -30,7 +30,7 @@ const FlashSale = () => {
         products && <div className='w-full flex flex-col items-center justify-center gap-20'>
           {
             products.map((item) => (
-              <div key={item._id} className='w-full max-w-4xl gap-4 md:gap6 flex flex-row items-center even:flex-row-reverse'>
+              <div key={item.id} className='w-full max-w-4xl gap-4 md:gap6 flex flex-row items-center even:flex-row-reverse'>
 
                 <motion.div initial={{opacity:0, x:-30}} whileInView={{opacity:1, x:0}} transition={{duration:0.9}} className='w-full flex items-center justify-center'>
                   <Link href={`/menu/${item.slug}`} className='w-full aspect-square overflow-hidden p-2 rounded-full shadow'>
@@ -39,7 +39,7 @@ const FlashSale = () => {
                 </motion.div>
                 <motion.div initial={{opacity:0, x:30}} whileInView={{opacity:1, x:0}} transition={{duration:0.9}} className='w-full flex flex-col gap-1'>
                   <p className='font-semibold text-xl'>{item.title}</p>
-                  <p className='text-xs'>{item.categoryId.name}</p>
+                  <p className='text-xs'>{item.category_name}</p>
                   <p>{item.description}</p>
                   {
                     item.discount !== 0 && item.discount !== null ? <div>

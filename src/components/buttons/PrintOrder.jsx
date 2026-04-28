@@ -1,10 +1,11 @@
+// components/buttons/PrintOrder.jsx
 'use client'
 import React from 'react'
 import { FaPrint } from "react-icons/fa";
-import { useCart } from '../context/Context';
+import { Context } from '../context/Context';
 
 const PrintOrder = ({ order }) => {
-  const { siteData } = useCart()
+  const { siteData } = React.useContext(Context)
 
   const printOrder = () => {
     const iframe = document.createElement('iframe');
@@ -40,18 +41,18 @@ const PrintOrder = ({ order }) => {
         </head>
         <body>
           <div class="center">
-            <h2 style="margin:0; font-size: 18px; text-transform: uppercase;">${siteData?.title || 'Restaurant'}</h2>
-            <p style="margin:2px 0;">${siteData?.address || 'Sadar, Mymensingh'}</p>
+            <h2 style="margin:0; font-size: 18px; text-transform: uppercase;">${siteData?.business_name || 'Restaurant'}</h2>
+            <p style="margin:2px 0;">${siteData?.address || ''}</p>
             ${siteData?.phone ? `<p style="margin:2px 0;">Tel: ${siteData.phone}</p>` : ''}
             <div class="divider"></div>
-            <p style="margin:2px 0;">ORDER: #${order._id?.slice(-6).toUpperCase()}</p>
+            <p style="margin:2px 0;">ORDER: #${order.id?.toString().slice(-6).toUpperCase()}</p>
             <p style="margin:2px 0;">${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
           </div>
 
           <div style="margin: 10px 0 5px 0;">
             <div>Customer: <span class="bold">${order.name || 'Guest'}</span></div>
-            <div>Type: <span class="bold">${order.delivery?.toUpperCase()}</span></div>
-            ${order.delivery === 'dinein' ? `<div>Table: <span class="bold">${order.table}</span></div>` : ''}
+            <div>Type: <span class="bold">${order.delivery_method?.toUpperCase()}</span></div>
+            ${order.delivery_method === 'takein' ? `<div>Table: <span class="bold">${order.table_no}</span></div>` : ''}
           </div>
 
           <table>
@@ -67,7 +68,7 @@ const PrintOrder = ({ order }) => {
                 <tr>
                   <td class="qty">${item.quantity}</td>
                   <td class="name">${item.title}</td>
-                  <td class="price">${(item.price * item.quantity).toFixed(2)}</td>
+                  <td class="price">${(Number(item.price - (item.discount || 0)) * item.quantity).toFixed(2)}</td>
                 </tr>
               `).join('')}
             </tbody>
@@ -78,28 +79,24 @@ const PrintOrder = ({ order }) => {
           <div class="total-section">
             <div class="total-row">
               <span>Subtotal:</span>
-              <span>${order.subTotal?.toFixed(2)}</span>
+              <span>${Number(order.sub_total).toFixed(2)}</span>
             </div>
-            ${order.discount > 0 ? `
+            ${order.total_discount > 0 ? `
             <div class="total-row">
               <span>Discount:</span>
-              <span>-${order.discount?.toFixed(2)}</span>
+              <span>-${Number(order.total_discount).toFixed(2)}</span>
             </div>` : ''}
-            <div class="total-row">
-              <span>Tax (2%):</span>
-              <span>${order.tax?.toFixed(2)}</span>
-            </div>
             <div class="total-row bold grand-total">
               <span>TOTAL:</span>
-              <span>BDT ${order.totalPrice?.toFixed(2)}</span>
+              <span>BDT ${Number(order.total_price).toFixed(2)}</span>
             </div>
           </div>
 
           <div class="center footer-msg">
-            <p style="margin:0;">Payment Mode: ${order.paymentMethod?.toUpperCase()}</p>
+            <p style="margin:0;">Payment: ${order.payment_method?.toUpperCase()} (${order.payment_status?.toUpperCase()})</p>
             <div class="divider" style="border-top-style: dotted;"></div>
             <p>Thank you for dining with us!</p>
-            <p style="font-size: 9px; opacity: 0.8;">Software by YourName</p>
+            <p style="font-size: 9px; opacity: 0.8;">Powered by Disibin</p>
           </div>
         </body>
       </html>
@@ -128,4 +125,4 @@ const PrintOrder = ({ order }) => {
   )
 }
 
-export default PrintOrder
+export default PrintOrder

@@ -1,3 +1,4 @@
+// components/forms/AddProduct.jsx
 'use client'
 import axios from 'axios'
 import React, { useContext, useState } from 'react'
@@ -12,7 +13,7 @@ const AddProduct = () => {
         description: '',
         price: '',
         discount: '0',
-        categoryId: '',
+        category_id: '',
         image: null,
     })
 
@@ -34,7 +35,7 @@ const AddProduct = () => {
             newData.append('description', formData.description)
             newData.append('price', formData.price)
             newData.append('discount', formData.discount)
-            newData.append('categoryId', formData.categoryId)
+            newData.append('category_id', formData.category_id)
             newData.append('image', formData.image)
 
             const response = await axios.post('/api/product', newData, { withCredentials: true })
@@ -45,11 +46,12 @@ const AddProduct = () => {
                 description: '',
                 price: '',
                 discount: '0',
-                categoryId: '',
+                category_id: '',
                 image: null,
             })
             e.target.reset()
         } catch (error) {
+            console.error(error)
             toast.error(error?.response?.data?.message || 'Failed to add product')
         } finally {
             setLoading(false)
@@ -73,12 +75,12 @@ const AddProduct = () => {
             </div>
 
             <div className='w-full flex flex-col gap-1.5'>
-                <label htmlFor="categoryId" className='text-sm font-medium text-slate-700'>Category</label>
-                <select name="categoryId" id="categoryId" required value={formData.categoryId} onChange={handleChange} 
+                <label htmlFor="category_id" className='text-sm font-medium text-slate-700'>Category</label>
+                <select name="category_id" id="category_id" required value={formData.category_id} onChange={handleChange} 
                     className='w-full p-2 px-3 outline-none border border-slate-300 rounded-lg focus:ring-2 focus:ring-black/5 focus:border-black transition-all bg-white'>
-                    <option value="">--Select--</option>
+                    <option value="">--Select Category--</option>
                     {categories && categories.map((cat) => (
-                        <option value={cat._id} key={cat._id}>{cat.name}</option>
+                        <option value={cat.id} key={cat.id}>{cat.name}</option>
                     ))}
                 </select>
             </div>
@@ -90,14 +92,14 @@ const AddProduct = () => {
                         className='w-full p-2 px-3 outline-none border border-slate-300 rounded-lg focus:ring-2 focus:ring-black/5 focus:border-black transition-all' />
                 </div>
                 <div className='w-1/2 flex flex-col gap-1.5'>
-                    <label htmlFor="discount" className='text-sm font-medium text-slate-700'>Discount </label>
-                    <input type="number" name='discount' id='discount' min={0} max={100} value={formData.discount} onChange={handleChange} 
+                    <label htmlFor="discount" className='text-sm font-medium text-slate-700'>Discount Value</label>
+                    <input type="number" name='discount' id='discount' min={0} value={formData.discount} onChange={handleChange} 
                         className='w-full p-2 px-3 outline-none border border-slate-300 rounded-lg focus:ring-2 focus:ring-black/5 focus:border-black transition-all' />
                 </div>
             </div>
 
             <div className='w-full flex flex-col gap-1.5'>
-                <label htmlFor="image" className='text-sm font-medium text-slate-700'>Image</label>
+                <label htmlFor="image" className='text-sm font-medium text-slate-700'>Product Image</label>
                 <input type="file" accept='image/*' required name='image' onChange={handleChange} id='image' 
                     className='w-full p-1.5 px-3 outline-none border border-slate-300 rounded-lg file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200' />
             </div>
@@ -106,10 +108,10 @@ const AddProduct = () => {
                 type='submit' 
                 disabled={loading}
                 className={`w-full md:w-auto mt-2 bg-black text-white p-2 px-10 rounded-lg font-semibold shadow-md active:scale-95 transition-all ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-slate-800 cursor-pointer'}`}>
-                {loading ? 'Processing...' : 'Submit Product'}
+                {loading ? 'Adding Product...' : 'Create Product'}
             </button>
         </form>
     )
 }
 
-export default AddProduct
+export default AddProduct

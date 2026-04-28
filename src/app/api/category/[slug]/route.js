@@ -1,37 +1,53 @@
-import ConnectDB from "@/lib/database/mongo";
-import Category from "@/lib/models/category";
-import Product from "@/lib/models/product";
+import { pool } from "@/lib/database/pg";
+import { getTenant } from "@/lib/database/tenant";
 import { NextResponse } from "next/server";
 
-
-export async function GET(req, {params}) {
-    try {
-        await ConnectDB()
-        const {slug}= await params
-        if(!slug) return NextResponse.json({
-            success:false, message:'Slug not found'
-        })
-        const category= await Category.findOne({ 
-            slug: { $regex: new RegExp(`^${slug}$`, "i") } 
-        }) 
-        
-        if(!category){
-            return NextResponse.json({
-                success:false, message:'Category not found'
-            },{status:400})
-        }
-        const products= await Product.find({categoryId: category._id}).populate('categoryId', 'name slug')
-            .sort({ createdAt: -1 })
-            .lean();
-
-            return NextResponse.json({
-                success:true, message:'Successfully fetched data', payload:products
-            },{status:200})
-    } catch (error) {
-        return NextResponse.json({
-            success:false, message:error.message
-        },{status:500})
-        
+export async function GET(req, { params }) {
+  try {
+    const tenant = await getTenant(req);
+    if (!tenant) {
+      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
     }
-    
+
+    const { slug } = await params;
+    if (!slug) {
+      return NextResponse.json({ success: false, message: "Slug not found" }, { status: 400 });
+    }
+
+    // Find category by slug
+    const { rows: catRows } = await pool.query(
+      "SELECT id, name, slug FROM res_categories WHERE slug ILIKE $1 AND tenant_id = $2 LIMIT 1",
+      [slug, tenant.tenant_id]
+    );
+
+    if (catRows.length === 0) {
+      return NextResponse.json({ success: false, message: "Category not found" }, { status: 404 });
+    }
+
+    const categoryId = catRows[0].id;
+
+    // Fetch products for this category
+    const { rows: products } = await pool.query(
+      `SELECT i.*, c.name as category_name, c.slug as category_slug 
+       FROM res_items i
+       JOIN res_categories c ON i.category_id = c.id
+       WHERE i.category_id = $1 AND i.tenant_id = $2 
+       ORDER BY i.created_at DESC`,
+      [categoryId, tenant.tenant_id]
+    );
+
+    return NextResponse.json({
+      success: true,
+      message: "Successfully fetched category products",
+      payload: products,
+    }, { status: 200 });
+
+  } catch (error) {
+    console.error("Category slug error:", error);
+    return NextResponse.json({
+      success: false,
+      message: "Failed to fetch category products",
+      error: error.message,
+    }, { status: 500 });
+  }
 }

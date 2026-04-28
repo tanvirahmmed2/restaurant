@@ -14,7 +14,7 @@ const Item = ({ item }) => {
       <div className='w-full overflow-hidden'>
         <Image src={item.image} alt={item.title} width={1000} height={1000} className='w-full aspect-square object-cover overflow-hidden rounded-lg hover:scale-110 transform ease-in-out duration-500' />
       </div>
-      <p className='text-xs'>{item.categoryId.name}</p>
+      <p className='text-xs'>{item.category_name}</p>
       <Link href={`/menu/${item.slug}`} className='w-full text-lg'>{item.title}</Link>
 
       <div className='w-full flex flex-row items-center justify-between px-2'>

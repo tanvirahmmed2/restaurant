@@ -5,7 +5,7 @@ import Logout from '../buttons/Logout'
 import { Context } from '../context/Context'
 
 const Sidebar = ({ isSidebar, setIsSidebar, }) => {
-    const {cartBar,setCartBar, userData, staffData}= useContext(Context)
+    const {cartBar,setCartBar, userData}= useContext(Context)
     const handleGotoCart=()=>{
         setCartBar(!cartBar)
         setIsSidebar(false)

@@ -4,7 +4,7 @@ import axios from 'axios'
 import Image from 'next/image'
 import React, { useContext } from 'react'
 import { MdDeleteOutline, MdEdit } from 'react-icons/md'
-import { toast } from 'react-toastify'
+import toast from 'react-hot-toast'
 import Link from 'next/link'
 import { FaPlus } from 'react-icons/fa'
 

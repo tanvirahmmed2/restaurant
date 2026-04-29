@@ -1,11 +1,10 @@
-import ManageNavbar from "@/components/bar/ManageNavbar"
-import ManageSidebar from "@/components/bar/ManageSidebar"
+import DashboardLayoutWrapper from "@/components/layout/DashboardLayoutWrapper"
 import { isLogin } from "@/lib/auth/middleware"
 import { redirect } from "next/navigation"
 
 export const metadata = {
-  title: 'Manage | Restaurant',
-  description: 'Management site'
+  title: 'Dashboard | Management',
+  description: 'Restaurant Management System'
 }
 
 const PosLayout = async ({ children }) => {
@@ -23,11 +22,9 @@ const PosLayout = async ({ children }) => {
   }
 
   return (
-    <div className='w-full mt-16 overflow-x-hidden relative'>
-      <ManageNavbar />
-      <ManageSidebar />
+    <DashboardLayoutWrapper>
       {children}
-    </div>
+    </DashboardLayoutWrapper>
   )
 }
 

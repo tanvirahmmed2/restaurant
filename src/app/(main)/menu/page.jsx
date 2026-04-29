@@ -3,60 +3,97 @@
 import Item from "@/components/card/Item"
 import { Context } from "@/components/context/Context"
 import axios from "axios"
-import Link from "next/link"
-import { useEffect, useState, useMemo, useContext } from "react"
-
-
+import React, { useEffect, useState, useContext } from "react"
+import { motion, AnimatePresence } from 'framer-motion'
 
 const Menu = () => {
   const [products, setProducts] = useState([])
   const { categories } = useContext(Context)
   const [categoryId, setCategoryId] = useState('')
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true)
       try {
         const response = await axios.get(`/api/product?q=${categoryId}`, { withCredentials: true })
-        setProducts(response.data.payload)
+        setProducts(response.data.payload || [])
       } catch (error) {
         setProducts([])
+      } finally {
+        setLoading(false)
       }
     }
     fetchData()
   }, [categoryId])
 
-
-
-
   return (
-    <div className="w-full p-4 min-h-screen">
-      <div className="w-full flex flex-col items-center justify-center gap-4">
-        <button onClick={() => setCategoryId('')} className="text-2xl cursor-pointer font-semibold w-full text-center">Menu</button>
+    <div className="w-full min-h-screen bg-gray-50/50 pt-24 pb-20">
+      <div className="max-w-7xl mx-auto px-6 flex flex-col gap-12">
+        
+        {/* Header */}
+        <div className="text-center space-y-4">
+          <h1 className="text-5xl font-black text-gray-900 tracking-tight">Our Menu</h1>
+          <p className="text-gray-500 max-w-lg mx-auto">Explore our curated selection of gourmet dishes, prepared with the finest ingredients.</p>
+        </div>
 
-        <div className="w-full grid grid-cols-3 md:grid-cols-6 justify-items-center gap-2">
-
+        {/* Category Filter */}
+        <div className="w-full flex flex-wrap items-center justify-center gap-3">
+          <button 
+            onClick={() => setCategoryId('')}
+            className={`px-8 py-3 rounded-full text-sm font-bold transition-all ${
+              categoryId === '' 
+              ? 'bg-black text-white shadow-xl shadow-black/20 scale-105' 
+              : 'bg-white text-gray-600 hover:bg-gray-100'
+            }`}
+          >
+            All Items
+          </button>
           {categories.map((cat) => (
             <button
-              key={cat._id}
-              onClick={() => setCategoryId(cat._id)}
-              className={`p-4 w-full text-center cursor-pointer shadow-sm rounded-lg transition-colors
-                ${categoryId === cat._id ? 'bg-indigo-300 text-white' : 'bg-white text-gray-700'}
-              `}
+              key={cat.id}
+              onClick={() => setCategoryId(cat.id)}
+              className={`px-8 py-3 rounded-full text-sm font-bold transition-all ${
+                categoryId === cat.id 
+                ? 'bg-black text-white shadow-xl shadow-black/20 scale-105' 
+                : 'bg-white text-gray-600 hover:bg-gray-100'
+              }`}
             >
               {cat.name}
             </button>
           ))}
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-4 mt-8 w-full">
-          {products.length > 0 ? (
-            products.map((item) => (
-              <Item item={item} key={item._id} />
-            ))
+        {/* Products Grid */}
+        <div className="w-full min-h-[400px]">
+          {loading ? (
+            <div className="w-full h-64 flex items-center justify-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black"></div>
+            </div>
           ) : (
-            <p className="col-span-full text-center text-gray-400">No items found in this category.</p>
+            <AnimatePresence mode="wait">
+              <motion.div 
+                key={categoryId}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.4 }}
+                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8"
+              >
+                {products.length > 0 ? (
+                  products.map((item) => (
+                    <Item item={item} key={item.id} />
+                  ))
+                ) : (
+                  <div className="col-span-full text-center py-20 bg-white rounded-3xl border border-dashed border-gray-200">
+                    <p className="text-gray-400 font-medium">No delicacies found in this category.</p>
+                  </div>
+                )}
+              </motion.div>
+            </AnimatePresence>
           )}
         </div>
+
       </div>
     </div>
   )

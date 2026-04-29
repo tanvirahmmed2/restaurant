@@ -75,8 +75,8 @@ export async function PATCH(req) {
     const authenticatedUser = auth.payload;
     const { name, email, password } = await req.json();
 
-    if (!name || !email) {
-      return NextResponse.json({ success: false, message: "Please fill all info" }, { status: 400 });
+    if (!name && !email && !password) {
+      return NextResponse.json({ success: false, message: "Please provide data to update" }, { status: 400 });
     }
 
     const { rows: currentUserRows } = await pool.query(
@@ -89,8 +89,11 @@ export async function PATCH(req) {
     }
 
     const currentUser = currentUserRows[0];
-    const isNameChanged = name !== currentUser.name;
-    const isEmailChanged = email !== currentUser.email;
+    const newName = name || currentUser.name;
+    const newEmail = email || currentUser.email;
+
+    const isNameChanged = newName !== currentUser.name;
+    const isEmailChanged = newEmail !== currentUser.email;
 
     let isPasswordChanged = false;
     if (password && password.trim() !== "") {
@@ -111,7 +114,7 @@ export async function PATCH(req) {
 
     const { rows: updatedUser } = await pool.query(
       "UPDATE res_users SET name = $1, email = $2, password = $3 WHERE id = $4 RETURNING id, name, email, phone, role",
-      [name, email, finalPassword, authenticatedUser.id]
+      [newName, newEmail, finalPassword, authenticatedUser.id]
     );
 
     return NextResponse.json({
@@ -122,5 +125,56 @@ export async function PATCH(req) {
 
   } catch (error) {
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+  }
+}
+
+export async function DELETE(req) {
+  try {
+    const auth = await isLogin();
+    if (!auth.success) {
+      return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
+    }
+
+    const tenant = await getTenant(req);
+    if (!tenant) {
+      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
+    }
+
+    const user = auth.payload;
+
+    if (user.role === "admin") {
+      const { rows: adminRows } = await pool.query(
+        "SELECT id FROM res_users WHERE role = 'admin' AND tenant_id = $1",
+        [tenant.tenant_id]
+      );
+
+      if (adminRows.length === 1) {
+        return NextResponse.json({
+          success: false,
+          message: "This account can't be removed (last admin)",
+        }, { status: 400 });
+      }
+    }
+
+    await pool.query("DELETE FROM res_users WHERE id = $1", [user.id]);
+
+    const res = NextResponse.json({
+      success: true,
+      message: "Successfully deleted account",
+    }, { status: 200 });
+
+    res.cookies.set("restaurant_token", "", {
+      httpOnly: true,
+      expires: new Date(0),
+      path: "/",
+    });
+
+    return res;
+
+  } catch (error) {
+    return NextResponse.json({
+      success: false,
+      message: error.message,
+    }, { status: 500 });
   }
 }

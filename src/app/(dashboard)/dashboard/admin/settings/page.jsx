@@ -3,19 +3,19 @@ import { Context } from '@/components/context/Context'
 import WebsiteDetails from '@/components/forms/WebsiteDetails'
 import axios from 'axios'
 import React, { useContext, useState } from 'react'
-import { toast } from 'react-toastify'
+import toast from 'react-hot-toast'
 
 const Setting = () => {
-  const { siteData, staffData } = useContext(Context)
+  const { siteData, userData } = useContext(Context)
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
 
   const changePassword = async (e) => {
     e.preventDefault()
-    if (!password) return toast.warning("Enter a new password")
+    if (!password) return toast("Enter a new password")
     setLoading(true)
     try {
-      const res = await axios.patch('/api/staff', { password }, { withCredentials: true })
+      const res = await axios.patch('/api/user', { password }, { withCredentials: true })
       toast.success(res.data.message)
       setPassword('')
     } catch (error) {
@@ -28,7 +28,7 @@ const Setting = () => {
   const deleteAccount = async () => {
     if (!confirm("Are you sure you want to delete your account? This action is permanent.")) return;
     try {
-      const res = await axios.delete('/api/staff/login', { withCredentials: true })
+      const res = await axios.delete('/api/user', { withCredentials: true })
       toast.success(res.data.message)
       window.location.replace('/login')
     } catch (error) {
@@ -94,16 +94,16 @@ const Setting = () => {
           <section className='bg-indigo-600 p-8 rounded-3xl shadow-xl text-white flex flex-col gap-4'>
             <div className='flex items-center gap-4'>
               <div className='w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-xl font-bold'>
-                {staffData?.name?.charAt(0).toUpperCase()}
+                {userData?.name?.charAt(0).toUpperCase()}
               </div>
               <div>
-                <p className='font-bold'>{staffData?.name}</p>
-                <p className='text-xs opacity-70 uppercase tracking-widest font-medium'>{staffData?.role}</p>
+                <p className='font-bold'>{userData?.name}</p>
+                <p className='text-xs opacity-70 uppercase tracking-widest font-medium'>{userData?.role}</p>
               </div>
             </div>
             <div className='text-xs opacity-80 space-y-1 mt-2'>
-              <p>Email: {staffData?.email}</p>
-              <p>Phone: {staffData?.phone}</p>
+              <p>Email: {userData?.email}</p>
+              <p>Phone: {userData?.phone}</p>
             </div>
           </section>
         </div>

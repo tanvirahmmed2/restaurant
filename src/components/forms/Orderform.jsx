@@ -2,7 +2,7 @@
 'use client'
 import React, { useContext, useEffect, useState } from 'react'
 import { Context } from '../context/Context'
-import { toast } from 'react-toastify'
+import toast from 'react-hot-toast'
 import axios from 'axios'
 import Image from 'next/image'
 import { MdDeleteOutline } from 'react-icons/md'

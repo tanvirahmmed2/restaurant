@@ -1,7 +1,7 @@
 'use client'
 import axios from 'axios'
 import React, { useContext, useState } from 'react'
-import { toast } from 'react-toastify'
+import toast from 'react-hot-toast'
 import { Context } from '../context/Context'
 
 const AddCategoryForm = () => {

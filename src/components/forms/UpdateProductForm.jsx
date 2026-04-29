@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { MdOutlineEventAvailable } from "react-icons/md";
 import { CgUnavailable } from "react-icons/cg";
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast'
 
 const UpdateProductForm = ({ product }) => {
     const [formData, setFormData] = useState({

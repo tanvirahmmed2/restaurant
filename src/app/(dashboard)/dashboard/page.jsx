@@ -6,15 +6,15 @@ import Link from "next/link"
 import { MdSell, MdInventory, MdAnalytics } from "react-icons/md"
 
 const Manage =  () => {
-  const {staffData, siteData}= useContext(Context)
+  const {userData, siteData}= useContext(Context)
   
-  const role = staffData?.role || ''
+  const role = userData?.role || ''
 
   return (
     <div className="w-full min-h-[80vh] flex flex-col items-center justify-center p-6 gap-8">
       <div className="text-center flex flex-col gap-2">
         <p className="text-gray-500 font-medium uppercase tracking-widest text-sm">Welcome Back</p>
-        <h1 className="text-5xl font-black text-gray-900">{staffData?.name}</h1>
+        <h1 className="text-5xl font-black text-gray-900">{userData?.name}</h1>
         <p className="text-xl text-gray-400">Manage <span className="text-gray-900 font-bold">{siteData?.business_name || siteData?.title || 'your restaurant'}</span></p>
       </div>
 
@@ -60,7 +60,7 @@ const Manage =  () => {
         <div className="px-4 py-2 bg-gray-100 rounded-full text-xs font-bold text-gray-500 uppercase tracking-widest">
           Session Active
         </div>
-        <p className="text-gray-400 text-xs">Logged in as {staffData?.email}</p>
+        <p className="text-gray-400 text-xs">Logged in as {userData?.email}</p>
       </div>
     </div>
   )

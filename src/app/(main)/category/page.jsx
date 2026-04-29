@@ -3,26 +3,62 @@ import React, { useContext } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { MdStar } from 'react-icons/md'
+import { MdExplore } from 'react-icons/md'
 import { Context } from '@/components/context/Context'
 
 const Categories = () => {
     const { categories } = useContext(Context)
-    if (!categories || categories.length === 0) return console.log('No category found')
+
     return (
-        <div className='w-full flex flex-col items-center gap-4 py-5 min-h-screen'>
-            <h1 className='text-base md:text-2xl font-semibold text-center flex items-center justify-center gap-4 flex-row'>Explore Our Top Categories <MdStar/></h1>
-            <div className='w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5  gap-10'>
-            
-            {categories.map((cat) => (
-                <motion.div initial={{opacity:0, scale:0.9, rotate:6}} whileInView={{opacity:1, scale:1, rotate:0}} transition={{duration:0.7}} key={cat._id} className=' gap-2 group shadow cursor-pointer flex items-center flex-col p-2 rounded-xl'>
-                    <div className='w-full rounded-full overflow-hidden'>
-                        <Image src={cat?.image} alt='category image' width={500} height={500} className='w-full aspect-square overflow-hidden object-cover group-hover:scale-105 transform ease-in-out duration-500  ' />
+        <div className='w-full min-h-screen bg-gray-50/50 pt-28 pb-20 px-6'>
+            <div className='max-w-7xl mx-auto flex flex-col gap-16'>
+                
+                {/* Header */}
+                <div className='text-center space-y-4'>
+                    <div className='inline-flex items-center gap-2 text-indigo-600 font-black uppercase tracking-[0.3em] text-[10px]'>
+                        <MdExplore className='text-lg' />
+                        Discover Flavors
                     </div>
-                    <Link href={`/category/${cat.slug}`} className='text-xs md:text-xl font-mono font-semibold'>{cat?.name}</Link>
-                </motion.div>
-            ))}
-        </div>
+                    <h1 className='text-5xl font-black text-gray-900 tracking-tight'>Browse Categories</h1>
+                    <p className='text-gray-500 max-w-lg mx-auto'>Explore our diverse range of culinary categories, from spicy appetizers to divine desserts.</p>
+                </div>
+
+                {/* Grid */}
+                <div className='w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-8'>
+                    {categories && categories.length > 0 ? (
+                        categories.map((cat, index) => (
+                            <motion.div 
+                                initial={{ opacity: 0, scale: 0.9 }} 
+                                whileInView={{ opacity: 1, scale: 1 }} 
+                                transition={{ duration: 0.5, delay: index * 0.05 }} 
+                                key={cat.id} 
+                                className='group'
+                            >
+                                <Link href={`/category/${cat.slug}`} className='flex flex-col items-center gap-4 text-center'>
+                                    <div className='relative w-full aspect-square rounded-full overflow-hidden border-4 border-white shadow-xl group-hover:shadow-2xl group-hover:border-indigo-100 transition-all duration-500'>
+                                        <Image 
+                                            src={cat?.image} 
+                                            alt={cat.name} 
+                                            width={400} 
+                                            height={400} 
+                                            className='w-full h-full object-cover transition-transform duration-700 group-hover:scale-110' 
+                                        />
+                                        <div className='absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors' />
+                                    </div>
+                                    <div className='space-y-1'>
+                                        <h3 className='text-lg font-black text-gray-900 tracking-tight group-hover:text-indigo-600 transition-colors'>{cat?.name}</h3>
+                                        <p className='text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]'>Explore Items</p>
+                                    </div>
+                                </Link>
+                            </motion.div>
+                        ))
+                    ) : (
+                        <div className='col-span-full py-20 text-center bg-white rounded-[40px] border border-dashed border-gray-200'>
+                            <p className='text-gray-400 font-bold uppercase tracking-widest text-sm'>No categories found</p>
+                        </div>
+                    )}
+                </div>
+            </div>
         </div>
     )
 }

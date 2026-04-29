@@ -2,7 +2,7 @@
 'use client'
 import { createContext, useContext, useState, useEffect } from 'react'
 import axios from 'axios'
-import { toast } from 'react-toastify'
+import toast from 'react-hot-toast'
 
 export const Context = createContext()
 
@@ -12,7 +12,6 @@ export const ContextProvider = ({ children }) => {
   const [cart, setCart] = useState({ items: [] })
   const [siteData, setSiteData] = useState(null)
   const [userData, setUserData] = useState(null)
-  const [staffData, setStaffData] = useState(null)
   const [categories, setCategories] = useState([])
 
   const [manageSidebar, setManageSidebar] = useState(false)
@@ -31,17 +30,6 @@ export const ContextProvider = ({ children }) => {
     fetchUserData()
   }, [])
 
-  useEffect(() => {
-    const fetchStaffData = async () => {
-      try {
-        const response = await axios.get('/api/staff', { withCredentials: true })
-        setStaffData(response.data.payload)
-      } catch (error) {
-        setStaffData(null)
-      }
-    }
-    fetchStaffData()
-  }, [])
 
   useEffect(() => {
     const fetchWebsiteData = async () => {
@@ -115,7 +103,7 @@ export const ContextProvider = ({ children }) => {
           return item;
         })
       }));
-      toast.info(`Updated quantity: ${existingInCart.quantity + qty}`);
+      toast(`Updated quantity: ${existingInCart.quantity + qty}`);
     } else {
       const price = parseFloat(product?.price) || 0;
       const discount = parseFloat(product?.discount) || 0;
@@ -203,7 +191,7 @@ export const ContextProvider = ({ children }) => {
   
   const contextValue = {
     manageSidebar, setManageSidebar, cartBar, setCartBar, updateUserBox, setUpdateUserBox,
-    cart, siteData, userData, staffData, subTotal, totalPrice, totalDiscount,
+    cart, siteData, userData, subTotal, totalPrice, totalDiscount,
     categories,
     fetchCategories, addToCart, removeFromCart, decreaseQuantity, clearCart, fetchCart
   }

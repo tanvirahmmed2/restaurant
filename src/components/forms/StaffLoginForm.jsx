@@ -1,7 +1,7 @@
 'use client'
 import axios from 'axios'
 import React, { useState } from 'react'
-import { toast } from 'react-toastify'
+import toast from 'react-hot-toast'
 
 const StaffLoginForm = () => {
     const [formData, setFormData]= useState({
@@ -17,7 +17,7 @@ const StaffLoginForm = () => {
     const loginHandle=async (e) => {
         e.preventDefault()
         try {
-            const response= await axios.post('/api/staff/login', formData, {withCredentials:true})
+            const response= await axios.post('/api/user/login', formData, {withCredentials:true})
             toast.success(response.data.message)
             window.location.replace('/manage')
         } catch (error) {

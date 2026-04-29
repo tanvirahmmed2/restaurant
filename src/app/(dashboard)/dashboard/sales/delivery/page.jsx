@@ -3,7 +3,7 @@ import { generateReceipt } from '@/lib/database/print'
 import axios from 'axios'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
+import toast from 'react-hot-toast'
 
 const DeliveryOrder = () => {
   const [orders, setOrders] = useState([])

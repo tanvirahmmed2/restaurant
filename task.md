@@ -32,3 +32,30 @@ view orders in /users/orders
 post review in /user/review
 
 keep the frontend same. convert the api to postgresql. remeber every item is separated by tenants. make a implimentation file before editing
+
+
+role and permission:
+
+Admin:
+1. /dashboard/admin/page.jsx: business overview
+2. /dashbaord/admin/history/page.jsx: order history
+3. /dashbaord/admin/analytics/page.jsx : business analytics, orders statistics and expenses
+4. /dashbaord/admin/people/page.jsx : promote users to upper roles by emails only. only show list of management relatd people
+
+
+Manager:(/dashboard/manager/.....)
+1. separate page for categories,  item(rename from product) create , update and delete
+2. expenses
+3. history
+4. reservation
+5. reviews
+6. support
+
+sales(dashboard/sales/....)
+1. /sale to make purchase
+2. pending for users made pending orders
+3. deliver the accepted orders
+4. delivered orders in /orders
+
+
+make proper routing on the managesidebar and profperly fix the routing and protect them in layout

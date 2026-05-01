@@ -17,15 +17,27 @@ export async function GET(req) {
 
     const user = auth.payload;
 
-    const { rows } = await pool.query(
+    const { rows: orders } = await pool.query(
       "SELECT * FROM res_orders WHERE phone = $1 AND tenant_id = $2 ORDER BY created_at DESC",
       [user.phone, tenant.tenant_id]
     );
 
+    if (orders.length > 0) {
+      const orderIds = orders.map(o => o.id);
+      const { rows: itemRows } = await pool.query(
+        "SELECT * FROM res_order_items WHERE tenant_id = $1 AND order_id = ANY($2)",
+        [tenant.tenant_id, orderIds]
+      );
+      
+      orders.forEach(order => {
+        order.items = itemRows.filter(item => item.order_id === order.id);
+      });
+    }
+
     return NextResponse.json({
       success: true,
       message: "Successfully fetched user orders",
-      payload: rows,
+      payload: orders,
     }, { status: 200 });
 
   } catch (error) {

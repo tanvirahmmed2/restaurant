@@ -41,7 +41,7 @@ const Support = async () => {
             </div>
 
             <div className='flex-1 flex flex-col gap-3 items-center justify-center h-full'>
-              <Link href={`mailto:${info.email}`} className='w-full bg-black p-1 rounded-lg text-white text-center'  > Reply</Link>
+              <Link href={`mailto:${info.email}`} className='w-full bg-pink-500 p-1 rounded-lg text-white text-center'  > Reply</Link>
 
               <DeleteSupport id={info._id} />
 

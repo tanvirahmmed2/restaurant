@@ -62,7 +62,7 @@ const Support = () => {
 
                     <div className='space-y-6 pt-6 border-t border-gray-100'>
                         <div className='flex items-center gap-6'>
-                            <div className='w-14 h-14 bg-white rounded-2xl shadow-xl shadow-black/5 flex items-center justify-center text-emerald-600 border border-gray-50'>
+                            <div className='w-14 h-14 bg-white rounded-2xl shadow-xl shadow-pink-900/5 flex items-center justify-center text-emerald-600 border border-gray-50'>
                                 <FaMapMarkerAlt size={22} />
                             </div>
                             <div>
@@ -71,7 +71,7 @@ const Support = () => {
                             </div>
                         </div>
                         <div className='flex items-center gap-6'>
-                            <div className='w-14 h-14 bg-white rounded-2xl shadow-xl shadow-black/5 flex items-center justify-center text-emerald-600 border border-gray-50'>
+                            <div className='w-14 h-14 bg-white rounded-2xl shadow-xl shadow-pink-900/5 flex items-center justify-center text-emerald-600 border border-gray-50'>
                                 <FaEnvelope size={22} />
                             </div>
                             <div>
@@ -87,7 +87,7 @@ const Support = () => {
                     initial={{ opacity: 0, y: 30 }} 
                     animate={{ opacity: 1, y: 0 }} 
                     transition={{ duration: 0.8, delay: 0.2 }}
-                    className='bg-white p-10 rounded-[40px] shadow-2xl shadow-black/5 border border-gray-100'
+                    className='bg-white p-10 rounded-[40px] shadow-2xl shadow-pink-900/5 border border-gray-100'
                 >
                     <div className='mb-8 text-center'>
                         <h2 className='text-2xl font-black text-gray-900'>Get In Touch</h2>
@@ -122,7 +122,7 @@ const Support = () => {
                         <button 
                             type='submit' 
                             disabled={loading}
-                            className='group w-full py-5 bg-black text-white rounded-2xl font-black text-sm flex items-center justify-center gap-3 hover:bg-emerald-600 transition-all shadow-xl shadow-black/10 active:scale-[0.98] disabled:opacity-50 mt-2'
+                            className='group w-full py-5 bg-pink-500 text-white rounded-2xl font-black text-sm flex items-center justify-center gap-3 hover:bg-emerald-600 transition-all shadow-xl shadow-pink-900/10 active:scale-[0.98] disabled:opacity-50 mt-2'
                         >
                             {loading ? 'SENDING...' : (
                                 <>

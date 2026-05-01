@@ -15,17 +15,27 @@ export async function GET(req) {
       return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
     }
 
-    const { rows } = await pool.query(
+    const { rows: orders } = await pool.query(
       "SELECT * FROM res_orders WHERE tenant_id = $1 ORDER BY created_at DESC",
       [tenant.tenant_id]
     );
 
-    // Fetch items for each order (optional, but good for management)
-    // For now, let's just return the orders. UI can fetch items separately if needed.
+    if (orders.length > 0) {
+      const orderIds = orders.map(o => o.id);
+      const { rows: itemRows } = await pool.query(
+        "SELECT * FROM res_order_items WHERE tenant_id = $1 AND order_id = ANY($2)",
+        [tenant.tenant_id, orderIds]
+      );
+      
+      orders.forEach(order => {
+        order.items = itemRows.filter(item => item.order_id === order.id);
+      });
+    }
+
     return NextResponse.json({
       success: true,
       message: "Successfully fetched orders",
-      payload: rows,
+      payload: orders,
     }, { status: 200 });
 
   } catch (error) {

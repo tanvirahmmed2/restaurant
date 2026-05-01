@@ -34,7 +34,7 @@ const Review = () => {
         <section className='w-full py-16 bg-slate-300 overflow-hidden'>
             <div className='max-w-4xl mx-auto px-6 text-center'>
                 <h2 className='text-3xl font-bold text-slate-800 mb-2'>Guest Experiences</h2>
-                <div className='w-20 h-1 bg-black mx-auto mb-10 rounded-full' />
+                <div className='w-20 h-1 bg-pink-500 mx-auto mb-10 rounded-full' />
 
                 <div className='relative h-87.5 flex items-center justify-center'>
                     <AnimatePresence mode='wait'>
@@ -70,7 +70,7 @@ const Review = () => {
                             key={i}
                             onClick={() => setIndex(i)}
                             className={`h-2 transition-all duration-300 rounded-full ${
-                                i === index ? 'w-8 bg-black' : 'w-2 bg-slate-300'
+                                i === index ? 'w-8 bg-pink-500' : 'w-2 bg-slate-300'
                             }`}
                         />
                     ))}

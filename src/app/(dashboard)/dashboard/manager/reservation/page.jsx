@@ -29,7 +29,7 @@ const Reservation = async () => {
 
       <div className="flex w-full flex-col gap-3">
         {reservations.map((info) => (
-          <div key={info.id} className='w-full grid grid-cols-12 p-5 bg-white border border-gray-100 rounded-xl hover:border-black transition-all items-start gap-4'>
+          <div key={info.id} className='w-full grid grid-cols-12 p-5 bg-white border border-gray-100 rounded-xl hover:border-pink-500 transition-all items-start gap-4'>
             <div className='col-span-4 flex flex-col gap-1'>
               <h3 className='text-base font-semibold text-gray-800'>{info.name}</h3>
               <p className='text-xs text-gray-400 font-medium'>{info.email}</p>
@@ -64,7 +64,7 @@ const Reservation = async () => {
             <div className='col-span-3 flex flex-col gap-2 items-end justify-center h-full'>
               <Link 
                 href={`mailto:${info.email}`} 
-                className="w-full max-w-[120px] bg-gray-50 text-gray-900 py-2 rounded-lg text-center text-xs font-semibold hover:bg-black hover:text-white transition-all"
+                className="w-full max-w-[120px] bg-gray-50 text-gray-900 py-2 rounded-lg text-center text-xs font-semibold hover:bg-pink-500 hover:text-white transition-all"
               >
                 Reply
               </Link>

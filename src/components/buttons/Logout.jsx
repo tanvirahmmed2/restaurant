@@ -2,6 +2,7 @@
 import axios from 'axios'
 import React from 'react'
 import toast from 'react-hot-toast'
+import { IoLogOut } from 'react-icons/io5'
 
 const Logout = () => {
   const handleLogout = async () => {
@@ -16,7 +17,7 @@ const Logout = () => {
     }
   }
   return (
-    <button className='w-auto flex items-center justify-between gap-3 cursor-pointer border p-1 px-3 rounded-2xl' onClick={handleLogout}>Logout</button>
+    <button className='w-auto flex items-center justify-between gap-3 cursor-pointer  p-1 px-3 text-2xl' onClick={handleLogout}><IoLogOut/></button>
   )
 }
 

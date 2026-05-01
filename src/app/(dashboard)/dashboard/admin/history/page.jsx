@@ -25,7 +25,7 @@ const AdminHistory = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full min-h-[50vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pink-500"></div>
       </div>
     )
   }
@@ -54,7 +54,7 @@ const AdminHistory = () => {
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl ${
                     order.status === 'delivered' ? 'bg-emerald-100 text-emerald-600' :
                     order.status === 'pending' ? 'bg-amber-100 text-amber-600' :
-                    'bg-blue-100 text-blue-600'
+                    'bg-pink-100 text-pink-600'
                   }`}>
                     {order.status === 'delivered' ? <MdCheckCircle /> : <MdReceipt />}
                   </div>
@@ -72,7 +72,7 @@ const AdminHistory = () => {
                     order.status === 'delivered' ? 'bg-emerald-100 text-emerald-700' :
                     order.status === 'pending' ? 'bg-amber-100 text-amber-700' :
                     order.status === 'canceled' ? 'bg-red-100 text-red-700' :
-                    'bg-blue-100 text-blue-700'
+                    'bg-pink-100 text-pink-700'
                   }`}>
                     {order.status}
                   </span>

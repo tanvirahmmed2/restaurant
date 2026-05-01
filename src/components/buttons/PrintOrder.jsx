@@ -41,7 +41,7 @@ const PrintOrder = ({ order }) => {
         </head>
         <body>
           <div class="center">
-            <h2 style="margin:0; font-size: 18px; text-transform: uppercase;">${siteData?.business_name || 'Restaurant'}</h2>
+            <h2 style="margin:0; font-size: 18px; text-transform: uppercase;">${siteData?.name || 'Restaurant'}</h2>
             <p style="margin:2px 0;">${siteData?.address || ''}</p>
             ${siteData?.phone ? `<p style="margin:2px 0;">Tel: ${siteData.phone}</p>` : ''}
             <div class="divider"></div>
@@ -117,9 +117,9 @@ const PrintOrder = ({ order }) => {
   return (
     <button 
       onClick={printOrder} 
-      className='w-full px-2 rounded-lg hover:bg-black/10 p-2 cursor-pointer flex flex-row items-center justify-center gap-4 transition-colors border border-transparent active:border-black/20'
+      className='w-full px-2 rounded-lg hover:bg-pink-500/10 p-2 cursor-pointer flex flex-row items-center justify-center gap-4 transition-colors border border-transparent active:border-pink-500/20'
     >
-      <FaPrint className="text-gray-700 hover:text-black" />
+      <FaPrint className="text-gray-700 hover:text-pink-600" />
       <span className="font-medium">Print Receipt</span>
     </button>
   )

@@ -44,7 +44,7 @@ const Intro = () => {
           className='text-center lg:text-left space-y-10'
         >
           <div className="space-y-4">
-            <div className='inline-block px-4 py-1 bg-black text-white text-[10px] font-semibold uppercase tracking-[0.3em] rounded-full'>
+            <div className='inline-block px-4 py-1 bg-pink-500 text-white text-[10px] font-semibold uppercase tracking-[0.3em] rounded-full'>
               {siteData?.name || 'Grand Kitchen'}
             </div>
             <h1 className='text-6xl md:text-8xl font-semibold text-gray-900 leading-[0.9] tracking-tight'>
@@ -58,7 +58,7 @@ const Intro = () => {
           </p>
 
           <div className='flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4'>
-            <Link href='/menu' className='px-10 py-4 bg-black text-white rounded-xl font-semibold text-sm hover:bg-gray-800 transition-all shadow-xl shadow-black/10 active:scale-[0.98] uppercase tracking-widest'>
+            <Link href='/menu' className='px-10 py-4 bg-pink-500 text-white rounded-xl font-semibold text-sm hover:bg-pink-600 transition-all shadow-xl shadow-pink-900/10 active:scale-[0.98] uppercase tracking-widest'>
               View Menu
             </Link>
             
@@ -76,7 +76,7 @@ const Intro = () => {
         >
           <div className='relative w-full aspect-square max-w-lg mx-auto'>
             <div className='absolute inset-0 bg-gray-100 rounded-[3rem] rotate-6 -z-10 scale-95' />
-            <div className='absolute inset-0 bg-black/5 rounded-[3rem] -rotate-3 -z-10 scale-105' />
+            <div className='absolute inset-0 bg-pink-500/5 rounded-[3rem] -rotate-3 -z-10 scale-105' />
             
             <Image 
               src={item.image} 
@@ -94,9 +94,33 @@ const Intro = () => {
             >
               <p className="text-gray-400 text-[10px] font-semibold uppercase tracking-widest mb-1">Today's Special</p>
               <p className="text-sm font-semibold text-gray-900 mb-2 line-clamp-1">{item.title}</p>
-              <p className="text-2xl font-semibold text-black tracking-tight">
-                ৳{item.price.toLocaleString()}
-              </p>
+              
+              {(() => {
+                const hasDiscount = item.discount !== 0 && item.discount !== null;
+                let variantAdjustment = 0;
+                const defaultVariants = {};
+                if (item.variants) {
+                  item.variants.forEach(v => {
+                    if (!defaultVariants[v.name] || v.is_default) {
+                      defaultVariants[v.name] = v;
+                    }
+                  });
+                  Object.values(defaultVariants).forEach(v => {
+                    variantAdjustment += Number(v.price_adjustment || 0);
+                  });
+                }
+                const baseWithVariant = Number(item.price) + variantAdjustment;
+                const currentPrice = hasDiscount ? baseWithVariant - Number(item.discount) : baseWithVariant;
+                
+                return (
+                  <div className='flex flex-col gap-0'>
+                    {hasDiscount && <p className='text-[10px] line-through text-gray-400'>৳{baseWithVariant.toFixed(2)}</p>}
+                    <p className="text-2xl font-semibold text-black tracking-tight">
+                      ৳{currentPrice.toFixed(2)}
+                    </p>
+                  </div>
+                );
+              })()}
             </motion.div>
           </div>
         </motion.div>
@@ -105,7 +129,7 @@ const Intro = () => {
 
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-20">
         <p className='text-[10px] font-semibold uppercase tracking-[0.5em] vertical-text'>Scroll</p>
-        <div className="w-px h-12 bg-black" />
+        <div className="w-px h-12 bg-pink-500" />
       </div>
     </section>
   )

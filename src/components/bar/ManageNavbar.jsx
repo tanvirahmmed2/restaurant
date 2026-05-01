@@ -2,7 +2,8 @@
 import React, { useContext } from 'react'
 import Profile from '../buttons/Profile'
 import { Context } from '../context/Context'
-import { MdMenu, MdMenuOpen, MdNotificationsNone, MdAccountCircle } from 'react-icons/md'
+import { MdMenu, MdNotificationsNone, MdAccountCircle } from 'react-icons/md'
+import { CgMenuMotion } from 'react-icons/cg'
 
 const ManageNavbar = () => {
   const { manageSidebar, setManageSidebar, userData } = useContext(Context)
@@ -13,16 +14,14 @@ const ManageNavbar = () => {
         {/* Left Side */}
         <div className='flex items-center gap-6'>
           <button 
-            className='p-2 hover:bg-gray-50 rounded-xl transition-colors cursor-pointer text-gray-500 hover:text-black' 
+            className='p-2 hover:bg-gray-50 rounded-xl transition-colors cursor-pointer text-gray-500 hover:text-pink-600' 
             onClick={() => setManageSidebar(!manageSidebar)}
           >
-            {manageSidebar ? <MdMenuOpen size={24} /> : <MdMenu size={24} />}
+            {manageSidebar ? <CgMenuMotion size={24} /> : <MdMenu size={24} />}
           </button>
 
           <div className='flex items-center gap-3'>
-            <div className='w-8 h-8 bg-black text-white rounded-lg flex items-center justify-center font-black text-xs'>
-              {userData?.role?.charAt(0).toUpperCase() || 'M'}
-            </div>
+            
             <h1 className='text-sm font-black text-gray-900 tracking-tight uppercase'>
               {userData?.role || 'Management'} <span className='text-gray-300 font-medium ml-1'>Portal</span>
             </h1>
@@ -32,7 +31,7 @@ const ManageNavbar = () => {
         {/* Right Side */}
         <div className='flex items-center gap-6'>
           {/* Notifications Placeholder */}
-          <button className='p-2 text-gray-400 hover:text-black transition-colors relative cursor-pointer'>
+          <button className='p-2 text-gray-400 hover:text-pink-600 transition-colors relative cursor-pointer'>
             <MdNotificationsNone size={22} />
             <span className='absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white' />
           </button>

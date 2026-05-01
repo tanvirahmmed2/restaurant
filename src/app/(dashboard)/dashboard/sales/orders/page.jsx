@@ -4,6 +4,7 @@ import axios from 'axios'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
+import { MdDelete, MdRateReview } from 'react-icons/md'
 
 const DeliveredOrder = () => {
   const [orders, setOrders] = useState([])
@@ -63,14 +64,14 @@ const DeliveredOrder = () => {
             
             <div className='flex flex-col gap-1.5'>
               {orders.map((order) => (
-                <div key={order.id} className='w-full grid grid-cols-12 p-3 items-center bg-white border border-gray-100 rounded-xl hover:border-black transition-all group'>
+                <div key={order.id} className='w-full grid grid-cols-12 p-3 items-center bg-white border border-gray-100 rounded-xl hover:border-pink-500 transition-all group'>
                   <p className='col-span-1 font-mono text-[10px] text-gray-400 uppercase tracking-tighter'>#{String(order.id).padStart(5, '0')}</p>
                   <div className='col-span-2 flex flex-col'>
                     <p className='text-sm font-semibold text-gray-800 line-clamp-1'>{order.name || 'Guest'}</p>
                     <p className='text-[10px] text-gray-400 font-semibold'>{order.phone}</p>
                   </div>
                   <div className='col-span-3 flex flex-col gap-0.5'>
-                    {order.items.map((item) => (
+                    {order?.items?.map((item) => (
                       <p key={item.id} className='text-[10px] text-gray-500 line-clamp-1'>
                         {item.quantity}x {item.title}
                       </p>
@@ -87,7 +88,7 @@ const DeliveredOrder = () => {
                   <p className='col-span-2 font-semibold text-gray-900 text-sm'>৳{Number(order.total_price).toLocaleString()}</p>
                   
                   <div className='col-span-2 flex flex-row items-center justify-end gap-1.5'>
-                    <Link href={`/dashboard/sales/orders/${order.id}`} className='p-2 text-gray-400 hover:text-black transition-colors' title="View Detail">
+                    <Link href={`/dashboard/sales/orders/${order.id}`} className='p-2 text-gray-400 hover:text-pink-600 transition-colors' title="View Detail">
                       <MdRateReview size={18} />
                     </Link>
                     <button className='p-2 text-rose-300 hover:text-rose-600 transition-colors' onClick={() => handleCancel(order.id)} title="Cancel Order">

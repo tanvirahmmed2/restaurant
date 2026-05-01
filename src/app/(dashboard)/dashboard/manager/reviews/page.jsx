@@ -62,7 +62,7 @@ const ReviewsPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {reviews.length > 0 ? (
           reviews.map((review) => (
-            <div key={review.id} className="bg-white p-5 rounded-xl border border-gray-100 flex flex-col justify-between gap-4 group hover:border-black transition-all">
+            <div key={review.id} className="bg-white p-5 rounded-xl border border-gray-100 flex flex-col justify-between gap-4 group hover:border-pink-500 transition-all">
               
               <div className="flex flex-col gap-3">
                 <div className="flex items-start justify-between gap-4">

@@ -33,11 +33,11 @@ const Profile = () => {
       <div className='max-w-6xl mx-auto flex flex-col gap-10'>
         
         {/* Profile Header Card */}
-        <section className='bg-white p-8 md:p-12 rounded-[40px] shadow-xl shadow-black/5 border border-gray-100 flex flex-col md:flex-row items-center gap-8 relative overflow-hidden'>
-          <div className='absolute top-0 right-0 w-64 h-64 bg-indigo-50 rounded-full -mr-32 -mt-32 blur-3xl opacity-50' />
+        <section className='bg-white p-8 md:p-12 rounded-[40px] shadow-xl shadow-pink-900/5 border border-gray-100 flex flex-col md:flex-row items-center gap-8 relative overflow-hidden'>
+          <div className='absolute top-0 right-0 w-64 h-64 bg-pink-50 rounded-full -mr-32 -mt-32 blur-3xl opacity-50' />
           
           <div className='relative'>
-            <div className='w-32 h-32 md:w-40 md:h-40 bg-black text-white rounded-full flex items-center justify-center text-7xl shadow-2xl'>
+            <div className='w-32 h-32 md:w-40 md:h-40 bg-pink-500 text-white rounded-full flex items-center justify-center text-7xl shadow-2xl'>
               <MdPerson />
             </div>
             <button 
@@ -74,22 +74,22 @@ const Profile = () => {
           <div className='lg:col-span-2 space-y-6'>
             <div className='flex items-center justify-between px-2'>
               <h2 className='text-2xl font-black text-gray-900 flex items-center gap-3'>
-                <MdShoppingBag className='text-indigo-600' />
+                <MdShoppingBag className='text-pink-600' />
                 Recent Orders
               </h2>
-              <button className='text-xs font-bold text-gray-400 hover:text-black uppercase tracking-widest'>View All</button>
+              <button className='text-xs font-bold text-gray-400 hover:text-pink-600 uppercase tracking-widest'>View All</button>
             </div>
 
             <div className='flex flex-col gap-4'>
               {loading ? (
                 <div className="bg-white p-20 rounded-[32px] border border-gray-100 flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-black"></div>
+                  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-pink-500"></div>
                 </div>
               ) : orders.length > 0 ? (
                 orders.slice(0, 5).map((order) => (
                   <div key={order.id} className='bg-white p-6 rounded-[32px] border border-gray-100 shadow-sm flex items-center justify-between group hover:shadow-md transition-all'>
                     <div className='flex items-center gap-5'>
-                      <div className='w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center text-2xl group-hover:bg-black group-hover:text-white transition-colors'>
+                      <div className='w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center text-2xl group-hover:bg-pink-500 group-hover:text-white transition-colors'>
                         <MdHistory />
                       </div>
                       <div>
@@ -110,7 +110,7 @@ const Profile = () => {
               ) : (
                 <div className='bg-white p-20 rounded-[32px] border border-dashed border-gray-200 text-center space-y-3'>
                   <p className='text-gray-400 font-medium'>No orders placed yet.</p>
-                  <Link href="/menu" className='text-indigo-600 font-black text-sm uppercase tracking-widest hover:underline'>Order Now</Link>
+                  <Link href="/menu" className='text-pink-600 font-black text-sm uppercase tracking-widest hover:underline'>Order Now</Link>
                 </div>
               )}
             </div>
@@ -134,7 +134,7 @@ const Profile = () => {
               <div className='pt-4 border-t border-gray-50'>
                 <button 
                   onClick={() => setUpdateUserBox(true)}
-                  className='w-full py-4 bg-gray-900 text-white rounded-2xl font-bold text-sm hover:bg-black transition-all shadow-xl shadow-black/10'
+                  className='w-full py-4 bg-gray-900 text-white rounded-2xl font-bold text-sm hover:bg-pink-500 transition-all shadow-xl shadow-pink-900/10'
                 >
                   Edit Profile Details
                 </button>
@@ -154,7 +154,7 @@ const Profile = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setUpdateUserBox(false)}
-              className='absolute inset-0 bg-black/60 backdrop-blur-md'
+              className='absolute inset-0 bg-pink-500/60 backdrop-blur-md'
             />
             <motion.div 
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -163,7 +163,7 @@ const Profile = () => {
               className='bg-white w-full max-w-md p-8 rounded-[40px] shadow-2xl relative'
             >
               <button 
-                className='absolute top-6 right-6 p-2 text-gray-300 hover:text-black transition-colors cursor-pointer' 
+                className='absolute top-6 right-6 p-2 text-gray-300 hover:text-pink-600 transition-colors cursor-pointer' 
                 onClick={() => setUpdateUserBox(false)}
               >
                 <MdCancel size={28} />

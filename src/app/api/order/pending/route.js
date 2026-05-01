@@ -14,6 +14,18 @@ export async function GET(req) {
       [tenant.tenant_id]
     );
 
+    if (orders.length > 0) {
+      const orderIds = orders.map(o => o.id);
+      const { rows: itemRows } = await pool.query(
+        "SELECT * FROM res_order_items WHERE tenant_id = $1 AND order_id = ANY($2)",
+        [tenant.tenant_id, orderIds]
+      );
+      
+      orders.forEach(order => {
+        order.items = itemRows.filter(item => item.order_id === order.id);
+      });
+    }
+
     return NextResponse.json({
       success: true,
       message: "Successfully fetched pending orders",

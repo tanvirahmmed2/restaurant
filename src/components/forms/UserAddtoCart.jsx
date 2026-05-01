@@ -37,14 +37,14 @@ const UserAddtoCart = ({ product }) => {
           <p className='text-2xl font-black text-gray-800'>৳{product.price}</p>
         </div>
         <div className='flex flex-row items-center gap-4 bg-white px-4 py-2 rounded-full shadow-sm'>
-          <button className='text-xl font-bold hover:text-indigo-600 transition-colors cursor-pointer' onClick={decreaseQuantity}><IoIosArrowBack /></button>
+          <button className='text-xl font-bold hover:text-pink-600 transition-colors cursor-pointer' onClick={decreaseQuantity}><IoIosArrowBack /></button>
           <p className='font-black text-lg w-6 text-center'>{quantity}</p>
-          <button className='text-xl font-bold hover:text-indigo-600 transition-colors cursor-pointer' onClick={increaseQuantity}><IoIosArrowForward /></button>
+          <button className='text-xl font-bold hover:text-pink-600 transition-colors cursor-pointer' onClick={increaseQuantity}><IoIosArrowForward /></button>
         </div>
       </div>
       <button 
         onClick={handleAddToCart} 
-        className='w-full flex flex-row items-center justify-center gap-3 bg-black text-white py-3 rounded-xl font-bold hover:bg-gray-800 transition-all active:scale-[0.98] shadow-lg shadow-black/10'
+        className='w-full flex flex-row items-center justify-center gap-3 bg-pink-500 text-white py-3 rounded-xl font-bold hover:bg-pink-600 transition-all active:scale-[0.98] shadow-lg shadow-pink-900/10'
       >
         <CiShoppingCart className='text-2xl' />
         Add to Cart

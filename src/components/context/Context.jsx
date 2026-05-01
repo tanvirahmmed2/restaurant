@@ -127,12 +127,59 @@ export const ContextProvider = ({ children }) => {
             discount: discount,
             image: product.image,
             salePrice: (price - discount) * qty,
-            selectedVariants: product.selectedVariants || null
+            selectedVariants: product.selectedVariants || null,
+            variants: product.variants || null
           }
         ]
       }));
       toast.success("Added to cart");
     }
+  };
+
+  const updateCartItemVariant = (oldCartItemId, newSelectedVariants, newPrice) => {
+    setCart((prev) => {
+      const existingItem = prev.items.find(item => item.cartItemId === oldCartItemId);
+      if (!existingItem) return prev;
+
+      const variantKeys = newSelectedVariants 
+        ? Object.values(newSelectedVariants).map(v => v.id).sort().join('-')
+        : '';
+      
+      const newCartItemId = variantKeys ? `${existingItem.id}-${variantKeys}` : `${existingItem.id}`;
+
+      const targetItem = prev.items.find(item => item.cartItemId === newCartItemId);
+
+      let newItems = [];
+      if (targetItem && targetItem.cartItemId !== oldCartItemId) {
+        newItems = prev.items.map(item => {
+          if (item.cartItemId === newCartItemId) {
+            const newQty = item.quantity + existingItem.quantity;
+            return {
+              ...item,
+              quantity: newQty,
+              salePrice: (item.price - item.discount) * newQty
+            };
+          }
+          return item;
+        }).filter(item => item.cartItemId !== oldCartItemId);
+      } else {
+        newItems = prev.items.map(item => {
+          if (item.cartItemId === oldCartItemId) {
+            return {
+              ...item,
+              cartItemId: newCartItemId,
+              selectedVariants: newSelectedVariants,
+              price: newPrice,
+              salePrice: (newPrice - item.discount) * item.quantity
+            };
+          }
+          return item;
+        });
+      }
+
+      return { ...prev, items: newItems };
+    });
+    toast.success("Variant updated");
   };
 
   const removeFromCart = (cartItemId) => {
@@ -201,7 +248,7 @@ export const ContextProvider = ({ children }) => {
     manageSidebar, setManageSidebar, cartBar, setCartBar, updateUserBox, setUpdateUserBox,
     cart, siteData, userData, subTotal, totalPrice, totalDiscount,
     categories,
-    fetchCategories, addToCart, removeFromCart, decreaseQuantity, clearCart, fetchCart
+    fetchCategories, addToCart, removeFromCart, decreaseQuantity, clearCart, fetchCart, updateCartItemVariant
   }
 
   return (

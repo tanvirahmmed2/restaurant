@@ -28,15 +28,15 @@ const NewExpenseForm = () => {
     <form onSubmit={handleSubmit} className='w-full flex flex-col items-center gap-4'>
         <div className='w-full flex flex-col gap-1'>
             <label htmlFor="title">Title</label>
-            <input type="text" name='title' id='title' required onChange={handleChange} value={formData.title} className='w-full px-3 p-1 border border-black/2- rounded-xl outline-none' />
+            <input type="text" name='title' id='title' required onChange={handleChange} value={formData.title} className='w-full px-3 p-1 border border-pink-500/2- rounded-xl outline-none' />
         </div>
         <div className='w-full flex flex-col gap-1'>
             <label htmlFor="note">Note</label>
-            <textarea name="note" id="note" onChange={handleChange} required value={formData.note} className='w-full px-3 p-1 border border-black/2- rounded-xl outline-none'></textarea>
+            <textarea name="note" id="note" onChange={handleChange} required value={formData.note} className='w-full px-3 p-1 border border-pink-500/2- rounded-xl outline-none'></textarea>
         </div>
         <div className='w-full flex flex-col gap-1'>
             <label htmlFor="amount">Amount</label>
-            <input type="number" onChange={handleChange} required value={formData.amount} name='amount' id='amount' className='w-full px-3 p-1 border border-black/2- rounded-xl outline-none' />
+            <input type="number" onChange={handleChange} required value={formData.amount} name='amount' id='amount' className='w-full px-3 p-1 border border-pink-500/2- rounded-xl outline-none' />
         </div>
       <button type='submit' className='w-full bg-slate-700 text-white p-1 rounded-xl cursor-pointer'>Submit</button>
     </form>

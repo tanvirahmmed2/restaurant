@@ -18,7 +18,7 @@ const About = () => {
             <span className="text-gray-400 italic">Excellence Since 2010</span>
           </h1>
           <p className="text-gray-500 text-lg font-medium leading-relaxed">
-            {siteData?.business_name || "Grand Kitchen"} was born out of a passion for authentic flavors and a commitment to exceptional hospitality.
+            {siteData?.name || "Grand Kitchen"} was born out of a passion for authentic flavors and a commitment to exceptional hospitality.
           </p>
         </div>
 

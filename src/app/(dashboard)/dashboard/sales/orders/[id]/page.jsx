@@ -6,8 +6,10 @@ import { useContext, useEffect, useState } from "react"// Adjust path as needed
 import { Printer, ArrowLeft, Loader2 } from "lucide-react"
 import Link from "next/link"
 import { generateReceipt } from "@/lib/database/print"
+import { Context } from "@/components/context/Context"
 
 const SingleOrderPage = () => {
+    const { siteData } = useContext(Context)
     const [order, setOrder] = useState(null)
     const [loading, setLoading] = useState(true)
     const { id } = useParams()
@@ -35,19 +37,19 @@ const SingleOrderPage = () => {
 
     if (!order) return <div className="p-10 text-center">Order not found.</div>
 
-    const orderDate = new Date(order.createdAt || Date.now())
+    const orderDate = new Date(order.created_at || Date.now())
     const formattedDate = orderDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
     const formattedTime = orderDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
 
     return (
         <div className="min-h-screen  py-10 px-4">
             <div className="max-w-3xl mx-auto mb-6 flex justify-between items-center">
-                <Link href="/manage/orders" className="flex items-center gap-2 text-sm text-gray-600 hover:text-black transition-colors">
+                <Link href="/manage/orders" className="flex items-center gap-2 text-sm text-gray-600 hover:text-pink-600 transition-colors">
                     <ArrowLeft size={16} /> Back
                 </Link>
                 <button 
-                    onClick={() => generateReceipt(order)}
-                    className="flex items-center gap-2 cursor-pointer bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-all shadow-sm active:scale-95"
+                    onClick={() => generateReceipt(order, siteData)}
+                    className="flex items-center gap-2 cursor-pointer bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700 transition-all shadow-sm active:scale-95"
                 >
                     <Printer size={18} /> Print Receipt
                 </button>
@@ -57,15 +59,15 @@ const SingleOrderPage = () => {
                 <div className="p-6 bg-white flex flex-col items-center">
                     
                     <div className="text-center border-b-2 border-slate-900 w-full pb-4 mb-4">
-                        <h1 className="text-2xl  font-bold tracking-tight text-slate-900">Sara's Dine</h1>
-                        <p className=" text-[10px] text-gray-400 uppercase tracking-widest">Mymensingh</p>
+                        <h1 className="text-2xl  font-bold tracking-tight text-slate-900">{siteData?.name || "Restaurant"}</h1>
+                        <p className=" text-[10px] text-gray-400 uppercase tracking-widest">{siteData?.address || ""}</p>
                         <p className="text-[11px] mt-1 text-slate-600">— Sales Receipt —</p>
                     </div>
 
                     <div className="w-full space-y-1 mb-4 border-b border-dashed border-gray-300 pb-4 text-[12px]">
                         <div className="flex justify-between">
                             <span className="text-gray-400 uppercase text-[10px]">Receipt No.</span>
-                            <span className=" font-medium uppercase">#{order._id.toString().slice(-6)}</span>
+                            <span className=" font-medium uppercase">#{String(order.id).padStart(5, '0')}</span>
                         </div>
                         <div className="flex justify-between">
                             <span className="text-gray-400 uppercase text-[10px]">Date</span>
@@ -93,12 +95,12 @@ const SingleOrderPage = () => {
                                 <div className="col-span-7 flex flex-col">
                                     <span className="font-semibold text-slate-800">{item.title}</span>
                                     <span className="text-[10px] text-gray-500 ">
-                                        @ ৳{item.price.toFixed(2)} {item.discount > 0 ? `(-৳${item.discount})` : ''}
+                                        @ ৳{Number(item.price).toFixed(2)} {item.discount > 0 ? `(-৳${item.discount})` : ''}
                                     </span>
                                 </div>
                                 <div className="col-span-2 text-center  self-center">{item.quantity}</div>
                                 <div className="col-span-3 text-right  font-semibold self-center">
-                                    ৳{((item.price - item.discount) * item.quantity).toFixed(2)}
+                                    ৳{(Number(item.price - item.discount) * item.quantity).toFixed(2)}
                                 </div>
                             </div>
                         ))}
@@ -107,15 +109,15 @@ const SingleOrderPage = () => {
                     <div className="w-full mt-4 space-y-1">
                         <div className="flex justify-between text-[11px] ">
                             <span>Subtotal</span>
-                            <span>৳{order.subTotal.toFixed(2)}</span>
+                            <span>৳{Number(order.sub_total).toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between text-[11px]  text-red-600">
                             <span>Discount</span>
-                            <span>-৳{order.totalDiscount.toFixed(2)}</span>
+                            <span>-৳{Number(order.total_discount).toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between items-baseline pt-2 border-t border-slate-900 mt-2">
                             <span className="text-[12px] font-bold uppercase">Net Total</span>
-                            <span className="text-xl  font-bold italic">৳{order.totalPrice.toFixed(2)}</span>
+                            <span className="text-xl  font-bold italic">৳{Number(order.total_price).toFixed(2)}</span>
                         </div>
                     </div>
 
@@ -132,7 +134,7 @@ const SingleOrderPage = () => {
                                 />
                             ))}
                         </div>
-                        <span className="text-[8px]  text-gray-400 mt-2 uppercase">ID: {order._id}</span>
+                        <span className="text-[8px]  text-gray-400 mt-2 uppercase">ID: {order.id}</span>
                     </div>
 
                     <div className="mt-6 pt-4 border-t border-dashed border-gray-300 w-full text-center">

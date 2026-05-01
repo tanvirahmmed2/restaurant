@@ -83,7 +83,7 @@ const WebsiteDetails = () => {
                 <button 
                     type='submit' 
                     disabled={loading}
-                    className='px-6 py-2 bg-black text-white rounded-xl font-bold hover:bg-gray-800 transition-all active:scale-95 disabled:opacity-50'
+                    className='px-6 py-2 bg-pink-500 text-white rounded-xl font-bold hover:bg-pink-600 transition-all active:scale-95 disabled:opacity-50'
                 >
                     {loading ? 'Saving...' : 'Save Changes'}
                 </button>
@@ -92,52 +92,52 @@ const WebsiteDetails = () => {
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                 {/* General Info */}
                 <div className='flex flex-col gap-4'>
-                    <h3 className='text-xs font-bold uppercase text-indigo-600 tracking-wider'>General Info</h3>
+                    <h3 className='text-xs font-bold uppercase text-pink-600 tracking-wider'>General Info</h3>
                     
                     <div className='flex flex-col gap-1'>
                         <label className='text-xs font-bold text-gray-400 uppercase'>Restaurant Name</label>
-                        <input type="text" name='business_name' value={formData.business_name} required onChange={handleChange} className='p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-black transition-all'/>
+                        <input type="text" name='business_name' value={formData.business_name} required onChange={handleChange} className='p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-pink-500 transition-all'/>
                     </div>
 
                     <div className='flex flex-col gap-1'>
                         <label className='text-xs font-bold text-gray-400 uppercase'>Website Tagline</label>
-                        <input type="text" name='meta_title' value={formData.meta_title} required onChange={handleChange} className='p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-black transition-all' placeholder="Best Pizza in Town"/>
+                        <input type="text" name='meta_title' value={formData.meta_title} required onChange={handleChange} className='p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-pink-500 transition-all' placeholder="Best Pizza in Town"/>
                     </div>
 
                     <div className='flex flex-col gap-1'>
                         <label className='text-xs font-bold text-gray-400 uppercase'>Meta Description</label>
-                        <textarea name="meta_description" value={formData.meta_description} required onChange={handleChange} className='p-3 bg-gray-50 border border-gray-200 rounded-xl h-28 outline-none focus:border-black transition-all resize-none' placeholder="Describe your restaurant for SEO..."></textarea>
+                        <textarea name="meta_description" value={formData.meta_description} required onChange={handleChange} className='p-3 bg-gray-50 border border-gray-200 rounded-xl h-28 outline-none focus:border-pink-500 transition-all resize-none' placeholder="Describe your restaurant for SEO..."></textarea>
                     </div>
                 </div>
 
                 {/* Contact Info */}
                 <div className='flex flex-col gap-4'>
-                    <h3 className='text-xs font-bold uppercase text-indigo-600 tracking-wider'>Contact & Location</h3>
+                    <h3 className='text-xs font-bold uppercase text-pink-600 tracking-wider'>Contact & Location</h3>
                     
                     <div className='grid grid-cols-2 gap-4'>
                         <div className='flex flex-col gap-1'>
                             <label className='text-xs font-bold text-gray-400 uppercase'>Email</label>
-                            <input type="email" name='email' value={formData.email} required onChange={handleChange} className='p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-black transition-all' />
+                            <input type="email" name='email' value={formData.email} required onChange={handleChange} className='p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-pink-500 transition-all' />
                         </div>
                         <div className='flex flex-col gap-1'>
                             <label className='text-xs font-bold text-gray-400 uppercase'>Phone</label>
-                            <input type="text" name='phone' value={formData.phone} required onChange={handleChange} className='p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-black transition-all' />
+                            <input type="text" name='phone' value={formData.phone} required onChange={handleChange} className='p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-pink-500 transition-all' />
                         </div>
                     </div>
 
                     <div className='flex flex-col gap-1'>
                         <label className='text-xs font-bold text-gray-400 uppercase'>Street Address</label>
-                        <input type="text" name='address' value={formData.address} required onChange={handleChange} className='p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-black transition-all' />
+                        <input type="text" name='address' value={formData.address} required onChange={handleChange} className='p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-pink-500 transition-all' />
                     </div>
 
                     <div className='grid grid-cols-2 gap-4'>
                         <div className='flex flex-col gap-1'>
                             <label className='text-xs font-bold text-gray-400 uppercase'>City</label>
-                            <input type="text" name='city' value={formData.city} onChange={handleChange} className='p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-black transition-all' />
+                            <input type="text" name='city' value={formData.city} onChange={handleChange} className='p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-pink-500 transition-all' />
                         </div>
                         <div className='flex flex-col gap-1'>
                             <label className='text-xs font-bold text-gray-400 uppercase'>Country</label>
-                            <input type="text" name='country' value={formData.country} onChange={handleChange} className='p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-black transition-all' />
+                            <input type="text" name='country' value={formData.country} onChange={handleChange} className='p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-pink-500 transition-all' />
                         </div>
                     </div>
                 </div>
@@ -146,22 +146,22 @@ const WebsiteDetails = () => {
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                 {/* Social Links */}
                 <div className='flex flex-col gap-4'>
-                    <h3 className='text-xs font-bold uppercase text-indigo-600 tracking-wider'>Social Presence</h3>
+                    <h3 className='text-xs font-bold uppercase text-pink-600 tracking-wider'>Social Presence</h3>
                     <div className='grid grid-cols-2 gap-4'>
                         <div className='flex flex-col gap-1'>
                             <label className='text-xs font-bold text-gray-400 uppercase'>Facebook</label>
-                            <input name="facebook" value={formData.facebook} onChange={handleChange} className='p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-black transition-all' type='text'/>
+                            <input name="facebook" value={formData.facebook} onChange={handleChange} className='p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-pink-500 transition-all' type='text'/>
                         </div>
                         <div className='flex flex-col gap-1'>
                             <label className='text-xs font-bold text-gray-400 uppercase'>Instagram</label>
-                            <input name="instagram" value={formData.instagram} onChange={handleChange} className='p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-black transition-all' type='text'/>
+                            <input name="instagram" value={formData.instagram} onChange={handleChange} className='p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-pink-500 transition-all' type='text'/>
                         </div>
                     </div>
                 </div>
 
                 {/* UI & Flags */}
                 <div className='flex flex-col gap-4'>
-                    <h3 className='text-xs font-bold uppercase text-indigo-600 tracking-wider'>Preferences</h3>
+                    <h3 className='text-xs font-bold uppercase text-pink-600 tracking-wider'>Preferences</h3>
                     <div className='grid grid-cols-2 gap-4'>
                         <div className='flex flex-col gap-1'>
                             <label className='text-xs font-bold text-gray-400 uppercase'>Primary Color</label>
@@ -172,12 +172,12 @@ const WebsiteDetails = () => {
                         </div>
                         <div className='flex flex-col gap-4 pt-4'>
                             <label className='flex items-center gap-3 cursor-pointer group'>
-                                <input type="checkbox" name="is_public" checked={formData.is_public} onChange={handleChange} className='w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600'/>
-                                <span className='text-sm font-medium text-gray-700 group-hover:text-black transition-colors'>Public Website</span>
+                                <input type="checkbox" name="is_public" checked={formData.is_public} onChange={handleChange} className='w-5 h-5 rounded border-gray-300 text-pink-600 focus:ring-indigo-600'/>
+                                <span className='text-sm font-medium text-gray-700 group-hover:text-pink-600 transition-colors'>Public Website</span>
                             </label>
                             <label className='flex items-center gap-3 cursor-pointer group'>
-                                <input type="checkbox" name="is_store_enabled" checked={formData.is_store_enabled} onChange={handleChange} className='w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600'/>
-                                <span className='text-sm font-medium text-gray-700 group-hover:text-black transition-colors'>Enable Store</span>
+                                <input type="checkbox" name="is_store_enabled" checked={formData.is_store_enabled} onChange={handleChange} className='w-5 h-5 rounded border-gray-300 text-pink-600 focus:ring-indigo-600'/>
+                                <span className='text-sm font-medium text-gray-700 group-hover:text-pink-600 transition-colors'>Enable Store</span>
                             </label>
                         </div>
                     </div>

@@ -15,13 +15,18 @@ const paymentOptions = [
     { id: 'bkash', label: 'bKash', color: 'bg-[#e2136e]' },
     { id: 'nagad', label: 'Nagad', color: 'bg-[#f69220]' },
     { id: 'rocket', label: 'Rocket', color: 'bg-[#8c3494]' },
-    { id: 'card', label: 'Card', color: 'bg-indigo-600' },
+    { id: 'card', label: 'Card', color: 'bg-pink-600' },
     { id: 'cash', label: 'Cash on Delivery', color: 'bg-slate-800' }
 ]
 
 const UserOrderForm = () => {
     const { subTotal, totalPrice, totalDiscount, addToCart, removeFromCart, decreaseQuantity, clearCart, userData, cart } = useContext(Context)
     const [loading, setLoading] = useState(false)
+    const [isMounted, setIsMounted] = useState(false)
+
+    useEffect(() => {
+        setIsMounted(true)
+    }, [])
 
     const [formData, setFormData] = useState({
         name: '',
@@ -70,7 +75,9 @@ const UserOrderForm = () => {
         }
     }
 
-    if (cart?.items.length === 0) {
+    if (!isMounted) return null;
+
+    if (cart?.items?.length === 0) {
         return (
             <div className='w-full min-h-[60vh] flex flex-col items-center justify-center gap-10 pt-20 px-6 bg-white rounded-[3rem] shadow-2xl'>
                 <div className='w-32 h-32 bg-slate-50 rounded-[3rem] flex items-center justify-center text-6xl shadow-inner'>🥣</div>
@@ -78,7 +85,7 @@ const UserOrderForm = () => {
                     <h2 className='text-4xl font-black text-slate-900 tracking-tighter'>The kitchen is quiet...</h2>
                     <p className='text-slate-400 font-medium max-w-sm'>Your cart is waiting for some delicious flavors. Let's find something amazing for you.</p>
                 </div>
-                <Link href={'/menu'} className='px-12 py-5 bg-black text-white rounded-2xl font-black text-sm uppercase tracking-[0.2em] hover:bg-slate-800 transition-all shadow-2xl shadow-black/20'>Explore Menu</Link>
+                <Link href={'/menu'} className='px-12 py-5 bg-pink-500 text-white rounded-2xl font-black text-sm uppercase tracking-[0.2em] hover:bg-slate-800 transition-all shadow-2xl shadow-pink-900/20'>Explore Menu</Link>
             </div>
         )
     }
@@ -89,7 +96,7 @@ const UserOrderForm = () => {
                 
                 {/* Header */}
                 <div className='flex items-center gap-6'>
-                    <Link href="/menu" className='p-4 bg-white rounded-2xl border border-slate-100 text-slate-300 hover:text-black hover:shadow-2xl transition-all'>
+                    <Link href="/menu" className='p-4 bg-white rounded-2xl border border-slate-100 text-slate-300 hover:text-pink-600 hover:shadow-2xl transition-all'>
                         <MdArrowBack size={28} />
                     </Link>
                     <div>
@@ -104,19 +111,19 @@ const UserOrderForm = () => {
                     <div className='lg:col-span-7 flex flex-col gap-12'>
                         
                         {/* 1. Personal Information */}
-                        <section className='bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-2xl shadow-black/[0.02] space-y-8'>
+                        <section className='bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-2xl shadow-pink-900/[0.02] space-y-8'>
                             <div className='flex items-center gap-4 border-b border-slate-50 pb-6'>
-                                <div className='w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center shadow-sm'><MdPerson size={20}/></div>
+                                <div className='w-10 h-10 bg-pink-50 text-pink-600 rounded-xl flex items-center justify-center shadow-sm'><MdPerson size={20}/></div>
                                 <h2 className='text-2xl font-black text-slate-800 tracking-tight'>Recipient Details</h2>
                             </div>
                             <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
                                 <div className='flex flex-col gap-2'>
                                     <label className='text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] ml-1'>Full Name</label>
-                                    <input type="text" name='name' required onChange={handleChange} value={formData.name} className='w-full p-5 bg-slate-50 border-none rounded-2xl outline-none focus:ring-2 focus:ring-black/5 transition-all font-bold text-slate-700' placeholder='Your name' />
+                                    <input type="text" name='name' required onChange={handleChange} value={formData.name} className='w-full p-5 bg-slate-50 border-none rounded-2xl outline-none focus:ring-2 focus:ring-pink-500/5 transition-all font-bold text-slate-700' placeholder='Your name' />
                                 </div>
                                 <div className='flex flex-col gap-2'>
                                     <label className='text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] ml-1'>Phone Number</label>
-                                    <input type="text" name='phone' required onChange={handleChange} value={formData.phone} className='w-full p-5 bg-slate-50 border-none rounded-2xl outline-none focus:ring-2 focus:ring-black/5 transition-all font-bold text-slate-700' placeholder='Primary contact' />
+                                    <input type="text" name='phone' required onChange={handleChange} value={formData.phone} className='w-full p-5 bg-slate-50 border-none rounded-2xl outline-none focus:ring-2 focus:ring-pink-500/5 transition-all font-bold text-slate-700' placeholder='Primary contact' />
                                 </div>
                             </div>
                         </section>
@@ -132,7 +139,7 @@ const UserOrderForm = () => {
                             </div>
                             <div className='flex flex-col gap-5'>
                                 {cart?.items.map((item) => (
-                                    <div key={item.cartItemId} className='bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-2xl shadow-black/[0.01] flex items-center gap-8 group hover:shadow-2xl hover:shadow-black/[0.03] transition-all duration-500'>
+                                    <div key={item.cartItemId} className='bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-2xl shadow-pink-900/[0.01] flex items-center gap-8 group hover:shadow-2xl hover:shadow-pink-900/[0.03] transition-all duration-500'>
                                         <div className='w-28 h-28 rounded-2xl overflow-hidden shadow-sm flex-shrink-0 bg-slate-50'>
                                             <Image src={item?.image} alt={item.title} width={150} height={150} className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-700' />
                                         </div>
@@ -143,7 +150,7 @@ const UserOrderForm = () => {
                                                     {item.selectedVariants && (
                                                         <div className="flex flex-wrap gap-1.5 mt-2">
                                                             {Object.values(item.selectedVariants).map(v => (
-                                                                <span key={v.id} className='text-[9px] font-black text-indigo-500 uppercase tracking-wider bg-indigo-50 px-2 py-0.5 rounded-full'>
+                                                                <span key={v.id} className='text-[9px] font-black text-pink-500 uppercase tracking-wider bg-pink-50 px-2 py-0.5 rounded-full'>
                                                                     {v.value}
                                                                 </span>
                                                             ))}
@@ -154,9 +161,9 @@ const UserOrderForm = () => {
                                             </div>
                                             <div className='flex items-center justify-between mt-6'>
                                                 <div className='flex items-center gap-6 bg-slate-50 rounded-2xl px-6 py-2.5 border border-transparent hover:border-slate-100 transition-all'>
-                                                    <button className='text-slate-400 hover:text-black font-black text-xl' onClick={() => decreaseQuantity(item.cartItemId)}>-</button>
+                                                    <button className='text-slate-400 hover:text-pink-600 font-black text-xl' onClick={() => decreaseQuantity(item.cartItemId)}>-</button>
                                                     <span className='font-black text-slate-900 w-6 text-center'>{item.quantity}</span>
-                                                    <button className='text-slate-400 hover:text-black font-black text-xl' onClick={() => addToCart(item)}>+</button>
+                                                    <button className='text-slate-400 hover:text-pink-600 font-black text-xl' onClick={() => addToCart(item)}>+</button>
                                                 </div>
                                                 <button className='p-3 text-slate-200 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-all cursor-pointer' onClick={() => removeFromCart(item.cartItemId)}><MdDeleteOutline size={24} /></button>
                                             </div>
@@ -185,7 +192,7 @@ const UserOrderForm = () => {
                                             onClick={() => setFormData(p => ({...p, delivery_method: opt.id}))}
                                             className={`p-6 rounded-[2rem] border-2 transition-all flex flex-col items-center gap-3 cursor-pointer ${
                                                 formData.delivery_method === opt.id 
-                                                ? 'border-black bg-slate-50 shadow-inner' 
+                                                ? 'border-pink-500 bg-slate-50 shadow-inner' 
                                                 : 'border-slate-50 hover:border-slate-100'
                                             }`}
                                         >
@@ -198,7 +205,7 @@ const UserOrderForm = () => {
 
                             <div className='space-y-6 border-t border-slate-50 pt-10'>
                                 <div className='flex items-center gap-3'>
-                                    <div className='w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center shadow-sm'><MdPayment size={20}/></div>
+                                    <div className='w-10 h-10 bg-pink-50 text-pink-600 rounded-xl flex items-center justify-center shadow-sm'><MdPayment size={20}/></div>
                                     <h2 className='text-xl font-black text-slate-800 tracking-tight'>Payment Mode</h2>
                                 </div>
                                 <div className='grid grid-cols-3 gap-3'>
@@ -209,7 +216,7 @@ const UserOrderForm = () => {
                                             onClick={() => setFormData(p => ({...p, payment_method: opt.id}))}
                                             className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center justify-center gap-2 cursor-pointer ${
                                                 formData.payment_method === opt.id 
-                                                ? 'border-black bg-slate-50' 
+                                                ? 'border-pink-500 bg-slate-50' 
                                                 : 'border-slate-50 hover:border-slate-100'
                                             }`}
                                         >
@@ -229,7 +236,7 @@ const UserOrderForm = () => {
                                             onChange={handleChange} 
                                             value={formData.transaction_id} 
                                             placeholder="Enter Transaction ID"
-                                            className='w-full p-5 bg-slate-50 border-none rounded-2xl outline-none focus:ring-2 focus:ring-black/5 transition-all font-bold text-slate-700' 
+                                            className='w-full p-5 bg-slate-50 border-none rounded-2xl outline-none focus:ring-2 focus:ring-pink-500/5 transition-all font-bold text-slate-700' 
                                         />
                                     </div>
                                 )}
@@ -254,7 +261,7 @@ const UserOrderForm = () => {
                             <button 
                                 onClick={handleOrder}
                                 disabled={loading}
-                                className='w-full py-6 bg-black text-white rounded-[2rem] font-black text-sm uppercase tracking-[0.2em] hover:bg-slate-800 transition-all shadow-[0_20px_60px_rgba(0,0,0,0.2)] active:scale-[0.98] disabled:opacity-50 mt-6'
+                                className='w-full py-6 bg-pink-500 text-white rounded-[2rem] font-black text-sm uppercase tracking-[0.2em] hover:bg-slate-800 transition-all shadow-[0_20px_60px_rgba(0,0,0,0.2)] active:scale-[0.98] disabled:opacity-50 mt-6'
                             >
                                 {loading ? 'CONFIRMING ORDER...' : 'FINALIZE ORDER'}
                             </button>

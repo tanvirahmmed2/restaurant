@@ -20,7 +20,7 @@ const Latest = () => {
 
   if (!products || products.length === 0) return console.log('No product found')
   return (
-    <div className='w-full flex flex-col items-center justify-center p-4 gap-4 '>
+    <div className='max-w-7xl mx-auto px-6 space-y-16'>
       <h1 className='text-3xl text-center '>Top Picks</h1>
       {
         products && <div className='w-full grid grid-cols-2 h-full sm:grid-cols-3 md:grid-cols-4 gap-4'>

@@ -15,7 +15,7 @@ const Categories = () => {
                 
                 {/* Header */}
                 <div className='text-center space-y-4'>
-                    <div className='inline-flex items-center gap-2 text-indigo-600 font-black uppercase tracking-[0.3em] text-[10px]'>
+                    <div className='inline-flex items-center gap-2 text-pink-600 font-black uppercase tracking-[0.3em] text-[10px]'>
                         <MdExplore className='text-lg' />
                         Discover Flavors
                     </div>
@@ -35,7 +35,7 @@ const Categories = () => {
                                 className='group'
                             >
                                 <Link href={`/category/${cat.slug}`} className='flex flex-col items-center gap-4 text-center'>
-                                    <div className='relative w-full aspect-square rounded-full overflow-hidden border-4 border-white shadow-xl group-hover:shadow-2xl group-hover:border-indigo-100 transition-all duration-500'>
+                                    <div className='relative w-full aspect-square rounded-full overflow-hidden border-4 border-white shadow-xl group-hover:shadow-2xl group-hover:border-pink-100 transition-all duration-500'>
                                         <Image 
                                             src={cat?.image} 
                                             alt={cat.name} 
@@ -43,10 +43,10 @@ const Categories = () => {
                                             height={400} 
                                             className='w-full h-full object-cover transition-transform duration-700 group-hover:scale-110' 
                                         />
-                                        <div className='absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors' />
+                                        <div className='absolute inset-0 bg-pink-500/0 group-hover:bg-pink-500/20 transition-colors' />
                                     </div>
                                     <div className='space-y-1'>
-                                        <h3 className='text-lg font-black text-gray-900 tracking-tight group-hover:text-indigo-600 transition-colors'>{cat?.name}</h3>
+                                        <h3 className='text-lg font-black text-gray-900 tracking-tight group-hover:text-pink-600 transition-colors'>{cat?.name}</h3>
                                         <p className='text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]'>Explore Items</p>
                                     </div>
                                 </Link>

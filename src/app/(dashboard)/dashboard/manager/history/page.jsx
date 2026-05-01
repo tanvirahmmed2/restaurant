@@ -2,11 +2,13 @@
 import { generateReceipt } from '@/lib/database/print'
 import axios from 'axios'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import toast from 'react-hot-toast'
+import { Context } from '@/components/context/Context'
 import { MdHistory, MdPrint, MdVisibility, MdDeleteSweep } from 'react-icons/md'
 
 const DeliveredOrder = () => {
+  const { siteData } = useContext(Context)
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -103,7 +105,7 @@ const DeliveredOrder = () => {
                   ৳{order.total_price}
                 </div>
                 <div className='col-span-2 flex items-center justify-end gap-2'>
-                  <button className='p-2 text-gray-400 hover:text-black transition-colors' onClick={() => generateReceipt(order)} title="Print"><MdPrint size={18}/></button>
+                  <button className='p-2 text-gray-400 hover:text-pink-600 transition-colors' onClick={() => generateReceipt(order, siteData)} title="Print"><MdPrint size={18}/></button>
                   <button className='p-2 text-gray-400 hover:text-rose-600 transition-colors' onClick={() => handleDelete(order.id)} title="Delete"><MdDeleteSweep size={18}/></button>
                 </div>
               </div>

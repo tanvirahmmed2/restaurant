@@ -49,7 +49,7 @@ const UpdateUserForm = () => {
                             required 
                             onChange={handleChange} 
                             value={formData.name} 
-                            className='w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-black focus:bg-white transition-all text-sm' 
+                            className='w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-pink-500 focus:bg-white transition-all text-sm' 
                         />
                     </div>
                 </div>
@@ -65,7 +65,7 @@ const UpdateUserForm = () => {
                             onChange={handleChange} 
                             required 
                             value={formData.email} 
-                            className='w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-black focus:bg-white transition-all text-sm' 
+                            className='w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-pink-500 focus:bg-white transition-all text-sm' 
                         />
                     </div>
                 </div>
@@ -81,7 +81,7 @@ const UpdateUserForm = () => {
                             id='password' 
                             value={formData.password} 
                             placeholder="Leave blank to keep current"
-                            className='w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-black focus:bg-white transition-all text-sm' 
+                            className='w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-pink-500 focus:bg-white transition-all text-sm' 
                         />
                     </div>
                 </div>
@@ -90,7 +90,7 @@ const UpdateUserForm = () => {
             <button 
                 type='submit'
                 disabled={loading}
-                className='w-full py-4 bg-black text-white rounded-2xl font-black text-sm hover:bg-gray-800 transition-all shadow-xl shadow-black/10 active:scale-[0.98] mt-4 disabled:opacity-50'
+                className='w-full py-4 bg-pink-500 text-white rounded-2xl font-black text-sm hover:bg-pink-600 transition-all shadow-xl shadow-pink-900/10 active:scale-[0.98] mt-4 disabled:opacity-50'
             >
                 {loading ? 'SAVING CHANGES...' : 'SAVE CHANGES'}
             </button>

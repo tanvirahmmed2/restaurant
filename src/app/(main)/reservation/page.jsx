@@ -56,7 +56,7 @@ const Reservation = () => {
           className='space-y-8'
         >
           <div className='space-y-4'>
-            <div className='inline-block px-4 py-1 bg-black text-white text-[10px] font-semibold uppercase tracking-widest rounded-full'>
+            <div className='inline-block px-4 py-1 bg-pink-500 text-white text-[10px] font-semibold uppercase tracking-widest rounded-full'>
               Reservations
             </div>
             <h1 className='text-5xl md:text-6xl font-semibold text-gray-900 tracking-tight leading-tight'>
@@ -104,41 +104,41 @@ const Reservation = () => {
             <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
               <div className='flex flex-col gap-1.5'>
                 <label htmlFor="name" className='text-[10px] font-semibold uppercase text-gray-400 tracking-widest ml-1'>Name</label>
-                <input type="text" id='name' name='name' required onChange={handleChange} value={formData.name} className='w-full px-4 py-2.5 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-black transition-all text-sm font-semibold' placeholder="John Doe" />
+                <input type="text" id='name' name='name' required onChange={handleChange} value={formData.name} className='w-full px-4 py-2.5 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-pink-500 transition-all text-sm font-semibold' placeholder="John Doe" />
               </div>
               
               <div className='flex flex-col gap-1.5'>
                 <label htmlFor="email" className='text-[10px] font-semibold uppercase text-gray-400 tracking-widest ml-1'>Email</label>
-                <input type="email" id='email' name='email' required onChange={handleChange} value={formData.email} className='w-full px-4 py-2.5 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-black transition-all text-sm font-semibold' placeholder="john@example.com" />
+                <input type="email" id='email' name='email' required onChange={handleChange} value={formData.email} className='w-full px-4 py-2.5 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-pink-500 transition-all text-sm font-semibold' placeholder="john@example.com" />
               </div>
             </div>
 
             <div className='grid grid-cols-1 md:grid-cols-3 gap-5'>
               <div className='flex flex-col gap-1.5'>
                 <label htmlFor="date" className='text-[10px] font-semibold uppercase text-gray-400 tracking-widest ml-1'>Date</label>
-                <input type="date" id='date' name='date' required onChange={handleChange} value={formData.date} className='w-full px-4 py-2.5 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-black transition-all text-sm font-semibold' />
+                <input type="date" id='date' name='date' required onChange={handleChange} value={formData.date} className='w-full px-4 py-2.5 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-pink-500 transition-all text-sm font-semibold' />
               </div>
 
               <div className='flex flex-col gap-1.5'>
                 <label htmlFor="member" className='text-[10px] font-semibold uppercase text-gray-400 tracking-widest ml-1'>Guests</label>
-                <input type="number" id='member' name='member' min="1" required onChange={handleChange} value={formData.member} className='w-full px-4 py-2.5 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-black transition-all text-sm font-semibold' placeholder="2" />
+                <input type="number" id='member' name='member' min="1" required onChange={handleChange} value={formData.member} className='w-full px-4 py-2.5 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-pink-500 transition-all text-sm font-semibold' placeholder="2" />
               </div>
 
               <div className='flex flex-col gap-1.5'>
                 <label htmlFor="table" className='text-[10px] font-semibold uppercase text-gray-400 tracking-widest ml-1'>Table</label>
-                <input type="number" id='table' name='table' required onChange={handleChange} value={formData.table} className='w-full px-4 py-2.5 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-black transition-all text-sm font-semibold' placeholder="5" />
+                <input type="number" id='table' name='table' required onChange={handleChange} value={formData.table} className='w-full px-4 py-2.5 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-pink-500 transition-all text-sm font-semibold' placeholder="5" />
               </div>
             </div>
 
             <div className='flex flex-col gap-1.5'>
               <label htmlFor="message" className='text-[10px] font-semibold uppercase text-gray-400 tracking-widest ml-1'>Notes (Optional)</label>
-              <textarea name="message" id="message" rows="2" onChange={handleChange} value={formData.message} className='w-full px-4 py-2.5 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-black transition-all text-sm font-semibold resize-none' placeholder="Allergies, anniversaries, etc." />
+              <textarea name="message" id="message" rows="2" onChange={handleChange} value={formData.message} className='w-full px-4 py-2.5 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-pink-500 transition-all text-sm font-semibold resize-none' placeholder="Allergies, anniversaries, etc." />
             </div>
 
             <button 
               type='submit' 
               disabled={loading}
-              className='w-full py-3.5 bg-black text-white rounded-xl font-semibold text-xs uppercase tracking-widest hover:bg-gray-800 transition-all active:scale-[0.98] disabled:opacity-50 mt-2'
+              className='w-full py-3.5 bg-pink-500 text-white rounded-xl font-semibold text-xs uppercase tracking-widest hover:bg-pink-600 transition-all active:scale-[0.98] disabled:opacity-50 mt-2'
             >
               {loading ? 'Processing...' : 'Confirm Reservation'}
             </button>

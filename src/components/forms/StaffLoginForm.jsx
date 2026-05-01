@@ -31,13 +31,13 @@ const StaffLoginForm = () => {
     <form onSubmit={loginHandle} className='flex-1 flex flex-col  gap-4'>
           <div className='w-full flex flex-col'>
             <label htmlFor="email">Email</label>
-            <input type="email" id='email' name='email' required value={formData.email} onChange={handleChange} className='w-full px-3 p-1 rounded-lg outline-none border border-black/10'/>
+            <input type="email" id='email' name='email' required value={formData.email} onChange={handleChange} className='w-full px-3 p-1 rounded-lg outline-none border border-pink-500/10'/>
           </div>
           <div className='w-full flex flex-col'>
             <label htmlFor="password">Password</label>
-            <input type="password" id='password' name='password' required value={formData.password} onChange={handleChange} className='w-full px-3 p-1 rounded-lg outline-none border border-black/10'/>
+            <input type="password" id='password' name='password' required value={formData.password} onChange={handleChange} className='w-full px-3 p-1 rounded-lg outline-none border border-pink-500/10'/>
           </div>
-          <button type='submit' className='bg-black/80 hover:bg-black text-white rounded-lg cursor-pointer '>Next</button>
+          <button type='submit' className='bg-pink-500/80 hover:bg-pink-500 text-white rounded-lg cursor-pointer '>Next</button>
         </form>
   )
 }

@@ -86,19 +86,19 @@ const AdminSettings = () => {
                     <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="flex flex-col gap-1.5">
                             <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Website Name</label>
-                            <input name="name" value={website.name} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-black outline-none transition-all" />
+                            <input name="name" value={website.name} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-pink-500 outline-none transition-all" />
                         </div>
                         <div className="flex flex-col gap-1.5">
                             <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Business Legal Name</label>
-                            <input name="business_name" value={website.business_name} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-black outline-none transition-all" />
+                            <input name="business_name" value={website.business_name} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-pink-500 outline-none transition-all" />
                         </div>
                         <div className="flex flex-col gap-1.5">
                             <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Support Email</label>
-                            <input name="email" value={website.email} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-black outline-none transition-all" />
+                            <input name="email" value={website.email} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-pink-500 outline-none transition-all" />
                         </div>
                         <div className="flex flex-col gap-1.5">
                             <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Contact Phone</label>
-                            <input name="phone" value={website.phone} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-black outline-none transition-all" />
+                            <input name="phone" value={website.phone} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-pink-500 outline-none transition-all" />
                         </div>
                     </div>
                 </div>
@@ -112,25 +112,25 @@ const AdminSettings = () => {
                     <div className="p-6 flex flex-col gap-6">
                         <div className="flex flex-col gap-1.5">
                             <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Full Address</label>
-                            <input name="address" value={website.address} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-black outline-none transition-all" />
+                            <input name="address" value={website.address} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-pink-500 outline-none transition-all" />
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="flex flex-col gap-1.5">
                                 <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">City</label>
-                                <input name="city" value={website.city} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-black outline-none transition-all" />
+                                <input name="city" value={website.city} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-pink-500 outline-none transition-all" />
                             </div>
                             <div className="flex flex-col gap-1.5">
                                 <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Country</label>
-                                <input name="country" value={website.country} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-black outline-none transition-all" />
+                                <input name="country" value={website.country} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-pink-500 outline-none transition-all" />
                             </div>
                         </div>
                         <div className="flex flex-col gap-1.5">
                             <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">SEO Title Tag</label>
-                            <input name="meta_title" value={website.meta_title} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-black outline-none transition-all" />
+                            <input name="meta_title" value={website.meta_title} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-pink-500 outline-none transition-all" />
                         </div>
                         <div className="flex flex-col gap-1.5">
                             <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">SEO Meta Description</label>
-                            <textarea name="meta_description" value={website.meta_description} onChange={handleChange} rows={3} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-black outline-none transition-all resize-none" />
+                            <textarea name="meta_description" value={website.meta_description} onChange={handleChange} rows={3} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-pink-500 outline-none transition-all resize-none" />
                         </div>
                     </div>
                 </div>
@@ -145,15 +145,15 @@ const AdminSettings = () => {
                         <div className="p-6 flex flex-col gap-4">
                             <div className="flex flex-col gap-1.5">
                                 <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Facebook URL</label>
-                                <input name="facebook" value={website.facebook} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-black outline-none transition-all" />
+                                <input name="facebook" value={website.facebook} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-pink-500 outline-none transition-all" />
                             </div>
                             <div className="flex flex-col gap-1.5">
                                 <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Instagram URL</label>
-                                <input name="instagram" value={website.instagram} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-black outline-none transition-all" />
+                                <input name="instagram" value={website.instagram} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-pink-500 outline-none transition-all" />
                             </div>
                             <div className="flex flex-col gap-1.5">
                                 <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">YouTube URL</label>
-                                <input name="youtube" value={website.youtube} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-black outline-none transition-all" />
+                                <input name="youtube" value={website.youtube} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-pink-500 outline-none transition-all" />
                             </div>
                         </div>
                     </div>
@@ -186,7 +186,7 @@ const AdminSettings = () => {
                     <button 
                         type="submit" 
                         disabled={saving}
-                        className="flex items-center gap-2 px-8 py-3 bg-black text-white rounded-xl font-semibold text-sm hover:bg-gray-800 transition-all active:scale-[0.98] disabled:opacity-50"
+                        className="flex items-center gap-2 px-8 py-3 bg-pink-500 text-white rounded-xl font-semibold text-sm hover:bg-pink-600 transition-all active:scale-[0.98] disabled:opacity-50"
                     >
                         {saving ? (
                             <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>

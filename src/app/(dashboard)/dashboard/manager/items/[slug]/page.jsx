@@ -16,7 +16,7 @@ const UpdateItem = async ({ params }) => {
 
   return (
     <div className='w-full flex flex-col items-center p-4 gap-6'>
-      <h1 className='text-xl text-center border-b-2 border-black/10 w-full py-2'>Update Item Information</h1>
+      <h1 className='text-xl text-center border-b-2 border-pink-500/10 w-full py-2'>Update Item Information</h1>
       <UpdateItemForm product={product}/>
     </div>
   )

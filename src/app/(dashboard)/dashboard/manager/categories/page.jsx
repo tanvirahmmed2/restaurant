@@ -32,7 +32,7 @@ const CategorListPage = () => {
         </div>
         <Link 
           href="/dashboard/manager/new-category" 
-          className='flex items-center gap-2 px-5 py-2.5 bg-black text-white rounded-xl font-semibold text-sm hover:bg-gray-800 transition-all active:scale-[0.98]'
+          className='flex items-center gap-2 px-5 py-2.5 bg-pink-500 text-white rounded-xl font-semibold text-sm hover:bg-pink-600 transition-all active:scale-[0.98]'
         >
           <FaPlus size={12}/>
           <span>Add Category</span>
@@ -49,7 +49,7 @@ const CategorListPage = () => {
             
             <div className='flex flex-col gap-1.5'>
               {categories.map((cat) => (
-                <div key={cat.id} className='w-full grid grid-cols-12 p-3 items-center bg-white border border-gray-100 rounded-xl hover:border-black transition-all group'>
+                <div key={cat.id} className='w-full grid grid-cols-12 p-3 items-center bg-white border border-gray-100 rounded-xl hover:border-pink-500 transition-all group'>
                   <div className='col-span-10 flex items-center gap-3'>
                     <div className='w-10 h-10 rounded-lg overflow-hidden border border-gray-50'>
                       <Image src={cat?.image} alt={cat?.name} width={40} height={40} className='object-cover w-full h-full'/>
@@ -57,7 +57,7 @@ const CategorListPage = () => {
                     <p className='font-semibold text-gray-800 text-sm'>{cat?.name}</p>
                   </div>
                   <div className='col-span-2 flex flex-row items-center justify-end gap-2'>
-                    <button className='p-2 text-gray-400 hover:text-black transition-colors'><MdEdit/></button>
+                    <button className='p-2 text-gray-400 hover:text-pink-600 transition-colors'><MdEdit/></button>
                     <button className='p-2 text-rose-300 hover:text-rose-600 transition-colors' onClick={() => handleDelete(cat.id)}><MdDeleteOutline /></button>
                   </div>
                 </div>

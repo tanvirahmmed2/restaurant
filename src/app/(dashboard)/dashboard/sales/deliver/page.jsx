@@ -2,10 +2,12 @@
 import { generateReceipt } from '@/lib/database/print'
 import axios from 'axios'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import toast from 'react-hot-toast'
+import { Context } from '@/components/context/Context'
 
 const DeliverOrder = () => {
+  const { siteData } = useContext(Context)
   const [orders, setOrders] = useState([])
 
   const fethcOrders = async () => {
@@ -69,7 +71,7 @@ const DeliverOrder = () => {
                   </div>
                   <div className='col-span-2 flex flex-col gap-1'>
                     {
-                      order.items.map((item) => (
+                      order?.items?.map((item) => (
                         <p key={item.id} className='text-[10px] text-gray-600 line-clamp-1'>
                           {item.quantity}x {item.title}
                         </p>
@@ -87,10 +89,10 @@ const DeliverOrder = () => {
                   <p className='col-span-1 text-[10px] uppercase font-bold text-gray-400'>{order.payment_method}</p>
                   
                   <div className='col-span-2 flex flex-row items-center justify-end gap-2'>
-                    <Link href={`/dashboard/sales/orders/${order.id}`} className='p-2 bg-gray-50 text-gray-600 rounded-lg hover:bg-black hover:text-white transition-all'>
+                    <Link href={`/dashboard/sales/orders/${order.id}`} className='p-2 bg-gray-50 text-gray-600 rounded-lg hover:bg-pink-500 hover:text-white transition-all'>
                       View
                     </Link>
-                    <button className='p-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-600 hover:text-white transition-all' onClick={() => generateReceipt(order)}>
+                    <button className='p-2 bg-pink-50 text-pink-600 rounded-lg hover:bg-pink-600 hover:text-white transition-all' onClick={() => generateReceipt(order, siteData)}>
                       Print
                     </button>
                     <button className='p-2 bg-emerald-50 text-emerald-600 rounded-lg hover:bg-emerald-600 hover:text-white transition-all' onClick={() => handleDeliver(order.id)}>

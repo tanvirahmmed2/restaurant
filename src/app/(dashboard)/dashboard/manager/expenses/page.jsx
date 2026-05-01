@@ -50,7 +50,7 @@ const Expenses = () => {
         </div>
         <Link 
           href="/dashboard/manager/new-expense" 
-          className='flex items-center gap-2 px-5 py-2.5 bg-black text-white rounded-xl font-semibold text-sm hover:bg-gray-800 transition-all active:scale-[0.98]'
+          className='flex items-center gap-2 px-5 py-2.5 bg-pink-500 text-white rounded-xl font-semibold text-sm hover:bg-pink-600 transition-all active:scale-[0.98]'
         >
           <MdDeleteOutline size={16} className="rotate-45" />
           <span>New Expense</span>
@@ -69,7 +69,7 @@ const Expenses = () => {
 
         <div className='flex flex-col gap-1.5'>
           {expenses.map((e) => (
-            <div key={e.id} className='w-full grid grid-cols-12 p-3 items-center bg-white border border-gray-100 rounded-xl hover:border-black transition-all group'>
+            <div key={e.id} className='w-full grid grid-cols-12 p-3 items-center bg-white border border-gray-100 rounded-xl hover:border-pink-500 transition-all group'>
               <p className='col-span-1 text-[10px] font-semibold text-gray-400 uppercase'>#{String(e.id).padStart(4, '0')}</p>
               <p className='col-span-2 text-xs text-gray-500'>{new Date(e.created_at).toLocaleDateString()}</p>
               <p className='col-span-2 font-semibold text-gray-800 text-sm'>{e.title}</p>

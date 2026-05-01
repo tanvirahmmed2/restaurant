@@ -75,7 +75,7 @@ const ManageUser = () => {
               id="role" 
               value={role} 
               onChange={(e) => setRole(e.target.value)}
-              className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-indigo-500 transition-colors cursor-pointer appearance-none"
+              className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-pink-500 transition-colors cursor-pointer appearance-none"
             >
               <option value="user">User (Customer)</option>
               <option value="sales">Sales (POS & Orders)</option>
@@ -88,7 +88,7 @@ const ManageUser = () => {
           <button 
             type="submit" 
             disabled={loading || role === staff.role}
-            className="flex items-center justify-center gap-2 w-full py-4 bg-black text-white rounded-xl font-bold hover:bg-gray-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center justify-center gap-2 w-full py-4 bg-pink-500 text-white rounded-xl font-bold hover:bg-pink-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <MdSave size={20} />
             {loading ? 'Updating...' : 'Save Changes'}

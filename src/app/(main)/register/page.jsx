@@ -20,7 +20,7 @@ const RegistrationPage = () => {
                     transition={{ duration: 0.8 }} 
                     className='hidden lg:flex flex-col gap-6'
                 >
-                    <div className='inline-block w-fit px-4 py-1 bg-black text-white text-[10px] font-semibold uppercase tracking-widest rounded-full'>
+                    <div className='inline-block w-fit px-4 py-1 bg-pink-500 text-white text-[10px] font-semibold uppercase tracking-widest rounded-full'>
                         {siteData?.name || 'Grand Kitchen'}
                     </div>
                     <h1 className='text-6xl font-semibold text-gray-900 leading-[1.1] tracking-tight'>
@@ -33,7 +33,7 @@ const RegistrationPage = () => {
                     
                     <div className='flex items-center gap-4 mt-4'>
                         <div className='w-12 h-12 rounded-full bg-white border border-gray-100 flex items-center justify-center shadow-sm'>
-                            <div className='w-2 h-2 bg-black rounded-full' />
+                            <div className='w-2 h-2 bg-pink-500 rounded-full' />
                         </div>
                         <p className='text-xs font-semibold text-gray-400 uppercase tracking-widest'>Secure & Private</p>
                     </div>

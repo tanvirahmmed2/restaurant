@@ -1,5 +1,5 @@
 
-export const generateReceipt = (order) => {
+export const generateReceipt = (order, siteData = {}) => {
   if (!order) return;
   const iframe = document.createElement('iframe');
   iframe.style.display = 'none';
@@ -48,8 +48,8 @@ export const generateReceipt = (order) => {
       </head>
       <body>
         <div class="header">
-          <p class="store-name">Sara's Dine</p>
-          <p class="store-contact">Mymensingh</p>
+          <p class="store-name">${siteData?.name || "Restaurant"}</p>
+          <p class="store-contact">${siteData?.address || ""}</p>
           <p class="receipt-type">— Sales Receipt —</p>
         </div>
 

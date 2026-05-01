@@ -43,8 +43,8 @@ const ManageSidebar = () => {
   const linkStyle = (path) =>
     `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-semibold text-sm
      ${pathname === path
-      ? 'bg-black text-white shadow-lg shadow-black/10'
-      : 'text-gray-500 hover:bg-gray-50 hover:text-black'}`
+      ? 'bg-pink-500 text-white shadow-lg shadow-pink-900/10'
+      : 'text-gray-500 hover:bg-gray-50 hover:text-pink-600'}`
 
   const menuItems = useMemo(() => {
     const items = {
@@ -132,7 +132,7 @@ const ManageSidebar = () => {
 
       {/* Bottom Actions */}
       <div className="flex flex-col gap-1 pt-6 border-t border-gray-100">
-        <Link href="/" className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 font-semibold text-sm hover:bg-gray-50 hover:text-black transition-all">
+        <Link href="/" className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 font-semibold text-sm hover:bg-gray-50 hover:text-pink-600 transition-all">
           <span className="text-xl"><MdPublic /></span> Website
         </Link>
         <button

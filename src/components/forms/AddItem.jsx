@@ -86,19 +86,19 @@ const AddItem = () => {
             <div className='w-full flex flex-col gap-1.5'>
                 <label htmlFor="title" className='text-sm font-medium text-slate-700'>Title</label>
                 <input type="text" name='title' id='title' required value={formData.title} onChange={handleChange} 
-                    className='w-full p-2 px-3 outline-none border border-slate-300 rounded-lg focus:ring-2 focus:ring-black/5 focus:border-black transition-all' />
+                    className='w-full p-2 px-3 outline-none border border-slate-300 rounded-lg focus:ring-2 focus:ring-pink-500/5 focus:border-pink-500 transition-all' />
             </div>
 
             <div className='w-full flex flex-col gap-1.5'>
                 <label htmlFor="description" className='text-sm font-medium text-slate-700'>Description</label>
                 <textarea name='description' id='description' required value={formData.description} onChange={handleChange} 
-                    className='w-full p-2 px-3 outline-none border border-slate-300 rounded-lg focus:ring-2 focus:ring-black/5 focus:border-black transition-all resize-none' />
+                    className='w-full p-2 px-3 outline-none border border-slate-300 rounded-lg focus:ring-2 focus:ring-pink-500/5 focus:border-pink-500 transition-all resize-none' />
             </div>
 
             <div className='w-full flex flex-col gap-1.5'>
                 <label htmlFor="category_id" className='text-sm font-medium text-slate-700'>Category</label>
                 <select name="category_id" id="category_id" required value={formData.category_id} onChange={handleChange} 
-                    className='w-full p-2 px-3 outline-none border border-slate-300 rounded-lg focus:ring-2 focus:ring-black/5 focus:border-black transition-all bg-white'>
+                    className='w-full p-2 px-3 outline-none border border-slate-300 rounded-lg focus:ring-2 focus:ring-pink-500/5 focus:border-pink-500 transition-all bg-white'>
                     <option value="">--Select Category--</option>
                     {categories && categories.map((cat) => (
                         <option value={cat.id} key={cat.id}>{cat.name}</option>
@@ -110,12 +110,12 @@ const AddItem = () => {
                 <div className='w-1/2 flex flex-col gap-1.5'>
                     <label htmlFor="price" className='text-sm font-medium text-slate-700'>Price</label>
                     <input type="number" name='price' id='price' min={0} step="0.01" required value={formData.price} onChange={handleChange} 
-                        className='w-full p-2 px-3 outline-none border border-slate-300 rounded-lg focus:ring-2 focus:ring-black/5 focus:border-black transition-all' />
+                        className='w-full p-2 px-3 outline-none border border-slate-300 rounded-lg focus:ring-2 focus:ring-pink-500/5 focus:border-pink-500 transition-all' />
                 </div>
                 <div className='w-1/2 flex flex-col gap-1.5'>
                     <label htmlFor="discount" className='text-sm font-medium text-slate-700'>Discount Value</label>
                     <input type="number" name='discount' id='discount' min={0} value={formData.discount} onChange={handleChange} 
-                        className='w-full p-2 px-3 outline-none border border-slate-300 rounded-lg focus:ring-2 focus:ring-black/5 focus:border-black transition-all' />
+                        className='w-full p-2 px-3 outline-none border border-slate-300 rounded-lg focus:ring-2 focus:ring-pink-500/5 focus:border-pink-500 transition-all' />
                 </div>
             </div>
 
@@ -129,7 +129,7 @@ const AddItem = () => {
             <div className='w-full flex flex-col gap-4 mt-4 border-t border-slate-100 pt-4'>
                 <div className='flex items-center justify-between'>
                     <h3 className='text-lg font-bold text-slate-800'>Variants (Sizes/Add-ons)</h3>
-                    <button type='button' onClick={addVariantField} className='text-xs font-bold bg-black text-white px-3 py-1.5 rounded-lg hover:bg-slate-800 transition-all'>
+                    <button type='button' onClick={addVariantField} className='text-xs font-bold bg-pink-500 text-white px-3 py-1.5 rounded-lg hover:bg-slate-800 transition-all'>
                         + Add Variant
                     </button>
                 </div>
@@ -139,13 +139,13 @@ const AddItem = () => {
                         {variants.map((variant, index) => (
                             <div key={index} className='grid grid-cols-1 md:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl relative group'>
                                 <div className='flex flex-col gap-1'>
-                                    <input type="text" name="name" placeholder="Name (e.g. Size)" value={variant.name} onChange={(e) => handleVariantChange(index, e)} required className='w-full p-1.5 text-sm outline-none border border-slate-300 rounded-lg focus:border-black transition-all' />
+                                    <input type="text" name="name" placeholder="Name (e.g. Size)" value={variant.name} onChange={(e) => handleVariantChange(index, e)} required className='w-full p-1.5 text-sm outline-none border border-slate-300 rounded-lg focus:border-pink-500 transition-all' />
                                 </div>
                                 <div className='flex flex-col gap-1'>
-                                    <input type="text" name="value" placeholder="Value (e.g. Large)" value={variant.value} onChange={(e) => handleVariantChange(index, e)} required className='w-full p-1.5 text-sm outline-none border border-slate-300 rounded-lg focus:border-black transition-all' />
+                                    <input type="text" name="value" placeholder="Value (e.g. Large)" value={variant.value} onChange={(e) => handleVariantChange(index, e)} required className='w-full p-1.5 text-sm outline-none border border-slate-300 rounded-lg focus:border-pink-500 transition-all' />
                                 </div>
                                 <div className='flex flex-col gap-1'>
-                                    <input type="number" name="price_adjustment" placeholder="Extra Price" value={variant.price_adjustment} onChange={(e) => handleVariantChange(index, e)} className='w-full p-1.5 text-sm outline-none border border-slate-300 rounded-lg focus:border-black transition-all' />
+                                    <input type="number" name="price_adjustment" placeholder="Extra Price" value={variant.price_adjustment} onChange={(e) => handleVariantChange(index, e)} className='w-full p-1.5 text-sm outline-none border border-slate-300 rounded-lg focus:border-pink-500 transition-all' />
                                 </div>
                                 <div className='flex items-center gap-2'>
                                     <label className='flex items-center gap-2 text-xs font-medium text-slate-600 cursor-pointer'>
@@ -165,7 +165,7 @@ const AddItem = () => {
             <button 
                 type='submit' 
                 disabled={loading}
-                className={`w-full md:w-auto mt-2 bg-black text-white p-2 px-10 rounded-lg font-semibold shadow-md active:scale-95 transition-all ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-slate-800 cursor-pointer'}`}>
+                className={`w-full md:w-auto mt-2 bg-pink-500 text-white p-2 px-10 rounded-lg font-semibold shadow-md active:scale-95 transition-all ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-slate-800 cursor-pointer'}`}>
                 {loading ? 'Adding Item...' : 'Create Item'}
             </button>
         </form>

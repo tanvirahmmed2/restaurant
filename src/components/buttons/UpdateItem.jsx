@@ -7,7 +7,7 @@ import { FaEdit } from "react-icons/fa";
 const UpdateItem = ({slug}) => {
     
   return (
-    <Link href={`/dashboard/manager/items/${slug}`} className='text-blue-500 hover:text-blue-700 transition-colors'><FaEdit/></Link>
+    <Link href={`/dashboard/manager/items/${slug}`} className='text-pink-500 hover:text-pink-700 transition-colors'><FaEdit/></Link>
   )
 }
 

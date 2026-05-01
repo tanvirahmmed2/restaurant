@@ -43,7 +43,7 @@ const Menu = () => {
             onClick={() => setCategoryId('')}
             className={`px-8 py-3 rounded-full text-sm font-bold transition-all ${
               categoryId === '' 
-              ? 'bg-black text-white shadow-xl shadow-black/20 scale-105' 
+              ? 'bg-pink-500 text-white shadow-xl shadow-pink-900/20 scale-105' 
               : 'bg-white text-gray-600 hover:bg-gray-100'
             }`}
           >
@@ -55,7 +55,7 @@ const Menu = () => {
               onClick={() => setCategoryId(cat.id)}
               className={`px-8 py-3 rounded-full text-sm font-bold transition-all ${
                 categoryId === cat.id 
-                ? 'bg-black text-white shadow-xl shadow-black/20 scale-105' 
+                ? 'bg-pink-500 text-white shadow-xl shadow-pink-900/20 scale-105' 
                 : 'bg-white text-gray-600 hover:bg-gray-100'
               }`}
             >
@@ -68,7 +68,7 @@ const Menu = () => {
         <div className="w-full min-h-[400px]">
           {loading ? (
             <div className="w-full h-64 flex items-center justify-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pink-500"></div>
             </div>
           ) : (
             <AnimatePresence mode="wait">

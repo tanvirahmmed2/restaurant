@@ -39,8 +39,8 @@ const AdminOverview = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         
         {/* Revenue Card */}
-        <div className="bg-white p-5 rounded-xl border border-gray-100 flex flex-col gap-3 group hover:border-black transition-all duration-300">
-          <div className="w-10 h-10 bg-gray-50 text-gray-900 rounded-lg flex items-center justify-center text-xl transition-colors group-hover:bg-black group-hover:text-white">
+        <div className="bg-white p-5 rounded-xl border border-gray-100 flex flex-col gap-3 group hover:border-pink-500 transition-all duration-300">
+          <div className="w-10 h-10 bg-gray-50 text-gray-900 rounded-lg flex items-center justify-center text-xl transition-colors group-hover:bg-pink-500 group-hover:text-white">
             <MdTrendingUp />
           </div>
           <div>
@@ -50,8 +50,8 @@ const AdminOverview = () => {
         </div>
 
         {/* Orders Card */}
-        <div className="bg-white p-5 rounded-xl border border-gray-100 flex flex-col gap-3 group hover:border-black transition-all duration-300">
-          <div className="w-10 h-10 bg-gray-50 text-gray-900 rounded-lg flex items-center justify-center text-xl transition-colors group-hover:bg-black group-hover:text-white">
+        <div className="bg-white p-5 rounded-xl border border-gray-100 flex flex-col gap-3 group hover:border-pink-500 transition-all duration-300">
+          <div className="w-10 h-10 bg-gray-50 text-gray-900 rounded-lg flex items-center justify-center text-xl transition-colors group-hover:bg-pink-500 group-hover:text-white">
             <MdShoppingCart />
           </div>
           <div>
@@ -61,8 +61,8 @@ const AdminOverview = () => {
         </div>
 
         {/* Pending Card */}
-        <div className="bg-white p-5 rounded-xl border border-gray-100 flex flex-col gap-3 group hover:border-black transition-all duration-300">
-          <div className="w-10 h-10 bg-gray-50 text-gray-900 rounded-lg flex items-center justify-center text-xl transition-colors group-hover:bg-black group-hover:text-white">
+        <div className="bg-white p-5 rounded-xl border border-gray-100 flex flex-col gap-3 group hover:border-pink-500 transition-all duration-300">
+          <div className="w-10 h-10 bg-gray-50 text-gray-900 rounded-lg flex items-center justify-center text-xl transition-colors group-hover:bg-pink-500 group-hover:text-white">
             <MdPendingActions />
           </div>
           <div>
@@ -72,8 +72,8 @@ const AdminOverview = () => {
         </div>
 
         {/* Customers Card */}
-        <div className="bg-white p-5 rounded-xl border border-gray-100 flex flex-col gap-3 group hover:border-black transition-all duration-300">
-          <div className="w-10 h-10 bg-gray-50 text-gray-900 rounded-lg flex items-center justify-center text-xl transition-colors group-hover:bg-black group-hover:text-white">
+        <div className="bg-white p-5 rounded-xl border border-gray-100 flex flex-col gap-3 group hover:border-pink-500 transition-all duration-300">
+          <div className="w-10 h-10 bg-gray-50 text-gray-900 rounded-lg flex items-center justify-center text-xl transition-colors group-hover:bg-pink-500 group-hover:text-white">
             <MdPeople />
           </div>
           <div>

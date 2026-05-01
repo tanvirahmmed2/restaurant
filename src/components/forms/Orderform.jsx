@@ -76,13 +76,13 @@ const Orderform = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className='w-full flex flex-col gap-6 bg-white p-6 rounded-xl border border-gray-100'>
+        <form onSubmit={handleSubmit} className='w-full flex flex-col gap-6 bg-white rounded-xl border border-gray-100'>
             <div className='w-full flex flex-col gap-1.5'>
                 <label htmlFor="phone" className='text-[10px] font-semibold uppercase tracking-widest text-gray-400 ml-1'>Customer Phone</label>
                 <input 
                     type="text" name='phone' id='phone' 
                     onChange={handleChange} value={formData.phone} 
-                    className='w-full px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:border-black transition-all font-semibold text-sm' 
+                    className='w-full px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:border-pink-500 transition-all font-semibold text-sm' 
                     placeholder='Guest by default' 
                 />
             </div>
@@ -113,9 +113,9 @@ const Orderform = () => {
                                         </div>
                                     </div>
                                     <div className='flex items-center bg-gray-50 rounded-lg p-1'>
-                                        <button className='w-5 h-5 flex items-center justify-center font-semibold text-gray-400 hover:text-black transition-colors' type='button' onClick={() => decreaseQuantity(item.cartItemId)}>-</button>
+                                        <button className='w-5 h-5 flex items-center justify-center font-semibold text-gray-400 hover:text-pink-600 transition-colors' type='button' onClick={() => decreaseQuantity(item.cartItemId)}>-</button>
                                         <span className='text-[10px] font-semibold w-5 text-center'>{item.quantity}</span>
-                                        <button className='w-5 h-5 flex items-center justify-center font-semibold text-gray-400 hover:text-black transition-colors' type='button' onClick={() => addToCart(item)}>+</button>
+                                        <button className='w-5 h-5 flex items-center justify-center font-semibold text-gray-400 hover:text-pink-600 transition-colors' type='button' onClick={() => addToCart(item)}>+</button>
                                     </div>
                                     <button className='p-1.5 text-gray-200 hover:text-rose-500 transition-all' type='button' onClick={() => removeFromCart(item.cartItemId)}>
                                         <MdDeleteOutline size={16} />
@@ -124,7 +124,7 @@ const Orderform = () => {
                             ))}
                         </div>
                         
-                        <div className='bg-black text-white p-5 rounded-xl w-full flex flex-col gap-3'>
+                        <div className='bg-pink-500 text-white p-5 rounded-xl w-full flex flex-col gap-3'>
                             <div className='space-y-1.5'>
                                 <div className='flex justify-between text-[10px] font-semibold uppercase tracking-widest opacity-50'>
                                     <p>Subtotal</p>
@@ -159,7 +159,7 @@ const Orderform = () => {
             </div>
 
             {popUp && (
-                <div className='flex items-center justify-center fixed inset-0 backdrop-blur-sm bg-black/40 z-[60]'>
+                <div className='flex items-center justify-center fixed inset-0 backdrop-blur-sm bg-pink-500/40 z-[60]'>
                     <div className='w-full max-w-sm mx-4 flex flex-col p-6 gap-6 bg-white rounded-xl border border-gray-100'>
                         <div className='flex justify-between items-center border-b border-gray-50 pb-4'>
                             <div>
@@ -196,7 +196,7 @@ const Orderform = () => {
 
                         <div className='flex flex-row gap-3 mt-2'>
                             <button className='flex-1 py-3 border border-gray-100 rounded-xl font-semibold text-[10px] uppercase tracking-widest hover:bg-gray-50 transition-all text-gray-400' type='button' onClick={() => setPopUp(false)}>Cancel</button>
-                            <button className='flex-1 py-3 bg-black text-white rounded-xl font-semibold text-[10px] uppercase tracking-widest hover:bg-gray-800 transition-all' type='submit'>Pay Now</button>
+                            <button className='flex-1 py-3 bg-pink-500 text-white rounded-xl font-semibold text-[10px] uppercase tracking-widest hover:bg-pink-600 transition-all' type='submit'>Pay Now</button>
                         </div>
                     </div>
                 </div>

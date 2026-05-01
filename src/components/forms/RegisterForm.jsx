@@ -61,7 +61,7 @@ const RegisterForm = () => {
                             onChange={handleChange} 
                             value={formData.name} 
                             placeholder="John Doe"
-                            className='w-full px-4 py-3 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-black focus:bg-white transition-all text-sm font-medium'
+                            className='w-full px-4 py-3 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-pink-500 focus:bg-white transition-all text-sm font-medium'
                         />
                     </div>
 
@@ -75,7 +75,7 @@ const RegisterForm = () => {
                             value={formData.phone} 
                             required 
                             placeholder="01XXXXXXXXX"
-                            className='w-full px-4 py-3 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-black focus:bg-white transition-all text-sm font-medium'
+                            className='w-full px-4 py-3 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-pink-500 focus:bg-white transition-all text-sm font-medium'
                         />
                     </div>
 
@@ -89,7 +89,7 @@ const RegisterForm = () => {
                             required 
                             value={formData.email} 
                             placeholder="name@example.com"
-                            className='w-full px-4 py-3 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-black focus:bg-white transition-all text-sm font-medium'
+                            className='w-full px-4 py-3 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-pink-500 focus:bg-white transition-all text-sm font-medium'
                         />
                     </div>
 
@@ -103,7 +103,7 @@ const RegisterForm = () => {
                             value={formData.password} 
                             required 
                             placeholder="••••••••"
-                            className='w-full px-4 py-3 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-black focus:bg-white transition-all text-sm font-medium'
+                            className='w-full px-4 py-3 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-pink-500 focus:bg-white transition-all text-sm font-medium'
                         />
                     </div>
                 </div>
@@ -112,7 +112,7 @@ const RegisterForm = () => {
                     <button 
                         type='submit' 
                         disabled={loading}
-                        className='w-full py-4 bg-black text-white rounded-xl font-semibold text-xs uppercase tracking-widest hover:bg-gray-800 transition-all active:scale-[0.98] shadow-xl shadow-black/10 disabled:opacity-50'
+                        className='w-full py-4 bg-pink-500 text-white rounded-xl font-semibold text-xs uppercase tracking-widest hover:bg-pink-600 transition-all active:scale-[0.98] shadow-xl shadow-pink-900/10 disabled:opacity-50'
                     >
                         {loading ? 'Creating Account...' : 'Get Started'}
                     </button>

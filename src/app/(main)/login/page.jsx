@@ -20,7 +20,7 @@ const Login = () => {
                     transition={{ duration: 0.8 }} 
                     className='hidden lg:flex flex-col gap-6 order-last lg:order-first'
                 >
-                    <div className='inline-block w-fit px-4 py-1 bg-black text-white text-[10px] font-semibold uppercase tracking-widest rounded-full'>
+                    <div className='inline-block w-fit px-4 py-1 bg-pink-500 text-white text-[10px] font-semibold uppercase tracking-widest rounded-full'>
                         {siteData?.name || 'Grand Kitchen'}
                     </div>
                     <h1 className='text-6xl font-semibold text-gray-900 leading-[1.1] tracking-tight'>

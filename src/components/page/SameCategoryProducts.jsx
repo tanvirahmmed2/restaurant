@@ -24,7 +24,7 @@ const SameCategoryProducts = ({ id }) => {
             {
                 products.length > 0 ? <div className='w-full flex flex-col items-center gap-4 py-6'>
                     <p>You May Also Love</p>
-                    <div className='w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3'>
+                    <div className='w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3'>
                         {
                             products.map((item) => (
                                 <Item item={item} key={item.id} />

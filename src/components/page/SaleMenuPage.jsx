@@ -9,7 +9,7 @@ import SaleItem from "../card/SaleItem"
 
 
 
-const MenuPage = () => {
+const SaleMenuPage = () => {
   const [products, setProducts] = useState([])
   const { categories } = useContext(Context)
   const [categoryId, setCategoryId] = useState('')
@@ -56,7 +56,7 @@ const MenuPage = () => {
           ))}
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 w-full">
+        <div className="grid grid-cols-2 md:grid-cols-3  gap-3 w-full">
           {products.length > 0 ? (
             products.map((item) => (
               <SaleItem key={item.id} item={item}/>
@@ -72,4 +72,4 @@ const MenuPage = () => {
   )
 }
 
-export default MenuPage
+export default SaleMenuPage

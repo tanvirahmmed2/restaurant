@@ -57,12 +57,12 @@ const People = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className='flex-1 px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:border-black transition-all text-sm'
+            className='flex-1 px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:border-pink-500 transition-all text-sm'
           />
           <select 
             value={role} 
             onChange={(e) => setRole(e.target.value)}
-            className='px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:border-black transition-all text-sm'
+            className='px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:border-pink-500 transition-all text-sm'
           >
             <option value="manager">Manager</option>
             <option value="sales">Sales</option>
@@ -72,7 +72,7 @@ const People = () => {
           <button 
             type="submit" 
             disabled={loading}
-            className='px-6 py-2.5 bg-black text-white rounded-xl font-semibold text-sm hover:bg-gray-800 transition-colors disabled:opacity-50'
+            className='px-6 py-2.5 bg-pink-500 text-white rounded-xl font-semibold text-sm hover:bg-pink-600 transition-colors disabled:opacity-50'
           >
             {loading ? 'Processing...' : 'Promote'}
           </button>
@@ -95,7 +95,7 @@ const People = () => {
                 <p className='text-gray-500 text-xs'>{staff.email}</p>
                 <div>
                   <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wider ${
-                    staff.role === 'admin' ? 'bg-indigo-50 text-indigo-600' :
+                    staff.role === 'admin' ? 'bg-pink-50 text-pink-600' :
                     staff.role === 'manager' ? 'bg-amber-50 text-amber-600' :
                     staff.role === 'sales' ? 'bg-emerald-50 text-emerald-600' :
                     'bg-gray-50 text-gray-600'

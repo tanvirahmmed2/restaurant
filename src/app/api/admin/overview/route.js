@@ -15,8 +15,6 @@ export async function GET(req) {
       return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
     }
 
-    // Aggregate queries
-    // 1. Total Orders & Revenue
     const { rows: orderStats } = await pool.query(
       `SELECT COUNT(id) as total_orders, COALESCE(SUM(total_price), 0) as total_revenue 
        FROM res_orders 

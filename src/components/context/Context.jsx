@@ -18,6 +18,8 @@ export const ContextProvider = ({ children }) => {
   const [cartBar, setCartBar]= useState(false)
   const [updateUserBox,setUpdateUserBox]= useState(false)
 
+  const [siteLoading, setSiteLoading] = useState(true)
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -33,11 +35,14 @@ export const ContextProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchWebsiteData = async () => {
+      setSiteLoading(true)
       try {
         const response = await axios.get('/api/website', { withCredentials: true })
         setSiteData(response.data.payload)
       } catch (error) {
         setSiteData(null)
+      } finally {
+        setSiteLoading(false)
       }
     }
     fetchWebsiteData()
@@ -251,10 +256,93 @@ export const ContextProvider = ({ children }) => {
     fetchCategories, addToCart, removeFromCart, decreaseQuantity, clearCart, fetchCart, updateCartItemVariant
   }
 
+  // Site Access Guard Logic
+  const isTenantActive = siteData && siteData.tenant_status === 'active'
+  const isWebsiteActive = siteData && siteData.status === 'active'
+  const isAdminOrManager = userData && (userData.role === 'admin' || userData.role === 'manager')
+
+  if (siteLoading) {
+    return (
+      <div className="fixed inset-0 bg-white flex items-center justify-center z-[9999]">
+        <div className="w-10 h-10 border-4 border-pink-100 border-t-pink-600 rounded-full animate-spin"></div>
+      </div>
+    )
+  }
+
+  if (!siteData) {
+    return (
+      <div className="fixed inset-0 bg-slate-50 flex flex-col items-center justify-center p-6 text-center z-[9999]">
+        <div className="w-20 h-20 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+        </div>
+        <h1 className="text-3xl font-black text-slate-900 mb-2">No Website Data Found</h1>
+        <p className="text-slate-500 max-w-md font-medium">We couldn't retrieve the configuration for this domain. Please contact support if you believe this is an error.</p>
+      </div>
+    )
+  }
+
+  // Priority 1: Tenant Check (Account Level)
+  if (!isTenantActive && !isAdminOrManager) {
+    return (
+      <div className="fixed inset-0 bg-white flex flex-col items-center justify-center p-6 text-center z-[9999]">
+        <div className="w-24 h-24 bg-rose-100 text-rose-600 rounded-3xl flex items-center justify-center mb-8 shadow-2xl shadow-rose-500/10 animate-pulse">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <h1 className="text-4xl font-black text-slate-900 mb-4 tracking-tight uppercase">Account Suspended</h1>
+        <p className="text-slate-500 max-w-lg text-lg font-medium">
+          This business account has been suspended by the platform administrator. Access to all services is currently restricted.
+        </p>
+        <div className="mt-12 p-6 bg-rose-50 rounded-2xl border border-rose-100 flex flex-col items-center gap-2">
+            <span className="text-[10px] font-black uppercase tracking-widest text-rose-400">Account Status</span>
+            <span className="px-6 py-2 bg-rose-600 text-white rounded-full text-xs font-black uppercase tracking-widest shadow-lg shadow-rose-200">
+                {siteData.tenant_status}
+            </span>
+        </div>
+      </div>
+    )
+  }
+
+  // Priority 2: Website Check (Development/Maintenance Mode)
+  if (!isWebsiteActive && !isAdminOrManager) {
+    const isMaintenance = siteData.status === 'maintenance'
+    const isSuspended = siteData.status === 'suspended'
+
+    return (
+      <div className="fixed inset-0 bg-white flex flex-col items-center justify-center p-6 text-center z-[9999]">
+        <div className="w-24 h-24 bg-pink-100 text-pink-600 rounded-3xl flex items-center justify-center mb-8 shadow-2xl shadow-pink-500/10">
+          {isMaintenance ? (
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          ) : isSuspended ? (
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+          )}
+        </div>
+        <h1 className="text-4xl font-black text-slate-900 mb-4 tracking-tight uppercase">
+          {isMaintenance ? 'Under Maintenance' : isSuspended ? 'Service Unavailable' : 'Site Under Development'}
+        </h1>
+        <p className="text-slate-500 max-w-lg text-lg font-medium">
+          {isMaintenance 
+            ? "We're currently performing some scheduled maintenance. We'll be back online shortly!" 
+            : isSuspended
+            ? "This website has been temporarily disabled. Please check back later."
+            : `The website "${siteData.name}" is currently in development mode.`}
+        </p>
+        <div className="mt-12 p-6 bg-pink-50 rounded-2xl border border-pink-100 flex flex-col items-center gap-2">
+            <span className="text-[10px] font-black uppercase tracking-widest text-pink-400">Current Mode</span>
+            <span className="px-6 py-2 bg-pink-600 text-white rounded-full text-xs font-black uppercase tracking-widest shadow-lg shadow-pink-200">
+                {siteData.status}
+            </span>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <Context.Provider value={contextValue}>
       {children}
     </Context.Provider>
   )
 }
+
 

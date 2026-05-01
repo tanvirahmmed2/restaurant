@@ -3,7 +3,6 @@ import { getTenant } from "@/lib/database/tenant";
 import { NextResponse } from "next/server";
 import { isManager } from "@/lib/auth/middleware";
 
-// Fetch website details for the current tenant
 export async function GET(req) {
   try {
     const tenant = await getTenant(req);
@@ -12,15 +11,22 @@ export async function GET(req) {
     }
 
     const { rows } = await pool.query(
-      "SELECT * FROM websites WHERE tenant_id = $1 LIMIT 1",
+      `SELECT w.*, t.status as tenant_status, t.expires_at 
+       FROM websites w 
+       JOIN tenants t ON w.tenant_id = t.tenant_id 
+       WHERE w.tenant_id = $1 LIMIT 1`,
       [tenant.tenant_id]
     );
 
     if (rows.length === 0) {
       return NextResponse.json({
-        success: false,
-        message: "Website profile not found. Please setup your website first.",
-      }, { status: 404 });
+        success: true,
+        message: "Website profile not found. Showing tenant info only.",
+        payload: {
+          tenant_status: tenant.status,
+          expires_at: tenant.expires_at
+        },
+      }, { status: 200 });
     }
 
     return NextResponse.json({
@@ -38,7 +44,6 @@ export async function GET(req) {
   }
 }
 
-// Update existing website details (No Creation allowed)
 export async function POST(req) {
   try {
     const auth = await isManager();
@@ -53,7 +58,6 @@ export async function POST(req) {
 
     const body = await req.json();
 
-    // Check if website exists
     const { rows: existing } = await pool.query(
       "SELECT website_id FROM websites WHERE tenant_id = $1 LIMIT 1",
       [tenant.tenant_id]

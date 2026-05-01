@@ -40,66 +40,63 @@ const ReviewsPage = () => {
 
   const renderStars = (rating) => {
     return Array(5).fill(0).map((_, i) => (
-      <MdStar key={i} className={`text-xl ${i < rating ? 'text-amber-400' : 'text-gray-200'}`} />
+      <MdStar key={i} className={`text-sm ${i < rating ? 'text-amber-400' : 'text-gray-100'}`} />
     ))
   }
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full min-h-[50vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="w-8 h-8 border-2 border-gray-200 border-t-black rounded-full animate-spin"></div>
       </div>
     )
   }
 
   return (
-    <div className="w-full flex flex-col gap-8">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-black text-gray-900 tracking-tight">Customer Reviews</h1>
-        <p className="text-gray-500 text-sm">Manage feedback and testimonials from your customers.</p>
+    <div className="w-full max-w-6xl mx-auto flex flex-col gap-8">
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">Customer Reviews</h1>
+        <p className="text-gray-500 text-sm">Manage feedback and testimonials.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {reviews.length > 0 ? (
           reviews.map((review) => (
-            <div key={review.id} className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-between gap-6 group hover:shadow-md transition-shadow">
+            <div key={review.id} className="bg-white p-5 rounded-xl border border-gray-100 flex flex-col justify-between gap-4 group hover:border-black transition-all">
               
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-3">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <h3 className="font-bold text-gray-900 line-clamp-1">{review.name}</h3>
-                    <p className="text-xs text-gray-400 line-clamp-1">{review.email}</p>
+                    <h3 className="font-semibold text-gray-800 text-sm line-clamp-1">{review.name}</h3>
+                    <p className="text-[10px] text-gray-400 font-semibold tracking-wider uppercase">{new Date(review.created_at).toLocaleDateString()}</p>
                   </div>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-0.5">
                     {renderStars(review.rating)}
                   </div>
                 </div>
 
-                <div className="bg-gray-50 p-4 rounded-2xl relative">
-                  <MdRateReview className="absolute top-2 right-2 text-gray-200 text-3xl opacity-50" />
-                  <p className="text-gray-600 text-sm italic relative z-10">&quot;{review.comment}&quot;</p>
+                <div className="bg-gray-50/50 p-4 rounded-xl relative border border-gray-50">
+                  <p className="text-gray-600 text-xs italic leading-relaxed">&quot;{review.comment}&quot;</p>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between border-t border-gray-50 pt-4 mt-auto">
-                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                  {new Date(review.created_at).toLocaleDateString()}
-                </span>
+              <div className="flex items-center justify-between mt-2 pt-3 border-t border-gray-50">
+                <p className="text-[10px] text-gray-400 font-medium truncate max-w-[150px]">{review.email}</p>
                 <button 
                   onClick={() => handleDelete(review.id)}
-                  className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors cursor-pointer"
+                  className="p-1.5 text-rose-300 hover:text-rose-600 transition-colors"
                   title="Delete Review"
                 >
-                  <MdDelete size={20} />
+                  <MdDelete size={18} />
                 </button>
               </div>
 
             </div>
           ))
         ) : (
-          <div className="col-span-full p-12 text-center flex flex-col items-center gap-3 bg-white rounded-3xl border border-dashed border-gray-200">
-            <MdRateReview size={48} className="text-gray-300" />
-            <p className="text-gray-500 font-medium">No reviews received yet.</p>
+          <div className="col-span-full py-24 text-center flex flex-col items-center gap-2 bg-gray-50/50 rounded-xl border border-dashed border-gray-200">
+            <MdRateReview size={32} className="text-gray-300" />
+            <p className="text-gray-400 text-sm font-medium">No reviews received yet.</p>
           </div>
         )}
       </div>

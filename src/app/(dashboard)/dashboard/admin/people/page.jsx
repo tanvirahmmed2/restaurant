@@ -33,7 +33,7 @@ const People = () => {
       const res = await axios.put('/api/user/management', { email, role }, { withCredentials: true })
       toast.success(res.data.message)
       setEmail('')
-      fetchStaffs() // Refresh list
+      fetchStaffs()
     } catch (error) {
       toast.error(error?.response?.data?.message || "Failed to promote user")
     } finally {
@@ -42,69 +42,68 @@ const People = () => {
   }
 
   return (
-    <div className='w-full max-w-5xl mx-auto p-4 flex flex-col items-center gap-8'>
-      <div className='w-full border-b border-gray-100 pb-4'>
-        <h1 className='text-3xl font-black text-gray-900 tracking-tight'>People & Access</h1>
-        <p className='text-gray-500 mt-1'>Manage staff accounts and promote existing users.</p>
+    <div className='w-full max-w-5xl mx-auto flex flex-col gap-8'>
+      <div className='w-full'>
+        <h1 className='text-2xl font-semibold text-gray-900 tracking-tight'>People & Access</h1>
+        <p className='text-gray-500 text-sm'>Manage staff accounts and promote users.</p>
       </div>
 
-      <div className='w-full bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col gap-4'>
-        <h2 className='text-xl font-bold text-gray-800'>Promote User</h2>
-        <p className='text-sm text-gray-500'>Enter a registered user's email to promote them to a management role.</p>
-        <form onSubmit={handlePromote} className='flex flex-col md:flex-row gap-4'>
+      <div className='w-full bg-white p-6 rounded-xl border border-gray-100 flex flex-col gap-4'>
+        <h2 className='text-lg font-semibold text-gray-800'>Promote User</h2>
+        <form onSubmit={handlePromote} className='flex flex-col md:flex-row gap-3'>
           <input 
             type="email" 
-            placeholder="user@example.com" 
+            placeholder="User Email" 
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className='flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-black transition-all'
+            className='flex-1 px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:border-black transition-all text-sm'
           />
           <select 
             value={role} 
             onChange={(e) => setRole(e.target.value)}
-            className='px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-black transition-all'
+            className='px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:border-black transition-all text-sm'
           >
-            <option value="manager">Manager (Inventory & Ops)</option>
-            <option value="sales">Sales (POS & Orders)</option>
-            <option value="admin">Admin (Full Access)</option>
+            <option value="manager">Manager</option>
+            <option value="sales">Sales</option>
+            <option value="admin">Admin</option>
             <option value="user">User (Demote)</option>
           </select>
           <button 
             type="submit" 
             disabled={loading}
-            className='px-8 py-3 bg-black text-white rounded-xl font-bold hover:bg-gray-800 transition-colors shadow-lg disabled:opacity-50'
+            className='px-6 py-2.5 bg-black text-white rounded-xl font-semibold text-sm hover:bg-gray-800 transition-colors disabled:opacity-50'
           >
-            {loading ? 'Promoting...' : 'Promote'}
+            {loading ? 'Processing...' : 'Promote'}
           </button>
         </form>
       </div>
 
       <div className='w-full flex flex-col gap-4'>
-        <h2 className='text-xl font-bold text-gray-800'>Management Team</h2>
-        <div className='w-full flex flex-col border border-gray-100 rounded-xl overflow-hidden shadow-sm'>
-          <div className='w-full grid grid-cols-4 bg-gray-50 p-4 font-bold text-xs uppercase text-gray-400 tracking-widest border-b border-gray-100'>
-            <p>Name</p>
+        <h2 className='text-lg font-semibold text-gray-800'>Management Team</h2>
+        <div className='w-full flex flex-col border border-gray-100 rounded-xl overflow-hidden'>
+          <div className='w-full grid grid-cols-4 bg-gray-50/50 p-4 font-semibold text-[10px] uppercase text-gray-400 tracking-widest border-b border-gray-100'>
+            <p>Member</p>
             <p>Email</p>
-            <p>Role</p>
-            <p className='text-right'>Actions</p>
+            <p>Access Level</p>
+            <p className='text-right'>Management</p>
           </div>
           {
             staffs && staffs.map((staff) => (
-              <div key={staff.id} className='w-full grid grid-cols-4 p-4 items-center bg-white hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0'>
-                <h1 className='font-bold text-gray-800'>{staff.name}</h1>
-                <p className='text-gray-500 text-sm'>{staff.email}</p>
-                <p>
-                  <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
-                    staff.role === 'admin' ? 'bg-indigo-100 text-indigo-600' :
-                    staff.role === 'manager' ? 'bg-amber-100 text-amber-600' :
-                    staff.role === 'sales' ? 'bg-emerald-100 text-emerald-600' :
-                    'bg-gray-100 text-gray-600'
+              <div key={staff.id} className='w-full grid grid-cols-4 p-4 items-center bg-white hover:bg-gray-50/50 transition-colors border-b border-gray-50 last:border-0'>
+                <p className='font-semibold text-gray-800 text-sm'>{staff.name}</p>
+                <p className='text-gray-500 text-xs'>{staff.email}</p>
+                <div>
+                  <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wider ${
+                    staff.role === 'admin' ? 'bg-indigo-50 text-indigo-600' :
+                    staff.role === 'manager' ? 'bg-amber-50 text-amber-600' :
+                    staff.role === 'sales' ? 'bg-emerald-50 text-emerald-600' :
+                    'bg-gray-50 text-gray-600'
                   }`}>
                     {staff.role}
                   </span>
-                </p>
-                <div className='flex flex-row items-center justify-end gap-3'>
+                </div>
+                <div className='flex flex-row items-center justify-end gap-2'>
                   <BanUser id={staff.id} isBanned={staff.is_banned}/>
                   <DeleteUser id={staff.id}/>                  
                 </div>
@@ -112,7 +111,7 @@ const People = () => {
             ))
           }
           {staffs.length === 0 && (
-            <div className='p-8 text-center text-gray-500'>No management team members found.</div>
+            <div className='p-12 text-center text-gray-400 text-sm font-medium'>No team members found.</div>
           )}
         </div>
       </div>

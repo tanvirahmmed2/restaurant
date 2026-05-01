@@ -71,7 +71,7 @@ const UpdateUserForm = () => {
                 </div>
 
                 <div className='flex flex-col gap-1.5'>
-                    <label htmlFor="password" senior className='text-[10px] font-black uppercase text-gray-400 tracking-widest ml-1'>New Password (Optional)</label>
+                    <label htmlFor="password" className='text-[10px] font-black uppercase text-gray-400 tracking-widest ml-1'>New Password (Optional)</label>
                     <div className='relative'>
                         <FaLock className='absolute left-4 top-1/2 -translate-y-1/2 text-gray-300' />
                         <input 

@@ -1,12 +1,12 @@
 import React from 'react'
 
 export const metadata={
-    title:'New Product',
-    description:"New Product Page"
+    title:'New Item',
+    description:"New Item Page"
 }
 
 
-const NewProductLayout = ({children}) => {
+const NewItemLayout = ({children}) => {
   return (
     <div className='w-full overflow-x-hidden px-1 sm:px-4'>
       {children}
@@ -14,4 +14,4 @@ const NewProductLayout = ({children}) => {
   )
 }
 
-export default NewProductLayout
+export default NewItemLayout

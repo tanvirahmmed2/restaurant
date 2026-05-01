@@ -25,12 +25,31 @@ export async function GET(req) {
 
     query += " ORDER BY p.created_at DESC";
 
-    const { rows } = await pool.query(query, params);
+    const { rows: items } = await pool.query(query, params);
+
+    // Fetch variants for all items
+    const itemIds = items.map(i => i.id);
+    let variantsMap = {};
+    if (itemIds.length > 0) {
+      const { rows: variants } = await pool.query(
+        "SELECT * FROM res_item_variants WHERE item_id = ANY($1) AND tenant_id = $2",
+        [itemIds, tenant.tenant_id]
+      );
+      variants.forEach(v => {
+        if (!variantsMap[v.item_id]) variantsMap[v.item_id] = [];
+        variantsMap[v.item_id].push(v);
+      });
+    }
+
+    const payload = items.map(item => ({
+      ...item,
+      variants: variantsMap[item.id] || []
+    }));
 
     return NextResponse.json({
       success: true,
       message: "Products fetched successfully",
-      payload: rows,
+      payload: payload,
     }, { status: 200 });
 
   } catch (error) {
@@ -87,7 +106,12 @@ export async function POST(req) {
 
     const cloudImage = await new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
-        { folder: "restaurant-pos" },
+        {
+          folder: "res-items",
+          public_id: slug,
+          use_filename: true,
+          unique_filename: false
+        },
         (error, result) => {
           if (error) reject(error);
           else resolve(result);
@@ -101,10 +125,30 @@ export async function POST(req) {
       [tenant.tenant_id, category_id, title, slug, description, price, discount, cloudImage.secure_url, cloudImage.public_id]
     );
 
+    const product = newProduct[0];
+
+    // Handle variants if provided
+    const variantsStr = formData.get("variants");
+    if (variantsStr) {
+      try {
+        const variants = JSON.parse(variantsStr);
+        if (Array.isArray(variants) && variants.length > 0) {
+          for (const variant of variants) {
+            await pool.query(
+              "INSERT INTO res_item_variants (tenant_id, item_id, name, value, price_adjustment, is_default) VALUES ($1, $2, $3, $4, $5, $6)",
+              [tenant.tenant_id, product.id, variant.name, variant.value, Number(variant.price_adjustment) || 0, variant.is_default || false]
+            );
+          }
+        }
+      } catch (e) {
+        console.error("Failed to parse variants", e);
+      }
+    }
+
     return NextResponse.json({
       success: true,
       message: "Successfully added new product",
-      payload: newProduct[0],
+      payload: product,
     }, { status: 201 });
 
   } catch (error) {
@@ -162,4 +206,4 @@ export async function DELETE(req) {
       error: error.message,
     }, { status: 500 });
   }
-}
+}

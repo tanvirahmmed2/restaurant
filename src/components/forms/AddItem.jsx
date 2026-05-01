@@ -5,7 +5,7 @@ import React, { useContext, useState } from 'react'
 import toast from 'react-hot-toast'
 import { Context } from '../context/Context'
 
-const AddProduct = () => {
+const AddItem = () => {
     const { categories } = useContext(Context)
     const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({
@@ -16,6 +16,24 @@ const AddProduct = () => {
         category_id: '',
         image: null,
     })
+    const [variants, setVariants] = useState([])
+
+    const addVariantField = () => {
+        setVariants([...variants, { name: '', value: '', price_adjustment: 0, is_default: false }])
+    }
+
+    const removeVariantField = (index) => {
+        const newVariants = [...variants]
+        newVariants.splice(index, 1)
+        setVariants(newVariants)
+    }
+
+    const handleVariantChange = (index, e) => {
+        const { name, value, type, checked } = e.target
+        const newVariants = [...variants]
+        newVariants[index][name] = type === 'checkbox' ? checked : value
+        setVariants(newVariants)
+    }
 
     const handleChange = (e) => {
         const { name, value, files } = e.target
@@ -26,7 +44,7 @@ const AddProduct = () => {
         }
     }
 
-    const addNewProduct = async (e) => {
+    const addNewItem = async (e) => {
         e.preventDefault()
         setLoading(true)
         try {
@@ -37,9 +55,12 @@ const AddProduct = () => {
             newData.append('discount', formData.discount)
             newData.append('category_id', formData.category_id)
             newData.append('image', formData.image)
+            newData.append('variants', JSON.stringify(variants))
 
             const response = await axios.post('/api/product', newData, { withCredentials: true })
             toast.success(response.data.message)
+            
+            setVariants([])
             
             setFormData({
                 title: '',
@@ -52,15 +73,15 @@ const AddProduct = () => {
             e.target.reset()
         } catch (error) {
             console.error(error)
-            toast.error(error?.response?.data?.message || 'Failed to add product')
+            toast.error(error?.response?.data?.message || 'Failed to add item')
         } finally {
             setLoading(false)
         }
     }
 
     return (
-        <form onSubmit={addNewProduct} className='w-full flex flex-col items-center justify-center gap-4 border-b border-slate-200 p-6 bg-white rounded-xl shadow-sm'>
-            <h1 className='text-2xl font-bold text-slate-800 self-start'>Add New Product</h1>
+        <form onSubmit={addNewItem} className='w-full flex flex-col items-center justify-center gap-4 border-b border-slate-200 p-6 bg-white rounded-xl shadow-sm'>
+            <h1 className='text-2xl font-bold text-slate-800 self-start'>Add New Item</h1>
             
             <div className='w-full flex flex-col gap-1.5'>
                 <label htmlFor="title" className='text-sm font-medium text-slate-700'>Title</label>
@@ -99,19 +120,56 @@ const AddProduct = () => {
             </div>
 
             <div className='w-full flex flex-col gap-1.5'>
-                <label htmlFor="image" className='text-sm font-medium text-slate-700'>Product Image</label>
+                <label htmlFor="image" className='text-sm font-medium text-slate-700'>Item Image</label>
                 <input type="file" accept='image/*' required name='image' onChange={handleChange} id='image' 
                     className='w-full p-1.5 px-3 outline-none border border-slate-300 rounded-lg file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200' />
+            </div>
+
+            {/* Variants Section */}
+            <div className='w-full flex flex-col gap-4 mt-4 border-t border-slate-100 pt-4'>
+                <div className='flex items-center justify-between'>
+                    <h3 className='text-lg font-bold text-slate-800'>Variants (Sizes/Add-ons)</h3>
+                    <button type='button' onClick={addVariantField} className='text-xs font-bold bg-black text-white px-3 py-1.5 rounded-lg hover:bg-slate-800 transition-all'>
+                        + Add Variant
+                    </button>
+                </div>
+                
+                {variants.length > 0 && (
+                    <div className='flex flex-col gap-3'>
+                        {variants.map((variant, index) => (
+                            <div key={index} className='grid grid-cols-1 md:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl relative group'>
+                                <div className='flex flex-col gap-1'>
+                                    <input type="text" name="name" placeholder="Name (e.g. Size)" value={variant.name} onChange={(e) => handleVariantChange(index, e)} required className='w-full p-1.5 text-sm outline-none border border-slate-300 rounded-lg focus:border-black transition-all' />
+                                </div>
+                                <div className='flex flex-col gap-1'>
+                                    <input type="text" name="value" placeholder="Value (e.g. Large)" value={variant.value} onChange={(e) => handleVariantChange(index, e)} required className='w-full p-1.5 text-sm outline-none border border-slate-300 rounded-lg focus:border-black transition-all' />
+                                </div>
+                                <div className='flex flex-col gap-1'>
+                                    <input type="number" name="price_adjustment" placeholder="Extra Price" value={variant.price_adjustment} onChange={(e) => handleVariantChange(index, e)} className='w-full p-1.5 text-sm outline-none border border-slate-300 rounded-lg focus:border-black transition-all' />
+                                </div>
+                                <div className='flex items-center gap-2'>
+                                    <label className='flex items-center gap-2 text-xs font-medium text-slate-600 cursor-pointer'>
+                                        <input type="checkbox" name="is_default" checked={variant.is_default} onChange={(e) => handleVariantChange(index, e)} className='w-4 h-4 accent-black' />
+                                        Default
+                                    </label>
+                                    <button type='button' onClick={() => removeVariantField(index)} className='ml-auto text-red-500 hover:text-red-700 transition-all'>
+                                        ✕
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
 
             <button 
                 type='submit' 
                 disabled={loading}
                 className={`w-full md:w-auto mt-2 bg-black text-white p-2 px-10 rounded-lg font-semibold shadow-md active:scale-95 transition-all ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-slate-800 cursor-pointer'}`}>
-                {loading ? 'Adding Product...' : 'Create Product'}
+                {loading ? 'Adding Item...' : 'Create Item'}
             </button>
         </form>
     )
 }
 
-export default AddProduct
+export default AddItem

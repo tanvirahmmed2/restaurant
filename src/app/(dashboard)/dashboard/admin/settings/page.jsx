@@ -1,115 +1,204 @@
 'use client'
-import { Context } from '@/components/context/Context'
-import WebsiteDetails from '@/components/forms/WebsiteDetails'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import React, { useContext, useState } from 'react'
 import toast from 'react-hot-toast'
+import { MdSave, MdLanguage, MdBusiness, MdShare, MdPalette } from 'react-icons/md'
 
-const Setting = () => {
-  const { siteData, userData } = useContext(Context)
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
+const AdminSettings = () => {
+    const [loading, setLoading] = useState(true)
+    const [saving, setSaving] = useState(false)
+    const [website, setWebsite] = useState({
+        name: '',
+        business_name: '',
+        email: '',
+        phone: '',
+        address: '',
+        city: '',
+        country: '',
+        meta_title: '',
+        meta_description: '',
+        facebook: '',
+        instagram: '',
+        youtube: '',
+        primary_color: '#000000',
+        secondary_color: '#ffffff',
+    })
 
-  const changePassword = async (e) => {
-    e.preventDefault()
-    if (!password) return toast("Enter a new password")
-    setLoading(true)
-    try {
-      const res = await axios.patch('/api/user', { password }, { withCredentials: true })
-      toast.success(res.data.message)
-      setPassword('')
-    } catch (error) {
-      toast.error(error?.response?.data?.message || "Failed to change password")
-    } finally {
-      setLoading(false)
+    const fetchWebsite = async () => {
+        try {
+            const res = await axios.get('/api/website', { withCredentials: true })
+            if (res.data.success) {
+                setWebsite(res.data.payload)
+            }
+        } catch (error) {
+            toast.error("Failed to load settings")
+        } finally {
+            setLoading(false)
+        }
     }
-  }
 
-  const deleteAccount = async () => {
-    if (!confirm("Are you sure you want to delete your account? This action is permanent.")) return;
-    try {
-      const res = await axios.delete('/api/user', { withCredentials: true })
-      toast.success(res.data.message)
-      window.location.replace('/login')
-    } catch (error) {
-      toast.error(error?.response?.data?.message || 'Failed to delete account')
+    useEffect(() => {
+        fetchWebsite()
+    }, [])
+
+    const handleChange = (e) => {
+        const { name, value } = e.target
+        setWebsite(prev => ({ ...prev, [name]: value }))
     }
-  }
 
-  return (
-    <div className='w-full max-w-5xl mx-auto p-6 flex flex-col gap-10'>
-      <div className='flex flex-col gap-2'>
-        <h1 className='text-3xl font-black text-gray-900 tracking-tight'>Settings</h1>
-        <p className='text-gray-500'>Manage your business profile and account security.</p>
-      </div>
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        setSaving(true)
+        try {
+            const res = await axios.post('/api/website', website, { withCredentials: true })
+            if (res.data.success) {
+                toast.success("Settings updated successfully")
+            }
+        } catch (error) {
+            toast.error(error?.response?.data?.message || "Failed to update settings")
+        } finally {
+            setSaving(false)
+        }
+    }
 
-      <div className='grid grid-cols-1 lg:grid-cols-3 gap-10'>
-        <div className='lg:col-span-2 flex flex-col gap-8'>
-          {/* Business Information Section */}
-          <section className='bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden'>
-             <WebsiteDetails />
-          </section>
-        </div>
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <div className="w-8 h-8 border-2 border-gray-200 border-t-black rounded-full animate-spin"></div>
+            </div>
+        )
+    }
 
-        <div className='flex flex-col gap-8'>
-          {/* Account Security Section */}
-          <section className='bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col gap-6'>
-            <h2 className='text-xl font-bold text-gray-800'>Security</h2>
-            
-            <form onSubmit={changePassword} className='flex flex-col gap-4'>
-              <div className='flex flex-col gap-1'>
-                <label htmlFor="password" className='text-xs font-bold uppercase text-gray-400'>New Password</label>
-                <input 
-                  type="password" 
-                  required 
-                  value={password} 
-                  id='password' 
-                  onChange={(e) => setPassword(e.target.value)} 
-                  placeholder="••••••••"
-                  className='w-full p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-black transition-all' 
-                />
-              </div>
-              <button 
-                type='submit' 
-                disabled={loading}
-                className='w-full py-3 bg-black text-white rounded-xl font-bold hover:bg-gray-800 transition-colors shadow-lg active:scale-95 disabled:opacity-50'
-              >
-                {loading ? 'Updating...' : 'Update Password'}
-              </button>
+    return (
+        <div className="w-full max-w-5xl mx-auto flex flex-col gap-8">
+            <div className="flex flex-col gap-1">
+                <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">Website Settings</h1>
+                <p className="text-gray-500 text-sm">Update your brand identity and contact information.</p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+                {/* Brand & Business */}
+                <div className="bg-white border border-gray-100 rounded-xl overflow-hidden">
+                    <div className="px-6 py-4 border-b border-gray-50 flex items-center gap-2 bg-gray-50/50">
+                        <MdBusiness className="text-gray-400" />
+                        <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-500">Business Identity</h2>
+                    </div>
+                    <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Website Name</label>
+                            <input name="name" value={website.name} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-black outline-none transition-all" />
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Business Legal Name</label>
+                            <input name="business_name" value={website.business_name} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-black outline-none transition-all" />
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Support Email</label>
+                            <input name="email" value={website.email} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-black outline-none transition-all" />
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Contact Phone</label>
+                            <input name="phone" value={website.phone} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-black outline-none transition-all" />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Address */}
+                <div className="bg-white border border-gray-100 rounded-xl overflow-hidden">
+                    <div className="px-6 py-4 border-b border-gray-50 flex items-center gap-2 bg-gray-50/50">
+                        <MdLanguage className="text-gray-400" />
+                        <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-500">Location & SEO</h2>
+                    </div>
+                    <div className="p-6 flex flex-col gap-6">
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Full Address</label>
+                            <input name="address" value={website.address} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-black outline-none transition-all" />
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">City</label>
+                                <input name="city" value={website.city} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-black outline-none transition-all" />
+                            </div>
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Country</label>
+                                <input name="country" value={website.country} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-black outline-none transition-all" />
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">SEO Title Tag</label>
+                            <input name="meta_title" value={website.meta_title} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-black outline-none transition-all" />
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">SEO Meta Description</label>
+                            <textarea name="meta_description" value={website.meta_description} onChange={handleChange} rows={3} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-black outline-none transition-all resize-none" />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Social & Colors */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div className="bg-white border border-gray-100 rounded-xl overflow-hidden">
+                        <div className="px-6 py-4 border-b border-gray-50 flex items-center gap-2 bg-gray-50/50">
+                            <MdShare className="text-gray-400" />
+                            <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-500">Social Presence</h2>
+                        </div>
+                        <div className="p-6 flex flex-col gap-4">
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Facebook URL</label>
+                                <input name="facebook" value={website.facebook} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-black outline-none transition-all" />
+                            </div>
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Instagram URL</label>
+                                <input name="instagram" value={website.instagram} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-black outline-none transition-all" />
+                            </div>
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">YouTube URL</label>
+                                <input name="youtube" value={website.youtube} onChange={handleChange} className="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-lg text-sm font-semibold focus:border-black outline-none transition-all" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-white border border-gray-100 rounded-xl overflow-hidden">
+                        <div className="px-6 py-4 border-b border-gray-50 flex items-center gap-2 bg-gray-50/50">
+                            <MdPalette className="text-gray-400" />
+                            <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-500">Theme Colors</h2>
+                        </div>
+                        <div className="p-6 flex flex-col gap-6">
+                            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-100">
+                                <div className="flex flex-col gap-0.5">
+                                    <p className="text-xs font-semibold text-gray-800">Primary Color</p>
+                                    <p className="text-[10px] text-gray-400 font-medium uppercase">{website.primary_color}</p>
+                                </div>
+                                <input type="color" name="primary_color" value={website.primary_color} onChange={handleChange} className="w-10 h-10 rounded-lg overflow-hidden border-none cursor-pointer" />
+                            </div>
+                            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-100">
+                                <div className="flex flex-col gap-0.5">
+                                    <p className="text-xs font-semibold text-gray-800">Secondary Color</p>
+                                    <p className="text-[10px] text-gray-400 font-medium uppercase">{website.secondary_color}</p>
+                                </div>
+                                <input type="color" name="secondary_color" value={website.secondary_color} onChange={handleChange} className="w-10 h-10 rounded-lg overflow-hidden border-none cursor-pointer" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="flex justify-end pt-4">
+                    <button 
+                        type="submit" 
+                        disabled={saving}
+                        className="flex items-center gap-2 px-8 py-3 bg-black text-white rounded-xl font-semibold text-sm hover:bg-gray-800 transition-all active:scale-[0.98] disabled:opacity-50"
+                    >
+                        {saving ? (
+                            <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                        ) : (
+                            <MdSave size={18} />
+                        )}
+                        <span>Save Changes</span>
+                    </button>
+                </div>
             </form>
-
-            <div className='border-t border-gray-100 pt-6 mt-2'>
-              <h3 className='text-sm font-bold text-red-600 mb-4'>Danger Zone</h3>
-              <p className='text-xs text-gray-500 mb-4'>Deleting your account will remove your access to this restaurant. This cannot be undone.</p>
-              <button 
-                onClick={deleteAccount} 
-                className='w-full py-3 bg-red-50 text-red-600 border border-red-100 rounded-xl font-bold hover:bg-red-600 hover:text-white transition-all active:scale-95'
-              >
-                Delete Account
-              </button>
-            </div>
-          </section>
-
-          {/* Profile Quick Info */}
-          <section className='bg-indigo-600 p-8 rounded-3xl shadow-xl text-white flex flex-col gap-4'>
-            <div className='flex items-center gap-4'>
-              <div className='w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-xl font-bold'>
-                {userData?.name?.charAt(0).toUpperCase()}
-              </div>
-              <div>
-                <p className='font-bold'>{userData?.name}</p>
-                <p className='text-xs opacity-70 uppercase tracking-widest font-medium'>{userData?.role}</p>
-              </div>
-            </div>
-            <div className='text-xs opacity-80 space-y-1 mt-2'>
-              <p>Email: {userData?.email}</p>
-              <p>Phone: {userData?.phone}</p>
-            </div>
-          </section>
         </div>
-      </div>
-    </div>
-  )
+    )
 }
 
-export default Setting
+export default AdminSettings

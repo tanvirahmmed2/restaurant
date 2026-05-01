@@ -72,7 +72,7 @@ const FlashSale = () => {
                     />
                     <div className='absolute -top-6 -right-6 w-24 h-24 bg-red-500 text-white rounded-full flex flex-col items-center justify-center shadow-xl rotate-12 group-hover:rotate-0 transition-transform'>
                       <span className='text-xs font-black uppercase tracking-tighter'>Save</span>
-                      <span className='text-2xl font-black'>${item.discount}</span>
+                      <span className='text-2xl font-black'>৳{item.discount}</span>
                     </div>
                   </Link>
                 </motion.div>
@@ -95,8 +95,8 @@ const FlashSale = () => {
 
                   <div className='flex items-center justify-center md:justify-start gap-4'>
                     <div className='flex flex-col'>
-                      <span className='text-sm text-gray-300 line-through font-bold'>${Number(item.price).toFixed(2)}</span>
-                      <span className='text-4xl font-black text-gray-900'>${currentPrice.toFixed(2)}</span>
+                      <span className='text-sm text-gray-300 line-through font-bold'>৳{Number(item.price).toFixed(2)}</span>
+                      <span className='text-4xl font-black text-gray-900'>৳{currentPrice.toFixed(2)}</span>
                     </div>
                   </div>
 

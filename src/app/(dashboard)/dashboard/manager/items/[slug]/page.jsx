@@ -1,8 +1,8 @@
-import UpdateProductForm from '@/components/forms/UpdateProductForm'
+import UpdateItemForm from '@/components/forms/UpdateItemForm'
 import { BASE_URL } from '@/lib/database/secret'
 import React from 'react'
 
-const UpdateProduct = async ({ params }) => {
+const UpdateItem = async ({ params }) => {
   const { slug } = await params
   const res = await fetch(`${BASE_URL}/api/product/${slug}`, {
     method: 'GET',
@@ -16,10 +16,10 @@ const UpdateProduct = async ({ params }) => {
 
   return (
     <div className='w-full flex flex-col items-center p-4 gap-6'>
-      <h1 className='text-xl text-center border-b-2 border-black/10 w-full py-2'>Update Product Information</h1>
-      <UpdateProductForm product={product}/>
+      <h1 className='text-xl text-center border-b-2 border-black/10 w-full py-2'>Update Item Information</h1>
+      <UpdateItemForm product={product}/>
     </div>
   )
 }
 
-export default UpdateProduct
+export default UpdateItem

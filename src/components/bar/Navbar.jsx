@@ -41,10 +41,12 @@ const Navbar = () => {
         <Link 
           href={'/'} 
           onClick={() => setCartBar(false)} 
-          className='text-2xl font-black tracking-tighter text-gray-900 flex items-center gap-2'
+          className='text-xl font-semibold tracking-tight text-gray-900 flex items-center gap-3'
         >
-          <span className="w-8 h-8 bg-black text-white rounded-lg flex items-center justify-center text-xs">GK</span>
-          {siteData?.business_name || siteData?.title || 'Grand Kitchen'}
+          <span className="w-9 h-9 bg-black text-white rounded-xl flex items-center justify-center text-[10px] font-bold shadow-lg shadow-black/10">
+            {siteData?.business_name?.[0] || siteData?.name?.[0] || 'G'}
+          </span>
+          {siteData?.business_name || siteData?.name || 'Grand Kitchen'}
         </Link>
 
         {/* Desktop Navigation */}
@@ -54,10 +56,9 @@ const Navbar = () => {
               key={link.name} 
               href={link.href} 
               onClick={() => setCartBar(false)}
-              className='text-sm font-bold text-gray-600 hover:text-black transition-colors relative group'
+              className='text-xs font-semibold text-gray-500 hover:text-black transition-colors uppercase tracking-widest'
             >
               {link.name}
-              <span className='absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all group-hover:w-full' />
             </Link>
           ))}
 
@@ -65,27 +66,27 @@ const Navbar = () => {
           {(userData && userData.role !== 'user') && (
             <Link 
               href={getDashboardLink()} 
-              className='text-sm font-bold text-indigo-600 hover:text-indigo-800 transition-colors'
+              className='text-xs font-semibold text-gray-900 bg-gray-100 px-3 py-1.5 rounded-lg hover:bg-black hover:text-white transition-all uppercase tracking-widest'
             >
               Dashboard
             </Link>
           )}
 
-          {/* Cart Trigger */}
-          <button 
-            onClick={() => setCartBar(!cartBar)} 
-            className='relative p-2 text-gray-700 hover:text-black transition-colors cursor-pointer'
-          >
-            <FaShoppingCart size={20} />
-            {cart?.items?.length > 0 && (
-              <span className='absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center animate-bounce'>
-                {cart.items.length}
-              </span>
-            )}
-          </button>
+          <div className="flex items-center gap-6 border-l border-gray-100 pl-6">
+            {/* Cart Trigger */}
+            <button 
+              onClick={() => setCartBar(!cartBar)} 
+              className='relative p-2 text-gray-400 hover:text-black transition-colors cursor-pointer'
+            >
+              <FaShoppingCart size={18} />
+              {cart?.items?.length > 0 && (
+                <span className='absolute top-0 right-0 w-4 h-4 bg-black text-white text-[8px] font-bold rounded-full flex items-center justify-center border-2 border-white'>
+                  {cart.items.length}
+                </span>
+              )}
+            </button>
 
-          {/* Auth Buttons */}
-          <div className='flex items-center gap-4 ml-4 border-l border-gray-200 pl-8'>
+            {/* Auth Buttons */}
             {userData ? (
               <div className='flex items-center gap-3'>
                 <Profile />
@@ -95,7 +96,7 @@ const Navbar = () => {
               <Link 
                 href={'/login'} 
                 onClick={() => setCartBar(false)} 
-                className='px-6 py-2.5 bg-black text-white text-sm font-bold rounded-full hover:bg-gray-800 transition-all active:scale-95 shadow-lg shadow-black/10'
+                className='px-5 py-2 bg-black text-white text-[10px] font-semibold rounded-xl hover:bg-gray-800 transition-all active:scale-95 uppercase tracking-widest'
               >
                 Sign In
               </Link>
@@ -112,7 +113,6 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* Mobile Sidebar Component (Assuming it exists and needs redesign too) */}
       <Sidebar {...{ isSidebar, setIsSidebar }} />
     </nav>
   )

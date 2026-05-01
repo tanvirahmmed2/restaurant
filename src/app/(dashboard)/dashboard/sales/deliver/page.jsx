@@ -5,7 +5,7 @@ import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
-const DeliveryOrder = () => {
+const DeliverOrder = () => {
   const [orders, setOrders] = useState([])
 
   const fethcOrders = async () => {
@@ -111,4 +111,4 @@ const DeliveryOrder = () => {
   )
 }
 
-export default DeliveryOrder
+export default DeliverOrder

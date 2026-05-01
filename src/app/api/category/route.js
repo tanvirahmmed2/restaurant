@@ -67,7 +67,12 @@ export async function POST(req) {
 
     const cloudImage = await new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
-        { folder: "restaurant-pos" },
+        {
+          folder: "res-items",
+          public_id: slug,
+          use_filename: true,
+          unique_filename: false
+        },
         (err, result) => {
           if (err) reject(err);
           else resolve(result);

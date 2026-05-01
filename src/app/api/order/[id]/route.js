@@ -32,7 +32,26 @@ export async function GET(req, { params }) {
       [id, tenant.tenant_id]
     );
 
-    order.items = itemRows;
+    // Fetch variants for all items in this order
+    const itemIds = itemRows.map(item => item.id);
+    let variantsMap = {};
+    
+    if (itemIds.length > 0) {
+      const { rows: variantRows } = await pool.query(
+        "SELECT * FROM res_order_item_variants WHERE order_item_id = ANY($1) AND tenant_id = $2",
+        [itemIds, tenant.tenant_id]
+      );
+      
+      variantRows.forEach(v => {
+        if (!variantsMap[v.order_item_id]) variantsMap[v.order_item_id] = [];
+        variantsMap[v.order_item_id].push(v);
+      });
+    }
+
+    order.items = itemRows.map(item => ({
+      ...item,
+      variants: variantsMap[item.id] || []
+    }));
 
     return NextResponse.json({
       success: true,

@@ -7,7 +7,7 @@ export const metadata = {
   description: 'Restaurant Management System'
 }
 
-const PosLayout = async ({ children }) => {
+const DashboardLayout = async ({ children }) => {
   const auth = await isLogin()
   
   if (!auth.success) {
@@ -28,4 +28,4 @@ const PosLayout = async ({ children }) => {
   )
 }
 
-export default PosLayout
+export default DashboardLayout

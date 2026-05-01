@@ -86,13 +86,19 @@ export const ContextProvider = ({ children }) => {
   const addToCart = (product, qty = 1) => {
     if (!product?.id) return;
 
-    const existingInCart = cart.items.find(item => item.id === product.id);
+    const variantKeys = product.selectedVariants 
+      ? Object.values(product.selectedVariants).map(v => v.id).sort().join('-')
+      : '';
+    
+    const cartItemId = variantKeys ? `${product.id}-${variantKeys}` : `${product.id}`;
+
+    const existingInCart = cart.items.find(item => item.cartItemId === cartItemId);
 
     if (existingInCart) {
       setCart((prev) => ({
         ...prev,
         items: prev.items.map(item => {
-          if (item.id === product.id) {
+          if (item.cartItemId === cartItemId) {
             const newQty = item.quantity + qty;
             return { 
               ...item, 
@@ -113,13 +119,15 @@ export const ContextProvider = ({ children }) => {
         items: [
           ...prev.items,
           {
+            cartItemId: cartItemId,
             id: product.id,
             title: product.title,
             quantity: qty,
             price: price,
             discount: discount,
             image: product.image,
-            salePrice: (price - discount) * qty, 
+            salePrice: (price - discount) * qty,
+            selectedVariants: product.selectedVariants || null
           }
         ]
       }));
@@ -127,24 +135,24 @@ export const ContextProvider = ({ children }) => {
     }
   };
 
-  const removeFromCart = (id) => {
+  const removeFromCart = (cartItemId) => {
     setCart(prev => ({ 
       ...prev, 
-      items: prev.items.filter(item => item.id !== id) 
+      items: prev.items.filter(item => item.cartItemId !== cartItemId) 
     }))
     toast.error("Removed from cart");
   }
 
-  const decreaseQuantity = (id) => {
+  const decreaseQuantity = (cartItemId) => {
     setCart((prev) => {
-      const existing = prev.items.find(item => item.id === id);
+      const existing = prev.items.find(item => item.cartItemId === cartItemId);
       if (!existing) return prev;
 
       if (existing.quantity > 1) {
         return {
           ...prev,
           items: prev.items.map(item => {
-            if (item.id === id) {
+            if (item.cartItemId === cartItemId) {
               const newQty = item.quantity - 1;
               return { 
                 ...item, 
@@ -156,7 +164,7 @@ export const ContextProvider = ({ children }) => {
           })
         };
       }
-      return { ...prev, items: prev.items.filter(item => item.id !== id) };
+      return { ...prev, items: prev.items.filter(item => item.cartItemId !== cartItemId) };
     });
   };
 
@@ -188,7 +196,7 @@ export const ContextProvider = ({ children }) => {
       setTotalPrice(tempTotalPrice)
       setTotalDiscount(tempSubTotal - tempTotalPrice)
   }, [cart])
-  
+
   const contextValue = {
     manageSidebar, setManageSidebar, cartBar, setCartBar, updateUserBox, setUpdateUserBox,
     cart, siteData, userData, subTotal, totalPrice, totalDiscount,

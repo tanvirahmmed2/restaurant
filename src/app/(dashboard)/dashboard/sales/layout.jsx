@@ -1,25 +1,12 @@
 import { isLogin } from "@/lib/auth/middleware"
 import { redirect } from "next/navigation"
 
-const SalesLayout = async ({ children }) => {
+export default async function SalesLayout({ children }) {
   const auth = await isLogin()
   
-  if (!auth.success) {
-    return redirect('/login')
-  }
-
-  const user = auth.payload
-  
-  // Check for sales or admin role
-  if (user.role !== 'sales' && user.role !== 'admin') {
+  if (!auth.success || (auth.payload.role !== 'sales' && auth.payload.role !== 'admin')) {
     return redirect('/dashboard')
   }
 
-  return (
-    <>
-      {children}
-    </>
-  )
+  return <>{children}</>
 }
-
-export default SalesLayout

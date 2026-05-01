@@ -40,10 +40,10 @@ export async function GET(req) {
       [tenant.tenant_id]
     );
 
-    // 4. Total Products
-    const { rows: productStats } = await pool.query(
-      `SELECT COUNT(id) as total_products 
-       FROM res_products 
+    // 4. Total Items
+    const { rows: itemStats } = await pool.query(
+      `SELECT COUNT(id) as total_items 
+       FROM res_items 
        WHERE tenant_id = $1`,
       [tenant.tenant_id]
     );
@@ -53,7 +53,7 @@ export async function GET(req) {
       totalRevenue: parseFloat(orderStats[0].total_revenue) || 0,
       pendingOrders: parseInt(pendingStats[0].pending_orders) || 0,
       totalCustomers: parseInt(customerStats[0].total_customers) || 0,
-      totalProducts: parseInt(productStats[0].total_products) || 0,
+      totalItems: parseInt(itemStats[0].total_items) || 0,
     };
 
     return NextResponse.json({

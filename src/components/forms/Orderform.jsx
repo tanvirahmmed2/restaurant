@@ -5,7 +5,7 @@ import { Context } from '../context/Context'
 import toast from 'react-hot-toast'
 import axios from 'axios'
 import Image from 'next/image'
-import { MdDeleteOutline } from 'react-icons/md'
+import { MdDeleteOutline, MdChevronRight } from 'react-icons/md'
 
 const paymentOptions = ['bkash', 'card', 'nagad', 'rocket', 'cash']
 const deliveryOptions = ['takeaway', 'takein']
@@ -76,97 +76,127 @@ const Orderform = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className='w-full flex flex-col items-center gap-4 relative'>
-            <div className='w-full flex flex-col gap-1'>
-                <label htmlFor="phone" className='text-sm font-semibold'>Customer Phone</label>
-                <input type="text" name='phone' id='phone' onChange={handleChange} value={formData.phone} className='w-full px-3 p-2 border rounded outline-none placeholder:italic focus:border-black' placeholder='Customer contact number' />
+        <form onSubmit={handleSubmit} className='w-full flex flex-col gap-6 bg-white p-6 rounded-xl border border-gray-100'>
+            <div className='w-full flex flex-col gap-1.5'>
+                <label htmlFor="phone" className='text-[10px] font-semibold uppercase tracking-widest text-gray-400 ml-1'>Customer Phone</label>
+                <input 
+                    type="text" name='phone' id='phone' 
+                    onChange={handleChange} value={formData.phone} 
+                    className='w-full px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:border-black transition-all font-semibold text-sm' 
+                    placeholder='Guest by default' 
+                />
             </div>
             
-            <div className='w-full grid grid-cols-9 text-xs font-bold justify-items-center gap-1 border-b pb-2'>
-                <p className='col-span-1'>Img</p>
-                <p className='col-span-3'>Title</p>
-                <p className='col-span-1'>Qty</p>
-                <p className='col-span-1'>Price</p>
-                <p className='col-span-1'>Disc</p>
-                <p className='col-span-1'>Total</p>
-                <p className='col-span-1'></p>
+            <div className='w-full flex flex-col gap-3'>
+                <div className='flex items-center justify-between px-2 pb-2 border-b border-gray-50'>
+                    <p className='text-[10px] font-semibold uppercase tracking-widest text-gray-300'>Order Items</p>
+                    <button type='button' className='text-[10px] font-semibold text-rose-400 hover:text-rose-600 uppercase tracking-widest transition-colors' onClick={() => clearCart()}>Clear Cart</button>
+                </div>
+
+                {cart?.items.length > 0 ? (
+                    <div className='w-full flex flex-col gap-4'>
+                        <div className='max-h-[350px] overflow-y-auto w-full pr-1 space-y-2'>
+                            {cart.items.map((item) => (
+                                <div key={item.cartItemId} className='w-full flex items-center gap-3 py-2 border-b border-gray-50 last:border-0'>
+                                    <div className='w-10 h-10 overflow-hidden rounded-lg bg-gray-50 border border-gray-100'>
+                                        <Image src={item.image} alt={item.title} width={40} height={40} className='w-full h-full object-cover' />
+                                    </div>
+                                    <div className='flex-1 min-w-0'>
+                                        <p className='text-xs font-semibold text-gray-800 truncate'>{item.title}</p>
+                                        <div className='flex items-center gap-1.5 mt-0.5'>
+                                            <p className='text-[10px] font-semibold text-gray-900'>৳{item.salePrice.toLocaleString()}</p>
+                                            {item.selectedVariants && Object.values(item.selectedVariants).length > 0 && (
+                                                <span className='text-[8px] text-gray-400 uppercase font-medium tracking-tighter'>
+                                                    • {Object.values(item.selectedVariants).map(v => v.value).join(', ')}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className='flex items-center bg-gray-50 rounded-lg p-1'>
+                                        <button className='w-5 h-5 flex items-center justify-center font-semibold text-gray-400 hover:text-black transition-colors' type='button' onClick={() => decreaseQuantity(item.cartItemId)}>-</button>
+                                        <span className='text-[10px] font-semibold w-5 text-center'>{item.quantity}</span>
+                                        <button className='w-5 h-5 flex items-center justify-center font-semibold text-gray-400 hover:text-black transition-colors' type='button' onClick={() => addToCart(item)}>+</button>
+                                    </div>
+                                    <button className='p-1.5 text-gray-200 hover:text-rose-500 transition-all' type='button' onClick={() => removeFromCart(item.cartItemId)}>
+                                        <MdDeleteOutline size={16} />
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                        
+                        <div className='bg-black text-white p-5 rounded-xl w-full flex flex-col gap-3'>
+                            <div className='space-y-1.5'>
+                                <div className='flex justify-between text-[10px] font-semibold uppercase tracking-widest opacity-50'>
+                                    <p>Subtotal</p>
+                                    <p>৳{subTotal.toLocaleString()}</p>
+                                </div>
+                                <div className='flex justify-between text-[10px] font-semibold uppercase tracking-widest text-emerald-400'>
+                                    <p>Discounts</p>
+                                    <p>-৳{totalDiscount.toLocaleString()}</p>
+                                </div>
+                            </div>
+                            <div className='flex justify-between items-center border-t border-white/10 pt-3'>
+                                <div>
+                                    <p className='text-[10px] font-semibold uppercase tracking-widest opacity-50'>Total Payable</p>
+                                    <p className='text-2xl font-semibold tracking-tight'>৳{totalPrice.toLocaleString()}</p>
+                                </div>
+                                <button 
+                                    className='px-5 py-2.5 bg-white text-black rounded-lg font-semibold text-[11px] uppercase tracking-wider hover:bg-gray-100 transition-all flex items-center gap-1.5' 
+                                    type='button' 
+                                    onClick={() => setPopUp(true)}
+                                >
+                                    Review <MdChevronRight size={16} />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div className='py-20 flex flex-col items-center gap-3 text-gray-200'>
+                         <MdDeleteOutline size={48} className='opacity-20' />
+                         <p className='font-semibold uppercase tracking-widest text-[9px]'>Cart is empty</p>
+                    </div>
+                )}
             </div>
 
-            {cart?.items.length > 0 ? (
-                <div className='w-full flex flex-col items-center gap-2 '>
-                    {cart.items.map((item) => (
-                        <div key={item.id} className='w-full grid grid-cols-9 justify-items-center gap-1 py-2 items-center even:bg-gray-50 border-b border-gray-100'>
-                            <div className='col-span-1 w-10 h-10 overflow-hidden rounded'>
-                                <Image src={item.image} alt={item.title} width={50} height={50} className='w-full h-full object-cover' />
-                            </div>
-                            <p className='col-span-3 text-sm truncate w-full text-center'>{item.title}</p>
-                            <div className='col-span-1 flex flex-row items-center justify-between w-full px-1'>
-                                <button className='bg-black text-white w-5 h-5 flex items-center justify-center rounded-full text-xs cursor-pointer' type='button' onClick={() => addToCart(item)}>+</button>
-                                <p className='text-sm font-bold'>{item.quantity}</p>
-                                <button className='bg-gray-300 w-5 h-5 flex items-center justify-center rounded-full text-xs cursor-pointer' type='button' onClick={() => decreaseQuantity(item.id)}>-</button>
-                            </div>
-                            <p className='col-span-1 text-sm'>৳{item.price}</p>
-                            <p className='col-span-1 text-sm'>৳{item.discount}</p>
-                            <p className='col-span-1 text-sm font-bold'>৳{item.salePrice}</p>
-                            <button className='col-span-1 text-xl text-red-500 cursor-pointer hover:scale-110' type='button' onClick={() => removeFromCart(item.id)}><MdDeleteOutline /></button>
-                        </div>
-                    ))}
-                    
-                    <div className='bg-black text-white p-4 rounded-xl w-full flex flex-col gap-2 mt-4'>
-                        <div className='flex justify-between text-sm opacity-80'>
-                            <p>SubTotal</p>
-                            <p>৳{subTotal}</p>
-                        </div>
-                        <div className='flex justify-between text-sm opacity-80'>
-                            <p>Discount</p>
-                            <p>৳{totalDiscount}</p>
-                        </div>
-                        <div className='flex justify-between text-xl font-bold border-t pt-2 mt-2'>
-                            <p>Total</p>
-                            <p>৳{totalPrice}</p>
-                        </div>
-                        <button className='w-full mt-2 p-2 bg-white text-black rounded-lg font-bold cursor-pointer hover:bg-gray-100' type='button' onClick={() => setPopUp(true)}>Next Step</button>
-                    </div>
-                    <button type='button' className='text-sm text-gray-500 hover:text-red-500 underline mt-2' onClick={() => clearCart()}>Clear Cart</button>
-                </div>
-            ) : (
-                <div className='py-10 text-gray-400 italic text-center'>Your cart is empty. Add products to start an order.</div>
-            )}
-
             {popUp && (
-                <div className='flex items-center justify-center fixed inset-0 backdrop-blur-md bg-black/40 z-[60]'>
-                    <div className='w-full max-w-sm mx-4 flex flex-col p-6 gap-4 bg-white rounded-2xl shadow-2xl'>
-                        <div className='flex justify-between items-center border-b pb-3'>
-                            <h2 className='text-xl font-bold'>Checkout</h2>
-                            <p className='text-lg font-bold text-green-600'>৳{totalPrice}</p>
+                <div className='flex items-center justify-center fixed inset-0 backdrop-blur-sm bg-black/40 z-[60]'>
+                    <div className='w-full max-w-sm mx-4 flex flex-col p-6 gap-6 bg-white rounded-xl border border-gray-100'>
+                        <div className='flex justify-between items-center border-b border-gray-50 pb-4'>
+                            <div>
+                                <h2 className='text-lg font-semibold text-gray-800 tracking-tight'>Checkout</h2>
+                                <p className='text-[10px] font-semibold uppercase tracking-widest text-gray-400'>Order Settlement</p>
+                            </div>
+                            <p className='text-xl font-semibold text-black tracking-tight'>৳{totalPrice.toLocaleString()}</p>
                         </div>
 
-                        <div className='flex flex-col gap-1'>
-                            <label htmlFor="payment_method" className='text-sm font-semibold'>Payment Method</label>
-                            <select name="payment_method" id="payment_method" onChange={handleChange} required value={formData.payment_method} className='w-full p-2 border rounded outline-none focus:border-black'>
-                                {paymentOptions.map((p) => (
-                                    <option value={p} key={p}>{p.toUpperCase()}</option>
-                                ))}
-                            </select>
-                        </div>
+                        <div className='flex flex-col gap-4'>
+                            <div className='flex flex-col gap-1.5'>
+                                <label htmlFor="payment_method" className='text-[10px] font-semibold uppercase tracking-widest text-gray-400 ml-1'>Payment</label>
+                                <select name="payment_method" id="payment_method" onChange={handleChange} required value={formData.payment_method} className='w-full p-3 bg-gray-50 border border-gray-50 rounded-xl outline-none font-semibold text-sm appearance-none cursor-pointer'>
+                                    {paymentOptions.map((p) => (
+                                        <option value={p} key={p}>{p.toUpperCase()}</option>
+                                    ))}
+                                </select>
+                            </div>
 
-                        <div className='flex flex-col gap-1'>
-                            <label htmlFor="delivery_method" className='text-sm font-semibold'>Order Type</label>
-                            <select name="delivery_method" id="delivery_method" onChange={handleChange} required value={formData.delivery_method} className='w-full p-2 border rounded outline-none focus:border-black'>
-                                {deliveryOptions.map((d) => (
-                                    <option value={d} key={d}>{d.toUpperCase()}</option>
-                                ))}
-                            </select>
-                        </div>
+                            <div className='flex flex-col gap-1.5'>
+                                <label htmlFor="delivery_method" className='text-[10px] font-semibold uppercase tracking-widest text-gray-400 ml-1'>Type</label>
+                                <select name="delivery_method" id="delivery_method" onChange={handleChange} required value={formData.delivery_method} className='w-full p-3 bg-gray-50 border border-gray-50 rounded-xl outline-none font-semibold text-sm appearance-none cursor-pointer'>
+                                    {deliveryOptions.map((d) => (
+                                        <option value={d} key={d}>{d.toUpperCase()}</option>
+                                    ))}
+                                </select>
+                            </div>
 
-                        <div className='flex flex-col gap-1'>
-                            <label htmlFor="table_no" className='text-sm font-semibold'>Table Number (Optional)</label>
-                            <input name="table_no" id="table_no" onChange={handleChange} value={formData.table_no} placeholder="e.g. A1, 05" className='w-full p-2 border rounded outline-none focus:border-black'/>
+                            <div className='flex flex-col gap-1.5'>
+                                <label htmlFor="table_no" className='text-[10px] font-semibold uppercase tracking-widest text-gray-400 ml-1'>Table (Optional)</label>
+                                <input name="table_no" id="table_no" onChange={handleChange} value={formData.table_no} placeholder="e.g. A1" className='w-full p-3 bg-gray-50 border border-gray-50 rounded-xl outline-none font-semibold text-sm'/>
+                            </div>
                         </div>
 
                         <div className='flex flex-row gap-3 mt-2'>
-                            <button className='flex-1 p-2 border rounded-lg font-bold hover:bg-gray-50 transition-colors' type='button' onClick={() => setPopUp(false)}>Back</button>
-                            <button className='flex-1 p-2 bg-black text-white rounded-lg font-bold hover:bg-gray-800 transition-colors' type='submit'>Confirm Order</button>
+                            <button className='flex-1 py-3 border border-gray-100 rounded-xl font-semibold text-[10px] uppercase tracking-widest hover:bg-gray-50 transition-all text-gray-400' type='button' onClick={() => setPopUp(false)}>Cancel</button>
+                            <button className='flex-1 py-3 bg-black text-white rounded-xl font-semibold text-[10px] uppercase tracking-widest hover:bg-gray-800 transition-all' type='submit'>Pay Now</button>
                         </div>
                     </div>
                 </div>

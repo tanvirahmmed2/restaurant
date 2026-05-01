@@ -23,78 +23,62 @@ const AdminOverview = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full min-h-[50vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="w-8 h-8 border-2 border-gray-200 border-t-black rounded-full animate-spin"></div>
       </div>
     )
   }
 
   return (
     <div className="w-full flex flex-col gap-8">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-black text-gray-900 tracking-tight">Business Overview</h1>
-        <p className="text-gray-500 text-sm">Key metrics and performance of your restaurant.</p>
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">Business Overview</h1>
+        <p className="text-gray-500 text-sm">Real-time performance metrics.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         
         {/* Revenue Card */}
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col gap-4 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110" />
-          <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl relative z-10">
+        <div className="bg-white p-5 rounded-xl border border-gray-100 flex flex-col gap-3 group hover:border-black transition-all duration-300">
+          <div className="w-10 h-10 bg-gray-50 text-gray-900 rounded-lg flex items-center justify-center text-xl transition-colors group-hover:bg-black group-hover:text-white">
             <MdTrendingUp />
           </div>
-          <div className="relative z-10">
-            <p className="text-gray-400 font-bold uppercase tracking-widest text-[10px]">Total Revenue</p>
-            <h2 className="text-3xl font-black text-gray-900 mt-1">${stats?.totalRevenue?.toFixed(2)}</h2>
+          <div>
+            <p className="text-gray-400 font-semibold uppercase tracking-widest text-[9px]">Total Revenue</p>
+            <h2 className="text-2xl font-semibold text-gray-900 mt-0.5">৳{stats?.totalRevenue?.toLocaleString()}</h2>
           </div>
         </div>
 
         {/* Orders Card */}
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col gap-4 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110" />
-          <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-2xl relative z-10">
+        <div className="bg-white p-5 rounded-xl border border-gray-100 flex flex-col gap-3 group hover:border-black transition-all duration-300">
+          <div className="w-10 h-10 bg-gray-50 text-gray-900 rounded-lg flex items-center justify-center text-xl transition-colors group-hover:bg-black group-hover:text-white">
             <MdShoppingCart />
           </div>
-          <div className="relative z-10">
-            <p className="text-gray-400 font-bold uppercase tracking-widest text-[10px]">Total Orders</p>
-            <h2 className="text-3xl font-black text-gray-900 mt-1">{stats?.totalOrders}</h2>
+          <div>
+            <p className="text-gray-400 font-semibold uppercase tracking-widest text-[9px]">Total Orders</p>
+            <h2 className="text-2xl font-semibold text-gray-900 mt-0.5">{stats?.totalOrders}</h2>
           </div>
         </div>
 
         {/* Pending Card */}
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col gap-4 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-amber-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110" />
-          <div className="w-12 h-12 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center text-2xl relative z-10">
+        <div className="bg-white p-5 rounded-xl border border-gray-100 flex flex-col gap-3 group hover:border-black transition-all duration-300">
+          <div className="w-10 h-10 bg-gray-50 text-gray-900 rounded-lg flex items-center justify-center text-xl transition-colors group-hover:bg-black group-hover:text-white">
             <MdPendingActions />
           </div>
-          <div className="relative z-10">
-            <p className="text-gray-400 font-bold uppercase tracking-widest text-[10px]">Pending Orders</p>
-            <h2 className="text-3xl font-black text-gray-900 mt-1">{stats?.pendingOrders}</h2>
+          <div>
+            <p className="text-gray-400 font-semibold uppercase tracking-widest text-[9px]">Pending</p>
+            <h2 className="text-2xl font-semibold text-gray-900 mt-0.5">{stats?.pendingOrders}</h2>
           </div>
         </div>
 
         {/* Customers Card */}
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col gap-4 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-purple-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110" />
-          <div className="w-12 h-12 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center text-2xl relative z-10">
+        <div className="bg-white p-5 rounded-xl border border-gray-100 flex flex-col gap-3 group hover:border-black transition-all duration-300">
+          <div className="w-10 h-10 bg-gray-50 text-gray-900 rounded-lg flex items-center justify-center text-xl transition-colors group-hover:bg-black group-hover:text-white">
             <MdPeople />
           </div>
-          <div className="relative z-10">
-            <p className="text-gray-400 font-bold uppercase tracking-widest text-[10px]">Total Customers</p>
-            <h2 className="text-3xl font-black text-gray-900 mt-1">{stats?.totalCustomers}</h2>
-          </div>
-        </div>
-
-        {/* Products Card */}
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col gap-4 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110" />
-          <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center text-2xl relative z-10">
-            <MdInventory />
-          </div>
-          <div className="relative z-10">
-            <p className="text-gray-400 font-bold uppercase tracking-widest text-[10px]">Total Products</p>
-            <h2 className="text-3xl font-black text-gray-900 mt-1">{stats?.totalProducts}</h2>
+          <div>
+            <p className="text-gray-400 font-semibold uppercase tracking-widest text-[9px]">Customers</p>
+            <h2 className="text-2xl font-semibold text-gray-900 mt-0.5">{stats?.totalCustomers}</h2>
           </div>
         </div>
 

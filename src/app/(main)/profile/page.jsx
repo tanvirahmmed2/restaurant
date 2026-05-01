@@ -7,6 +7,7 @@ import { CiEdit, CiUser } from 'react-icons/ci'
 import { MdCancel, MdShoppingBag, MdSettings, MdHistory, MdPerson } from 'react-icons/md'
 import axios from 'axios'
 import { motion, AnimatePresence } from 'framer-motion'
+import Link from 'next/link'
 
 const Profile = () => {
   const { userData, updateUserBox, setUpdateUserBox } = useContext(Context)
@@ -97,8 +98,8 @@ const Profile = () => {
                       </div>
                     </div>
                     <div className='text-right'>
-                      <p className='font-black text-gray-900'>${Number(order.total_price).toFixed(2)}</p>
-                      <span className={`text-[10px] font-black uppercase tracking-widest ${
+                      <p className='font-black text-gray-900 tracking-tighter text-lg'>৳{Number(order.total_price).toFixed(2)}</p>
+                      <span className={`text-[9px] font-black uppercase tracking-[0.2em] ${
                         order.status === 'delivered' ? 'text-emerald-500' : 'text-amber-500'
                       }`}>
                         {order.status}

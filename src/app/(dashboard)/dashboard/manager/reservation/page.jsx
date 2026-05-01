@@ -6,54 +6,80 @@ import Link from 'next/link'
 import React from 'react'
 
 const Reservation = async () => {
-  const res = await fetch(`${BASE_URL}/api/reservation`, { method: 'GET', cache: 'no-store' })
-  const data = await res.json()
-
-  if (!data.success || data.payload.length === 0) return (
-    <div className='w-full h-64 flex flex-col items-center justify-center text-slate-400'>
-      <p className="text-xl font-medium">No reservation found</p>
-      <p className="text-sm">New bookings will appear here.</p>
-    </div>
-  )
-
-  const reservations = data.payload
+  let reservations = []
+  try {
+    const res = await fetch(`${BASE_URL}/api/reservation`, { method: 'GET', cache: 'no-store' })
+    const data = await res.json()
+    if (data.success) reservations = data.payload
+  } catch (error) {
+    console.error("Failed to fetch reservations:", error)
+  }
 
   return (
-    <div className='w-full mx-auto p-4 space-y-4'>
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-slate-800">Reservation Inbox</h2>
-        <span className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-bold">
-          {reservations.length} Bookings
-        </span>
+    <div className='w-full max-w-6xl mx-auto flex flex-col gap-8'>
+      <div className='flex flex-row items-center justify-between'>
+        <div className='flex flex-col gap-1'>
+          <h1 className='text-2xl font-semibold text-gray-900 tracking-tight'>Reservation Inbox</h1>
+          <p className='text-gray-500 text-sm'>Manage customer bookings and table assignments.</p>
+        </div>
+        <div className="bg-amber-50 text-amber-700 px-4 py-1.5 rounded-full text-[10px] font-semibold uppercase tracking-wider">
+          {reservations.length} Active Bookings
+        </div>
       </div>
 
-      <div className="flex w-full flex-col gap-4 ">
+      <div className="flex w-full flex-col gap-3">
         {reservations.map((info) => (
-          <div key={info._id} className='w-full flex flex-row justify-between p-2 border rounded-lg'>
-            <div className='flex-1 flex flex-col gap-3'>
-              <h1 className='text-xl font-semibold'>{info.name}</h1>
-              <p className='italic'>Email: {info.email}</p>
-              <p>Member: {info.member}</p>
-            </div>
-
-            <div className='flex-3 flex flex-col gap-3'>
-              <p>Date: {info.date.slice(0,10)}</p>
-              <p>Table: {info.table}</p>
-              <p className='font-semibold'>{info.message}</p>
-            </div>
-
-            <div className='flex-1 flex flex-col gap-3 items-center justify-center h-full'>
-              <Link href={`mailto:${info.email}`} className="w-full bg-black p-1 rounded-lg text-white text-center">Reply</Link>
-              <div className='w-full flex flex-row items-center justify-center gap-6'>
-                <DeleteReservation id={info._id} />
-                <ConfirmBooking id={info._id}/>
-                
-
+          <div key={info.id} className='w-full grid grid-cols-12 p-5 bg-white border border-gray-100 rounded-xl hover:border-black transition-all items-start gap-4'>
+            <div className='col-span-4 flex flex-col gap-1'>
+              <h3 className='text-base font-semibold text-gray-800'>{info.name}</h3>
+              <p className='text-xs text-gray-400 font-medium'>{info.email}</p>
+              <div className='mt-2 flex items-center gap-2'>
+                <span className={`px-2 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wider ${
+                  info.status === 'pending' ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-emerald-600'
+                }`}>
+                  {info.status}
+                </span>
               </div>
-              <p className={`w-full text-center ${info.status==='pending'? 'text-red-600': 'text-green-500'}`}>{info.status}</p>
+            </div>
+
+            <div className='col-span-5 flex flex-col gap-2'>
+              <div className='grid grid-cols-2 gap-4'>
+                <div>
+                  <p className='text-[10px] font-semibold text-gray-400 uppercase tracking-widest'>Date</p>
+                  <p className='text-sm text-gray-700 font-medium'>{new Date(info.res_date).toLocaleDateString()}</p>
+                </div>
+                <div>
+                  <p className='text-[10px] font-semibold text-gray-400 uppercase tracking-widest'>Table & Size</p>
+                  <p className='text-sm text-gray-700 font-medium'>Table {info.table_no} • {info.member_count} Pax</p>
+                </div>
+              </div>
+              {info.message && (
+                <div className='mt-1'>
+                  <p className='text-[10px] font-semibold text-gray-400 uppercase tracking-widest'>Customer Note</p>
+                  <p className='text-xs text-gray-500 leading-relaxed italic'>"{info.message}"</p>
+                </div>
+              )}
+            </div>
+
+            <div className='col-span-3 flex flex-col gap-2 items-end justify-center h-full'>
+              <Link 
+                href={`mailto:${info.email}`} 
+                className="w-full max-w-[120px] bg-gray-50 text-gray-900 py-2 rounded-lg text-center text-xs font-semibold hover:bg-black hover:text-white transition-all"
+              >
+                Reply
+              </Link>
+              <div className='w-full max-w-[120px] flex items-center gap-2'>
+                <ConfirmBooking id={info.id}/>
+                <DeleteReservation id={info.id} />
+              </div>
             </div>
           </div>
         ))}
+        {reservations.length === 0 && (
+          <div className='text-center py-24 bg-gray-50/50 rounded-xl border border-dashed border-gray-200'>
+            <p className='text-gray-400 text-sm font-medium'>No reservations found.</p>
+          </div>
+        )}
       </div>
     </div>
   )

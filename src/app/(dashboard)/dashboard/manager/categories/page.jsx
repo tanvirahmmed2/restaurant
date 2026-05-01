@@ -11,11 +11,11 @@ import { FaPlus } from 'react-icons/fa'
 const CategorListPage = () => {
   const { categories, fetchCategories } = useContext(Context)
 
-  const handleDelete=async(id)=>{
-    const confirm= window.confirm('Are you sure to delete this category?')
-    if(!confirm) return
+  const handleDelete = async (id) => {
+    const confirm = window.confirm('Are you sure to delete this category?')
+    if (!confirm) return
     try {
-      const res= await axios.delete('/api/category',{data:{id},withCredentials:true})
+      const res = await axios.delete('/api/category', { data: { id }, withCredentials: true })
       toast.success(res.data.message)
       fetchCategories()
     } catch (error) {
@@ -24,50 +24,49 @@ const CategorListPage = () => {
   }
 
   return (
-    <div className='w-full max-w-4xl mx-auto p-6 flex flex-col gap-8'>
-      <div className='flex flex-row items-center justify-between border-b border-gray-100 pb-6'>
-        <div>
-          <h1 className='text-3xl font-black text-gray-900 tracking-tight'>Categories</h1>
-          <p className='text-gray-500'>Organize your products into groups.</p>
+    <div className='w-full max-w-4xl mx-auto flex flex-col gap-8'>
+      <div className='flex flex-row items-center justify-between'>
+        <div className='flex flex-col gap-1'>
+          <h1 className='text-2xl font-semibold text-gray-900 tracking-tight'>Categories</h1>
+          <p className='text-gray-500 text-sm'>Organize your menu items into groups.</p>
         </div>
         <Link 
           href="/dashboard/manager/new-category" 
-          className='flex items-center gap-2 px-6 py-3 bg-black text-white rounded-2xl font-bold hover:bg-gray-800 transition-all active:scale-95 shadow-lg'
+          className='flex items-center gap-2 px-5 py-2.5 bg-black text-white rounded-xl font-semibold text-sm hover:bg-gray-800 transition-all active:scale-[0.98]'
         >
-          <FaPlus size={14}/>
+          <FaPlus size={12}/>
           <span>Add Category</span>
         </Link>
       </div>
 
       <div className='w-full flex flex-col gap-4'>
         {categories && categories.length > 0 ? (
-          <div className='flex flex-col gap-2'>
-            <div className='w-full grid grid-cols-6 bg-gray-50 p-4 rounded-xl font-bold text-xs uppercase text-gray-400 tracking-widest'>
-              <p className='col-span-1'>Image</p>
-              <p className='col-span-4'>Category Name</p>
-              <p className='text-right'>Actions</p>
+          <div className='flex flex-col gap-1.5'>
+            <div className='w-full grid grid-cols-12 bg-gray-50/50 p-4 rounded-xl font-semibold text-[10px] uppercase text-gray-400 tracking-widest border border-gray-100'>
+              <p className='col-span-10'>Category Detail</p>
+              <p className='col-span-2 text-right'>Action</p>
             </div>
             
-            <div className='flex flex-col gap-2'>
+            <div className='flex flex-col gap-1.5'>
               {categories.map((cat) => (
-                <div key={cat.id} className='w-full grid grid-cols-6 p-4 items-center bg-white border border-gray-100 rounded-2xl hover:shadow-md transition-all group'>
-                  <div className='col-span-1'>
-                    <div className='w-12 h-12 rounded-xl overflow-hidden shadow-sm'>
-                      <Image src={cat?.image} alt={cat?.name} width={48} height={48} className='object-cover w-full h-full'/>
+                <div key={cat.id} className='w-full grid grid-cols-12 p-3 items-center bg-white border border-gray-100 rounded-xl hover:border-black transition-all group'>
+                  <div className='col-span-10 flex items-center gap-3'>
+                    <div className='w-10 h-10 rounded-lg overflow-hidden border border-gray-50'>
+                      <Image src={cat?.image} alt={cat?.name} width={40} height={40} className='object-cover w-full h-full'/>
                     </div>
+                    <p className='font-semibold text-gray-800 text-sm'>{cat?.name}</p>
                   </div>
-                  <h1 className='col-span-4 font-bold text-gray-800'>{cat?.name}</h1>
-                  <div className='flex flex-row items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity text-xl'>
+                  <div className='col-span-2 flex flex-row items-center justify-end gap-2'>
                     <button className='p-2 text-gray-400 hover:text-black transition-colors'><MdEdit/></button>
-                    <button className='p-2 text-red-300 hover:text-red-600 transition-colors' onClick={()=>handleDelete(cat.id)}><MdDeleteOutline /></button>
+                    <button className='p-2 text-rose-300 hover:text-rose-600 transition-colors' onClick={() => handleDelete(cat.id)}><MdDeleteOutline /></button>
                   </div>
                 </div>
               ))}
             </div>
           </div>
         ) : (
-          <div className='text-center py-20 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200'>
-            <p className='text-gray-400 font-medium'>No categories found.</p>
+          <div className='text-center py-24 bg-gray-50/50 rounded-xl border border-dashed border-gray-200'>
+            <p className='text-gray-400 text-sm font-medium'>No categories found.</p>
           </div>
         )}
       </div>

@@ -66,7 +66,6 @@ export async function POST(req) {
       }, { status: 403 });
     }
 
-    // Filter fields to match schema and prevent injection/accidental overwrites
     const allowedFields = [
       'name', 'domain', 'theme', 'status', 'business_name', 'logo', 'favicon',
       'email', 'phone', 'address', 'city', 'country', 'meta_title', 'meta_description',

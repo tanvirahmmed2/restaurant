@@ -1,11 +1,13 @@
 'use client'
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import toast from 'react-hot-toast'
 import { motion } from 'framer-motion'
-import { FaCalendarAlt, FaUsers, FaChair, FaCommentAlt, FaArrowRight } from 'react-icons/fa'
+import { FaCalendarAlt, FaChair } from 'react-icons/fa'
+import { Context } from '@/components/context/Context'
 
 const Reservation = () => {
+  const { siteData } = useContext(Context)
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
@@ -43,112 +45,102 @@ const Reservation = () => {
   }
 
   return (
-    <div className='w-full min-h-screen bg-gray-50/50 pt-28 pb-20 px-6'>
+    <div className='w-full min-h-screen bg-gray-50/30 pt-28 pb-20 px-6'>
       <div className='max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center'>
 
         {/* Text Section */}
         <motion.div 
-          initial={{ opacity: 0, x: -30 }} 
+          initial={{ opacity: 0, x: -20 }} 
           animate={{ opacity: 1, x: 0 }} 
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.6 }}
           className='space-y-8'
         >
           <div className='space-y-4'>
-            <div className='inline-block px-4 py-1.5 bg-black text-white text-[10px] font-black uppercase tracking-[0.3em] rounded-full'>
+            <div className='inline-block px-4 py-1 bg-black text-white text-[10px] font-semibold uppercase tracking-widest rounded-full'>
               Reservations
             </div>
-            <h1 className='text-6xl md:text-7xl font-black text-gray-900 tracking-tight leading-none'>
-              Reserve Your <span className='text-indigo-600'>Table</span>
+            <h1 className='text-5xl md:text-6xl font-semibold text-gray-900 tracking-tight leading-tight'>
+              Experience the Art of <span className='text-gray-400 italic'>Fine Dining</span>
             </h1>
           </div>
-          <p className='text-gray-500 text-lg md:text-xl leading-relaxed max-w-lg'>
-            Whether it&apos;s a romantic dinner, a corporate lunch, or a family celebration, 
-            we ensure every detail is perfect for your visit.
+          <p className='text-gray-500 text-lg leading-relaxed max-w-md font-medium'>
+            {siteData?.meta_description || "Book your table at Grand Kitchen and prepare for an unforgettable culinary journey."}
           </p>
-          <div className='flex items-center gap-6 pt-4'>
-            <div className='flex -space-x-3'>
-              {[1, 2, 3, 4].map(i => (
-                <div key={i} className='w-12 h-12 rounded-full border-4 border-white bg-gray-200 overflow-hidden'>
-                  <img src={`https://i.pravatar.cc/100?img=${i+10}`} alt="avatar" />
-                </div>
-              ))}
+          <div className='flex flex-col gap-4 pt-4 border-t border-gray-100'>
+            <div className='flex items-center gap-3'>
+              <div className='w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center text-gray-900'>
+                <FaCalendarAlt size={16} />
+              </div>
+              <div>
+                <p className='text-[10px] font-semibold uppercase tracking-widest text-gray-400'>Open Hours</p>
+                <p className='text-sm font-semibold text-gray-900'>Mon - Sun: 10:00 AM - 11:00 PM</p>
+              </div>
             </div>
-            <p className='text-sm font-bold text-gray-400 uppercase tracking-widest'>
-              Join 500+ happy guests this week
-            </p>
+            <div className='flex items-center gap-3'>
+              <div className='w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center text-gray-900'>
+                <FaChair size={16} />
+              </div>
+              <div>
+                <p className='text-[10px] font-semibold uppercase tracking-widest text-gray-400'>Location</p>
+                <p className='text-sm font-semibold text-gray-900'>{siteData?.address || "123 Culinary Ave, Gourmet City"}</p>
+              </div>
+            </div>
           </div>
         </motion.div>
         
         {/* Form Section */}
         <motion.div 
-          initial={{ opacity: 0, y: 30 }} 
+          initial={{ opacity: 0, y: 20 }} 
           animate={{ opacity: 1, y: 0 }} 
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className='bg-white p-10 rounded-[40px] shadow-2xl shadow-black/5 border border-gray-100'
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className='bg-white p-8 rounded-xl border border-gray-100'
         >
-          <div className='mb-8 text-center'>
-            <h2 className='text-2xl font-black text-gray-900'>Booking Details</h2>
-            <p className='text-gray-400 text-sm'>Please fill in the information below</p>
+          <div className='mb-8'>
+            <h2 className='text-xl font-semibold text-gray-900 tracking-tight'>Request a Table</h2>
+            <p className='text-gray-400 text-xs font-medium'>Fill in your details and we&apos;ll confirm your spot.</p>
           </div>
           
-          <form onSubmit={handleSubmit} className='flex flex-col gap-6'>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+          <form onSubmit={handleSubmit} className='flex flex-col gap-5'>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
               <div className='flex flex-col gap-1.5'>
-                <label htmlFor="name" className='text-[10px] font-black uppercase text-gray-400 tracking-widest ml-1'>Your Name</label>
-                <input type="text" id='name' name='name' required onChange={handleChange} value={formData.name} className='w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-black transition-all text-sm' placeholder="John Doe" />
+                <label htmlFor="name" className='text-[10px] font-semibold uppercase text-gray-400 tracking-widest ml-1'>Name</label>
+                <input type="text" id='name' name='name' required onChange={handleChange} value={formData.name} className='w-full px-4 py-2.5 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-black transition-all text-sm font-semibold' placeholder="John Doe" />
               </div>
               
               <div className='flex flex-col gap-1.5'>
-                <label htmlFor="email" className='text-[10px] font-black uppercase text-gray-400 tracking-widest ml-1'>Email Address</label>
-                <input type="email" id='email' name='email' required onChange={handleChange} value={formData.email} className='w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-black transition-all text-sm' placeholder="john@example.com" />
+                <label htmlFor="email" className='text-[10px] font-semibold uppercase text-gray-400 tracking-widest ml-1'>Email</label>
+                <input type="email" id='email' name='email' required onChange={handleChange} value={formData.email} className='w-full px-4 py-2.5 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-black transition-all text-sm font-semibold' placeholder="john@example.com" />
               </div>
             </div>
 
-            <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-5'>
               <div className='flex flex-col gap-1.5'>
-                <label htmlFor="date" className='text-[10px] font-black uppercase text-gray-400 tracking-widest ml-1'>Date</label>
-                <div className='relative'>
-                  <FaCalendarAlt className='absolute left-4 top-1/2 -translate-y-1/2 text-gray-300' />
-                  <input type="date" id='date' name='date' required onChange={handleChange} value={formData.date} className='w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-black transition-all text-sm' />
-                </div>
+                <label htmlFor="date" className='text-[10px] font-semibold uppercase text-gray-400 tracking-widest ml-1'>Date</label>
+                <input type="date" id='date' name='date' required onChange={handleChange} value={formData.date} className='w-full px-4 py-2.5 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-black transition-all text-sm font-semibold' />
               </div>
 
               <div className='flex flex-col gap-1.5'>
-                <label htmlFor="member" className='text-[10px] font-black uppercase text-gray-400 tracking-widest ml-1'>Guests</label>
-                <div className='relative'>
-                  <FaUsers className='absolute left-4 top-1/2 -translate-y-1/2 text-gray-300' />
-                  <input type="number" id='member' name='member' min="1" required onChange={handleChange} value={formData.member} className='w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-black transition-all text-sm' placeholder="0" />
-                </div>
+                <label htmlFor="member" className='text-[10px] font-semibold uppercase text-gray-400 tracking-widest ml-1'>Guests</label>
+                <input type="number" id='member' name='member' min="1" required onChange={handleChange} value={formData.member} className='w-full px-4 py-2.5 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-black transition-all text-sm font-semibold' placeholder="2" />
               </div>
 
               <div className='flex flex-col gap-1.5'>
-                <label htmlFor="table" className='text-[10px] font-black uppercase text-gray-400 tracking-widest ml-1'>Table Preference</label>
-                <div className='relative'>
-                  <FaChair className='absolute left-4 top-1/2 -translate-y-1/2 text-gray-300' />
-                  <input type="number" id='table' name='table' required onChange={handleChange} value={formData.table} className='w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-black transition-all text-sm' placeholder="0" />
-                </div>
+                <label htmlFor="table" className='text-[10px] font-semibold uppercase text-gray-400 tracking-widest ml-1'>Table</label>
+                <input type="number" id='table' name='table' required onChange={handleChange} value={formData.table} className='w-full px-4 py-2.5 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-black transition-all text-sm font-semibold' placeholder="5" />
               </div>
             </div>
 
             <div className='flex flex-col gap-1.5'>
-              <label htmlFor="message" className='text-[10px] font-black uppercase text-gray-400 tracking-widest ml-1'>Special Requests (Optional)</label>
-              <div className='relative'>
-                <FaCommentAlt className='absolute left-4 top-5 text-gray-300' />
-                <textarea name="message" id="message" rows="3" onChange={handleChange} value={formData.message} className='w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-black transition-all text-sm resize-none' placeholder="Any allergies or special occasions?" />
-              </div>
+              <label htmlFor="message" className='text-[10px] font-semibold uppercase text-gray-400 tracking-widest ml-1'>Notes (Optional)</label>
+              <textarea name="message" id="message" rows="2" onChange={handleChange} value={formData.message} className='w-full px-4 py-2.5 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-black transition-all text-sm font-semibold resize-none' placeholder="Allergies, anniversaries, etc." />
             </div>
 
             <button 
               type='submit' 
               disabled={loading}
-              className='group w-full py-5 bg-black text-white rounded-2xl font-black text-sm flex items-center justify-center gap-3 hover:bg-gray-800 transition-all shadow-xl shadow-black/10 active:scale-[0.98] disabled:opacity-50 mt-2'
+              className='w-full py-3.5 bg-black text-white rounded-xl font-semibold text-xs uppercase tracking-widest hover:bg-gray-800 transition-all active:scale-[0.98] disabled:opacity-50 mt-2'
             >
-              {loading ? 'SUBMITTING...' : (
-                <>
-                  CONFIRM RESERVATION
-                  <FaArrowRight className='group-hover:translate-x-1 transition-transform' />
-                </>
-              )}
+              {loading ? 'Processing...' : 'Confirm Reservation'}
             </button>
           </form>
         </motion.div>

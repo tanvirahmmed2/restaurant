@@ -11,7 +11,7 @@ export async function GET(req) {
     }
 
     const { rows } = await pool.query(
-      "SELECT * FROM res_reviews WHERE tenant_id = $1 ORDER BY created_at DESC",
+      "SELECT * FROM res_reviews WHERE tenant_id = $1 ORDER BY id DESC",
       [tenant.tenant_id]
     );
 
@@ -100,4 +100,4 @@ export async function DELETE(req) {
   } catch (error) {
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });
   }
-}
+}

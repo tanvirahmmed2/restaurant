@@ -263,7 +263,51 @@ CREATE TABLE res_reviews (
   rating INT CHECK (rating BETWEEN 1 AND 5)
 );
 
+CREATE TABLE res_offers (
+  id SERIAL PRIMARY KEY,
+  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
 
+  title VARCHAR(255) NOT NULL,
+  description TEXT,
+
+  image TEXT,
+  image_id TEXT,
+
+  is_active BOOLEAN DEFAULT TRUE,
+
+  start_date TIMESTAMP,
+  end_date TIMESTAMP,
+
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE res_item_variants (
+  id SERIAL PRIMARY KEY,
+  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
+
+  item_id INT REFERENCES res_items(id) ON DELETE CASCADE,
+
+  name VARCHAR(255) NOT NULL,        -- e.g. Size / Add-on
+  value VARCHAR(255) NOT NULL,       -- e.g. Large / Cheese
+
+  price_adjustment DECIMAL(12,2) DEFAULT 0,  -- extra price
+  is_default BOOLEAN DEFAULT FALSE,
+
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE res_order_item_variants (
+  id SERIAL PRIMARY KEY,
+  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
+
+  order_item_id INT REFERENCES res_order_items(id) ON DELETE CASCADE,
+  variant_id INT REFERENCES res_item_variants(id),
+
+  name VARCHAR(255),   -- snapshot (e.g. Size)
+  value VARCHAR(255),  -- snapshot (e.g. Large)
+
+  price_adjustment DECIMAL(12,2) DEFAULT 0
+);
 
 CREATE INDEX idx_res_items_slug ON res_items(slug);
 CREATE INDEX idx_res_categories_slug ON res_categories(slug);

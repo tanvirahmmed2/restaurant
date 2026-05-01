@@ -113,19 +113,47 @@ export async function POST(req) {
 
     // 3. Insert Order Items
     for (const item of items) {
-      await client.query(
+      let finalTitle = item.title;
+      if (item.selectedVariants) {
+        const variantNames = Object.values(item.selectedVariants).map(v => v.value).join(', ');
+        if (variantNames) {
+          finalTitle += ` (${variantNames})`;
+        }
+      }
+
+      const { rows: itemRows } = await client.query(
         `INSERT INTO res_order_items (tenant_id, order_id, product_id, title, quantity, price, discount) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+        VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`,
         [
           tenant.tenant_id,
           orderId,
-          item.id || item._id, // Support both MongoDB-style and PG-style IDs from frontend
-          item.title,
+          item.id || item._id, 
+          finalTitle,
           item.quantity,
           item.price,
           item.discount || 0,
         ]
       );
+
+      const orderItemId = itemRows[0].id;
+
+      // 4. Insert Order Item Variants (Snapshot)
+      if (item.selectedVariants) {
+        for (const variant of Object.values(item.selectedVariants)) {
+          await client.query(
+            `INSERT INTO res_order_item_variants (tenant_id, order_item_id, variant_id, name, value, price_adjustment) 
+            VALUES ($1, $2, $3, $4, $5, $6)`,
+            [
+              tenant.tenant_id,
+              orderItemId,
+              variant.id,
+              variant.name,
+              variant.value,
+              variant.price_adjustment || 0
+            ]
+          );
+        }
+      }
     }
 
     await client.query("COMMIT");

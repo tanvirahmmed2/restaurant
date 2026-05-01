@@ -44,12 +44,13 @@ Admin:
 
 
 Manager:(/dashboard/manager/.....)
-1. separate page for categories,  item(rename from product) create , update and delete
+1. separate page for categories,  item(rename from product) create , update and delete and items variants
 2. expenses
 3. history
 4. reservation
 5. reviews
 6. support
+7. create offer
 
 sales(dashboard/sales/....)
 1. /sale to make purchase
@@ -59,3 +60,21 @@ sales(dashboard/sales/....)
 
 
 make proper routing on the managesidebar and profperly fix the routing and protect them in layout
+
+
+website redesign & style theme:
+
+1. Simple but 2 colour based framer animated structure
+2. No font-black or extra bold txt. max use font-semibold
+3. No extragap or spacing
+4. no extra round
+5. dont add extra shadow and create icon from text
+6. use card and grid layout
+7. use layout.jsx for better seo
+8. make the dashboard panel simple classy also
+9. use proper routing and navigations
+10. make the admin dashboard sidebar role based. don't let everyone to manage all. make it rule based as described before
+11. fix and use proper routing for user panel
+12. replace the exisiting icon with better version.
+13. dont make the cart or checkout robust. make them simple and pretty clean
+14. fix and redesign every single frontend page and component

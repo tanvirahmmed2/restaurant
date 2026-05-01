@@ -43,72 +43,66 @@ const LoginForm = () => {
 
     return (
         <motion.div 
-            initial={{ opacity: 0, y: 20 }} 
-            whileInView={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.6 }} 
+            initial={{ opacity: 0, y: 10 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.5 }} 
             className='flex-1 w-full max-w-md'
         >
-            <form onSubmit={loginHandle} className='flex flex-col gap-6 bg-white p-8 rounded-3xl shadow-xl border border-gray-100'>
-                <div className='space-y-1'>
-                    <h2 className='text-2xl font-black text-gray-900'>Sign In</h2>
-                    <p className='text-gray-400 text-sm'>Enter your credentials to continue</p>
+            <form onSubmit={loginHandle} className='flex flex-col gap-8 bg-white p-10 rounded-xl border border-gray-100'>
+                <div className='space-y-2'>
+                    <div className='inline-block px-3 py-1 bg-gray-50 text-gray-400 text-[10px] font-semibold uppercase tracking-widest rounded-full'>
+                        Security Check
+                    </div>
+                    <h2 className='text-3xl font-semibold text-gray-900 tracking-tight'>Welcome Back.</h2>
+                    <p className='text-gray-400 text-xs font-medium'>Sign in to manage your dining experience.</p>
                 </div>
 
-                <div className='space-y-4'>
+                <div className='flex flex-col gap-4'>
                     <div className='flex flex-col gap-1.5'>
-                        <label htmlFor="email" className='text-[10px] font-black uppercase text-gray-400 tracking-widest ml-1'>Email Address</label>
-                        <div className='relative'>
-                            <FaEnvelope className='absolute left-4 top-1/2 -translate-y-1/2 text-gray-300' />
-                            <input 
-                                type="email" 
-                                id='email' 
-                                name='email' 
-                                required 
-                                value={formData.email} 
-                                onChange={handleChange} 
-                                placeholder="name@example.com"
-                                className='w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-black focus:bg-white transition-all text-sm'
-                            />
-                        </div>
+                        <label htmlFor="email" className='text-[10px] font-semibold uppercase text-gray-400 tracking-widest ml-1'>Email Address</label>
+                        <input 
+                            type="email" 
+                            id='email' 
+                            name='email' 
+                            required 
+                            value={formData.email} 
+                            onChange={handleChange} 
+                            placeholder="name@example.com"
+                            className='w-full px-4 py-3 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-black focus:bg-white transition-all text-sm font-medium'
+                        />
                     </div>
 
                     <div className='flex flex-col gap-1.5'>
                         <div className='flex items-center justify-between ml-1'>
-                            <label htmlFor="password" senior className='text-[10px] font-black uppercase text-gray-400 tracking-widest'>Password</label>
-                            <Link href="/forgot-password" senior className='text-[10px] font-black uppercase text-gray-300 hover:text-black transition-colors'>Forgot?</Link>
+                            <label htmlFor="password" className='text-[10px] font-semibold uppercase text-gray-400 tracking-widest'>Password</label>
+                            <Link href="/forgot-password" size="sm" className='text-[10px] font-semibold uppercase text-gray-300 hover:text-black transition-colors'>Forgot?</Link>
                         </div>
-                        <div className='relative'>
-                            <FaLock className='absolute left-4 top-1/2 -translate-y-1/2 text-gray-300' />
-                            <input 
-                                type="password" 
-                                id='password' 
-                                name='password' 
-                                required 
-                                value={formData.password} 
-                                onChange={handleChange} 
-                                placeholder="••••••••"
-                                className='w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-black focus:bg-white transition-all text-sm'
-                            />
-                        </div>
+                        <input 
+                            type="password" 
+                            id='password' 
+                            name='password' 
+                            required 
+                            value={formData.password} 
+                            onChange={handleChange} 
+                            placeholder="••••••••"
+                            className='w-full px-4 py-3 bg-gray-50 border border-gray-50 rounded-xl outline-none focus:border-black focus:bg-white transition-all text-sm font-medium'
+                        />
                     </div>
                 </div>
 
-                <button 
-                    type='submit' 
-                    disabled={loading}
-                    className='group w-full py-4 bg-black text-white rounded-2xl font-black text-sm flex items-center justify-center gap-2 hover:bg-gray-800 transition-all active:scale-[0.98] shadow-xl shadow-black/10 disabled:opacity-50'
-                >
-                    {loading ? 'AUTHENTICATING...' : (
-                        <>
-                            CONTINUE
-                            <FaArrowRight className='group-hover:translate-x-1 transition-transform' />
-                        </>
-                    )}
-                </button>
+                <div className="flex flex-col gap-4 pt-2">
+                    <button 
+                        type='submit' 
+                        disabled={loading}
+                        className='w-full py-4 bg-black text-white rounded-xl font-semibold text-xs uppercase tracking-widest hover:bg-gray-800 transition-all active:scale-[0.98] shadow-xl shadow-black/10 disabled:opacity-50'
+                    >
+                        {loading ? 'Authenticating...' : 'Sign In'}
+                    </button>
 
-                <p className='text-center text-sm text-gray-400'>
-                    Don't have an account? <Link href='/register' className='text-gray-900 font-bold hover:underline'>Create one</Link>
-                </p>
+                    <p className='text-center text-xs text-gray-400 font-medium'>
+                        Don't have an account? <Link href='/register' className='text-gray-900 font-semibold hover:underline'>Create one</Link>
+                    </p>
+                </div>
             </form>
         </motion.div>
     )

@@ -11,8 +11,8 @@ import SaleItem from "../card/SaleItem"
 
 const MenuPage = () => {
   const [products, setProducts] = useState([])
-  const{categories, addToCart}= useContext(Context)
-  const [categoryId, setCategoryId]= useState('')
+  const { categories } = useContext(Context)
+  const [categoryId, setCategoryId] = useState('')
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,37 +26,45 @@ const MenuPage = () => {
     fetchData()
   }, [categoryId])
 
-
-
-
   return (
-    <div className="w-full p-4 min-h-screen">
-      <div className="w-full flex flex-col items-center justify-center gap-4">
-        <button onClick={() => setCategoryId('')} className="text-2xl cursor-pointer font-semibold w-full text-center">Menu</button>
+    <div className="w-full min-h-screen bg-white">
+      <div className="w-full flex flex-col gap-6">
+        <div className="flex flex-col gap-1">
+          <h2 className="text-xl font-semibold text-gray-900 tracking-tight">Menu Selection</h2>
+          <p className="text-gray-500 text-xs">Choose items for the current order.</p>
+        </div>
 
-        <div className="w-full grid grid-cols-3 md:grid-cols-6 justify-items-center gap-2">
-          
+        <div className="w-full flex flex-wrap gap-2">
+          <button
+            onClick={() => setCategoryId('')}
+            className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all border ${
+              categoryId === '' ? 'bg-black text-white border-black' : 'bg-gray-50 text-gray-600 border-gray-100 hover:border-black hover:text-black'
+            }`}
+          >
+            All Items
+          </button>
           {categories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setCategoryId(cat.id)}
-              className={`p-4 w-full text-center cursor-pointer shadow-sm rounded-lg transition-colors
-                ${categoryId === cat.id ? 'bg-indigo-300 text-white' : 'bg-white text-gray-700'}
-              `}
+              className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all border ${
+                categoryId === cat.id ? 'bg-black text-white border-black' : 'bg-gray-50 text-gray-600 border-gray-100 hover:border-black hover:text-black'
+              }`}
             >
               {cat.name}
             </button>
           ))}
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-8 w-full">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 w-full">
           {products.length > 0 ? (
             products.map((item) => (
-
               <SaleItem key={item.id} item={item}/>
             ))
           ) : (
-            <p className="col-span-full text-center text-gray-400">No items found in this category.</p>
+            <div className="col-span-full py-24 text-center border border-dashed border-gray-100 rounded-xl">
+              <p className="text-gray-400 text-xs font-medium">No items available.</p>
+            </div>
           )}
         </div>
       </div>

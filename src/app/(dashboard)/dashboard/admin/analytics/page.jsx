@@ -33,34 +33,34 @@ const Analytics = () => {
 
   if (loading) {
     return (
-      <div className='w-full min-h-[60vh] flex items-center justify-center'>
-        <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black'></div>
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="w-8 h-8 border-2 border-gray-200 border-t-black rounded-full animate-spin"></div>
       </div>
     );
   }
 
   return (
-    <div className='w-full max-w-7xl mx-auto p-6 flex flex-col gap-10'>
-      <div className='flex flex-col gap-2'>
-        <h1 className='text-3xl font-black text-gray-900 tracking-tight'>Analytics</h1>
-        <p className='text-gray-500'>Monitor your restaurant's performance and financial health.</p>
+    <div className='w-full flex flex-col gap-12'>
+      <div className='flex flex-col gap-1'>
+        <h1 className='text-2xl font-semibold text-gray-900 tracking-tight'>Business Analytics</h1>
+        <p className='text-gray-500 text-sm'>In-depth performance and financial analysis.</p>
       </div>
 
-      <div className='grid grid-cols-1 gap-12'>
+      <div className='flex flex-col gap-16'>
         {/* Sales Overview */}
         <section className='flex flex-col gap-6'>
           <div className='flex items-center gap-3'>
-            <div className='w-1 h-6 bg-emerald-500 rounded-full'></div>
-            <h2 className='text-xl font-bold text-gray-800'>Sales Performance</h2>
+            <div className='w-1 h-4 bg-emerald-500 rounded-full'></div>
+            <h2 className='text-lg font-semibold text-gray-900 tracking-tight'>Sales Performance</h2>
           </div>
           <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-            <div className='bg-white p-6 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow'>
+            <div className='bg-white p-6 rounded-xl border border-gray-100 hover:border-gray-300 transition-all'>
               <LastMonthSales data={data} />
             </div>
-            <div className='bg-white p-6 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow'>
+            <div className='bg-white p-6 rounded-xl border border-gray-100 hover:border-gray-300 transition-all'>
               <LastYearSales data={data} />
             </div>
-            <div className='bg-indigo-600 p-6 rounded-3xl shadow-xl text-white'>
+            <div className='bg-black p-6 rounded-xl shadow-xl text-white'>
               <TotalSales data={data} />
             </div>
           </div>
@@ -69,17 +69,17 @@ const Analytics = () => {
         {/* Expenses Overview */}
         <section className='flex flex-col gap-6'>
           <div className='flex items-center gap-3'>
-            <div className='w-1 h-6 bg-rose-500 rounded-full'></div>
-            <h2 className='text-xl font-bold text-gray-800'>Expense Analysis</h2>
+            <div className='w-1 h-4 bg-rose-500 rounded-full'></div>
+            <h2 className='text-lg font-semibold text-gray-900 tracking-tight'>Expense Analysis</h2>
           </div>
           <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-            <div className='bg-white p-6 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow'>
+            <div className='bg-white p-6 rounded-xl border border-gray-100 hover:border-gray-300 transition-all'>
               <LastMonthExpense data={expenses}/>
             </div>
-            <div className='bg-white p-6 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow'>
+            <div className='bg-white p-6 rounded-xl border border-gray-100 hover:border-gray-300 transition-all'>
               <LastYearExpense data={expenses}/>
             </div>
-            <div className='bg-gray-900 p-6 rounded-3xl shadow-xl text-white'>
+            <div className='bg-gray-50 p-6 rounded-xl border border-gray-200 text-gray-900'>
               <TotalExpense data={expenses}/>
             </div>
           </div>
@@ -87,8 +87,8 @@ const Analytics = () => {
       </div>
 
       {data.length === 0 && expenses.length === 0 && (
-        <div className='text-center py-20 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200'>
-          <p className='text-gray-400 font-medium'>No data available yet for analysis.</p>
+        <div className='text-center py-20 bg-gray-50 rounded-xl border border-dashed border-gray-200'>
+          <p className='text-gray-400 text-sm font-semibold uppercase tracking-widest'>No data available yet</p>
         </div>
       )}
     </div>

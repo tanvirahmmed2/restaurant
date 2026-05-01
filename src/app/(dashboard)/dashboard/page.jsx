@@ -1,66 +1,108 @@
 'use client'
+import React, { useContext } from 'react'
+import Link from 'next/link'
+import { 
+  MdAnalytics, 
+  MdPeople, 
+  MdSettings, 
+  MdInventory, 
+  MdHistory, 
+  MdEvent, 
+  MdRateReview, 
+  MdSupportAgent, 
+  MdLocalOffer, 
+  MdSell, 
+  MdPendingActions, 
+  MdCheckCircle 
+} from 'react-icons/md'
+import { Context } from '@/components/context/Context'
 
-import { Context } from "@/components/context/Context"
-import { useContext } from "react"
-import Link from "next/link"
-import { MdSell, MdInventory, MdAnalytics } from "react-icons/md"
-
-const Manage =  () => {
-  const {userData, siteData}= useContext(Context)
-  
+const Manage = () => {
+  const { userData, siteData } = useContext(Context)
   const role = userData?.role || ''
 
+  const getRoleActions = () => {
+    if (role === 'admin') {
+      return [
+        { title: 'Overview', desc: 'Business summary and metrics', href: '/dashboard/admin', icon: <MdAnalytics />, color: 'bg-indigo-50 text-indigo-600' },
+        { title: 'Order History', desc: 'Full business transaction logs', href: '/dashboard/admin/history', icon: <MdHistory />, color: 'bg-gray-50 text-gray-600' },
+        { title: 'Analytics', desc: 'Deep performance reports', href: '/dashboard/admin/analytics', icon: <MdAnalytics />, color: 'bg-blue-50 text-blue-600' },
+        { title: 'People', desc: 'Staff access and permissions', href: '/dashboard/admin/people', icon: <MdPeople />, color: 'bg-emerald-50 text-emerald-600' },
+        { title: 'Settings', desc: 'Website and brand information', href: '/dashboard/admin/settings', icon: <MdSettings />, color: 'bg-amber-50 text-amber-600' },
+      ]
+    }
+
+    if (role === 'manager') {
+      return [
+        { title: 'Inventory', desc: 'Items and stock management', href: '/dashboard/manager/items', icon: <MdInventory />, color: 'bg-rose-50 text-rose-600' },
+        { title: 'Expenses', desc: 'Track business expenditures', href: '/dashboard/manager/expenses', icon: <MdSell />, color: 'bg-orange-50 text-orange-600' },
+        { title: 'History', desc: 'Order fulfillment records', href: '/dashboard/manager/history', icon: <MdHistory />, color: 'bg-gray-50 text-gray-600' },
+        { title: 'Reservations', desc: 'Table booking management', href: '/dashboard/manager/reservation', icon: <MdEvent />, color: 'bg-blue-50 text-blue-600' },
+        { title: 'Reviews', desc: 'Customer feedback moderation', href: '/dashboard/manager/reviews', icon: <MdRateReview />, color: 'bg-teal-50 text-teal-600' },
+        { title: 'Support', desc: 'Customer assistance center', href: '/dashboard/manager/support', icon: <MdSupportAgent />, color: 'bg-indigo-50 text-indigo-600' },
+        { title: 'Offers', desc: 'Promotions and discounts', href: '/dashboard/manager/offers', icon: <MdLocalOffer />, color: 'bg-purple-50 text-purple-600' },
+      ]
+    }
+
+    if (role === 'sales') {
+      return [
+        { title: 'Sales POS', desc: 'Create new orders and billing', href: '/dashboard/sales/sale', icon: <MdSell />, color: 'bg-orange-50 text-orange-600' },
+        { title: 'Pending Orders', desc: 'Active and unpaid transactions', href: '/dashboard/sales/pending', icon: <MdPendingActions />, color: 'bg-purple-50 text-purple-600' },
+        { title: 'Deliveries', desc: 'Fulfill and complete orders', href: '/dashboard/sales/deliver', icon: <MdCheckCircle />, color: 'bg-emerald-50 text-emerald-600' },
+        { title: 'Order Logs', desc: 'View delivered order history', href: '/dashboard/sales/orders', icon: <MdHistory />, color: 'bg-gray-50 text-gray-600' },
+      ]
+    }
+
+    return []
+  }
+
+  const actions = getRoleActions()
+
   return (
-    <div className="w-full min-h-[80vh] flex flex-col items-center justify-center p-6 gap-8">
-      <div className="text-center flex flex-col gap-2">
-        <p className="text-gray-500 font-medium uppercase tracking-widest text-sm">Welcome Back</p>
-        <h1 className="text-5xl font-black text-gray-900">{userData?.name}</h1>
-        <p className="text-xl text-gray-400">Manage <span className="text-gray-900 font-bold">{siteData?.business_name || siteData?.title || 'your restaurant'}</span></p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl mt-4">
-        {(role === 'admin' || role === 'sales') && (
-          <Link href="/dashboard/sales/sale" className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col items-center gap-4 hover:shadow-xl hover:-translate-y-1 transition-all group">
-            <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-3xl group-hover:bg-emerald-600 group-hover:text-white transition-all">
-              <MdSell />
-            </div>
-            <div className="text-center">
-              <h3 className="font-bold text-gray-800 text-lg">Sales POS</h3>
-              <p className="text-sm text-gray-400">Process new orders and payments.</p>
-            </div>
-          </Link>
-        )}
-
-        {(role === 'admin' || role === 'manager') && (
-          <Link href="/dashboard/manager/products" className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col items-center gap-4 hover:shadow-xl hover:-translate-y-1 transition-all group">
-            <div className="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center text-3xl group-hover:bg-amber-600 group-hover:text-white transition-all">
-              <MdInventory />
-            </div>
-            <div className="text-center">
-              <h3 className="font-bold text-gray-800 text-lg">Inventory</h3>
-              <p className="text-sm text-gray-400">Manage products and categories.</p>
-            </div>
-          </Link>
-        )}
-
-        {role === 'admin' && (
-          <Link href="/dashboard/admin/analytics" className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col items-center gap-4 hover:shadow-xl hover:-translate-y-1 transition-all group">
-            <div className="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center text-3xl group-hover:bg-indigo-600 group-hover:text-white transition-all">
-              <MdAnalytics />
-            </div>
-            <div className="text-center">
-              <h3 className="font-bold text-gray-800 text-lg">Analytics</h3>
-              <p className="text-sm text-gray-400">View performance and reports.</p>
-            </div>
-          </Link>
-        )}
-      </div>
-
-      <div className="mt-10 flex flex-col items-center gap-2">
-        <div className="px-4 py-2 bg-gray-100 rounded-full text-xs font-bold text-gray-500 uppercase tracking-widest">
-          Session Active
+    <div className="w-full min-h-[90vh] flex flex-col p-8 md:p-12 gap-12 bg-white">
+      <div className="flex flex-col gap-2">
+        <div className='inline-block w-fit px-4 py-1 bg-gray-100 text-gray-900 text-[10px] font-semibold uppercase tracking-widest rounded-full'>
+          {role} Dashboard
         </div>
-        <p className="text-gray-400 text-xs">Logged in as {userData?.email}</p>
+        <h1 className="text-4xl md:text-5xl font-semibold text-gray-900 tracking-tight leading-tight">
+          Welcome back, <br />
+          <span className="text-gray-400 italic">{userData?.name || 'Staff'}</span>
+        </h1>
+        <p className="text-gray-500 font-medium max-w-md">
+          Control <span className="text-gray-900">{siteData?.business_name || "your platform"}</span> with precision.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {actions.map((action, index) => (
+          <Link 
+            key={index} 
+            href={action.href} 
+            className="group p-8 bg-white border border-gray-100 rounded-xl hover:border-gray-200 hover:shadow-2xl hover:shadow-black/5 transition-all flex flex-col gap-6"
+          >
+            <div className={`w-12 h-12 ${action.color} rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform`}>
+              {action.icon}
+            </div>
+            <div className="space-y-1">
+              <h3 className="font-semibold text-gray-900 tracking-tight">{action.title}</h3>
+              <p className="text-xs text-gray-400 font-medium leading-relaxed">{action.desc}</p>
+            </div>
+            <div className="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between">
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-300 group-hover:text-black transition-colors">Launch Module</span>
+              <div className="w-6 h-px bg-gray-100 group-hover:w-10 transition-all group-hover:bg-black" />
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      <div className="mt-auto pt-12 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between gap-6 opacity-60">
+        <div className="flex items-center gap-3">
+          <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">System Online: {userData?.email}</p>
+        </div>
+        <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 italic">
+          Access Level: {role?.toUpperCase()}
+        </p>
       </div>
     </div>
   )

@@ -86,8 +86,8 @@ const AdminHistory = () => {
                   </span>
                   <p className="text-[10px] text-gray-400 mt-1 uppercase">{order.payment_method}</p>
                 </div>
-                <div className="text-right font-black text-gray-900">
-                  ${Number(order.total_price).toFixed(2)}
+                <div className="text-right font-black text-gray-900 tracking-tighter text-lg">
+                  ৳{Number(order.total_price).toFixed(2)}
                 </div>
               </div>
             ))

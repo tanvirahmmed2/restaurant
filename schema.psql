@@ -82,6 +82,31 @@ CREATE TABLE public.websites (
 );
 
 
+-- =====================================================
+CREATE TABLE subscriptions (
+  subscription_id SERIAL PRIMARY KEY,
+  user_id INT REFERENCES users(user_id),
+  package_id INT REFERENCES packages(package_id),
+  tenant_id INT,
+
+  purchase_id INT REFERENCES purchases(purchase_id),
+
+  stripe_subscription_id TEXT UNIQUE,
+
+  status TEXT DEFAULT 'active'
+    CHECK (status IN ('active','past_due','canceled','unpaid','trialing','expired','refunded','pending')),
+
+  current_period_start TIMESTAMP DEFAULT now(),
+  current_period_end TIMESTAMP,
+
+  cancel_at_period_end BOOLEAN DEFAULT FALSE,
+  is_lifetime BOOLEAN DEFAULT FALSE,
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+
 
 ---
 -- 1. USER & IDENTITY MANAGEMENT

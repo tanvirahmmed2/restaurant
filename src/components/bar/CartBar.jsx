@@ -66,11 +66,11 @@ const VariantEditor = ({ item, onClose }) => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="absolute inset-0 z-10 bg-white flex flex-col h-full shadow-[0_-10px_40px_rgba(0,0,0,0.1)] rounded-t-3xl sm:rounded-none"
+            className="absolute inset-0 z-10 bg-white flex flex-col min-h-screen shadow-[0_-10px_40px_rgba(0,0,0,0.1)] rounded-t-3xl sm:rounded-none"
         >
-            <div className="p-6 border-b border-pink-50 flex items-center justify-between bg-gradient-to-r from-pink-50/50 to-transparent">
+            <div className="p-2 border-b border-pink-50 flex items-center justify-between bg-linear-to-r from-pink-50/50 to-transparent">
                 <div>
-                    <h3 className="font-black text-gray-900 text-xl tracking-tight">Edit Variant</h3>
+                    <h3 className="font-semibold text-gray-900 text-xl tracking-tight">Edit Variant</h3>
                     <p className="text-[10px] uppercase tracking-widest text-pink-500 font-bold mt-1">{item.title}</p>
                 </div>
                 <button 
@@ -81,11 +81,11 @@ const VariantEditor = ({ item, onClose }) => {
                 </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-gray-50/50">
+            <div className="flex-1 overflow-y-auto p-2 space-y-2 bg-gray-50/50">
                 {Object.entries(groupedVariants).map(([groupName, variants]) => (
-                    <div key={groupName} className="space-y-3 bg-white p-4 rounded-2xl border border-pink-50/50 shadow-sm">
+                    <div key={groupName} className="space-y-2 bg-white p-1 rounded-2xl border border-pink-50/50 shadow-sm">
                         <div className="flex items-center gap-2">
-                            <h4 className="text-[10px] font-black text-pink-400 uppercase tracking-widest">{groupName}</h4>
+                            <h4 className="text-[10px] font-semibold text-pink-400 uppercase tracking-widest">{groupName}</h4>
                             <div className="h-px flex-1 bg-pink-50" />
                         </div>
                         <div className="grid grid-cols-2 gap-2">
@@ -116,24 +116,24 @@ const VariantEditor = ({ item, onClose }) => {
 
             <div className="p-6 border-t border-pink-50 bg-white flex flex-col gap-4 shadow-[0_-20px_40px_rgba(236,72,153,0.05)]">
                 <div className="flex items-end justify-between">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Updated Price</span>
+                    <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Updated Price</span>
                     <div className="flex items-baseline gap-2">
                         {hasDiscount && (
                             <span className="text-[11px] font-bold text-gray-300 line-through">৳{newCalculatedPrice.toFixed(2)}</span>
                         )}
-                        <span className="text-2xl font-black text-gray-900 tracking-tighter">৳{displayCurrentPrice.toFixed(2)}</span>
+                        <span className="text-2xl font-semibold text-gray-900 tracking-tighter">৳{displayCurrentPrice.toFixed(2)}</span>
                     </div>
                 </div>
                 <div className="flex gap-3">
                     <button 
                         onClick={onClose}
-                        className="flex-1 py-3.5 bg-pink-50 text-pink-600 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-pink-100 transition-all"
+                        className="flex-1 py-3.5 bg-pink-50 text-pink-600 rounded-2xl font-semibold text-xs uppercase tracking-[0.2em] hover:bg-pink-100 transition-all"
                     >
                         Cancel
                     </button>
                     <button 
                         onClick={handleSave}
-                        className="flex-[2] py-3.5 bg-pink-500 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-lg shadow-pink-500/25 hover:bg-pink-600 hover:shadow-pink-600/25 transition-all active:scale-[0.98]"
+                        className="flex-2 py-3.5 bg-pink-500 text-white rounded-2xl font-semibold text-xs uppercase tracking-[0.2em] shadow-lg shadow-pink-500/25 hover:bg-pink-600 hover:shadow-pink-600/25 transition-all active:scale-[0.98]"
                     >
                         Save Changes
                     </button>
@@ -174,8 +174,8 @@ const CartBar = () => {
                         {/* Header */}
                         <div className="p-8 flex items-center justify-between border-b border-pink-50 bg-gradient-to-b from-pink-50/30 to-transparent">
                             <div>
-                                <h2 className="text-3xl font-black text-gray-900 tracking-tighter">My Cart</h2>
-                                <p className="text-[10px] text-pink-500 uppercase font-black tracking-[0.2em] mt-1">
+                                <h2 className="text-3xl font-semibold text-gray-900 tracking-tighter">My Cart</h2>
+                                <p className="text-[10px] text-pink-500 uppercase font-semibold tracking-[0.2em] mt-1">
                                     {cart?.items?.length || 0} Items Reserved
                                 </p>
                             </div>
@@ -198,21 +198,21 @@ const CartBar = () => {
                                         <MdDeleteOutline size={48} />
                                     </div>
                                     <div className='space-y-2'>
-                                        <p className="text-gray-900 font-black text-xl">Your cart is empty</p>
+                                        <p className="text-gray-900 font-semibold text-xl">Your cart is empty</p>
                                         <p className="text-gray-400 text-sm font-medium">Add some treats to your basket!</p>
                                     </div>
                                     <Link 
                                         href="/menu" 
                                         onClick={() => setCartBar(false)}
-                                        className="px-10 py-4 bg-pink-500 text-white rounded-2xl font-black text-sm uppercase tracking-[0.2em] hover:bg-pink-600 transition-all shadow-xl shadow-pink-500/20"
+                                        className="px-10 py-4 bg-pink-500 text-white rounded-2xl font-semibold text-sm uppercase tracking-[0.2em] hover:bg-pink-600 transition-all shadow-xl shadow-pink-500/20"
                                     >
                                         Browse Menu
                                     </Link>
                                 </div>
                             ) : (
                                 cart.items.map((item) => (
-                                    <div key={item.cartItemId} className="flex gap-4 p-4 bg-white rounded-3xl border border-pink-100 shadow-sm group hover:border-pink-300 hover:shadow-md hover:shadow-pink-500/5 transition-all duration-300">
-                                        <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-sm flex-shrink-0 bg-pink-50 relative">
+                                    <div key={item.cartItemId} className="flex gap-4 p-2 items-center justify-between bg-white rounded-3xl border border-pink-100 shadow-sm group hover:border-pink-300 hover:shadow-md hover:shadow-pink-500/5 transition-all duration-300">
+                                        <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-sm shrink-0 bg-pink-50 relative">
                                             <Image 
                                                 src={item.image} 
                                                 alt={item.title} 
@@ -229,7 +229,7 @@ const CartBar = () => {
                                         <div className="flex-1 flex flex-col justify-between py-1">
                                             <div className="flex justify-between items-start gap-2">
                                                 <div>
-                                                    <h3 className="font-black text-gray-900 text-base leading-tight tracking-tight">{item.title}</h3>
+                                                    <h3 className="font-semibold text-gray-900 text-base leading-tight tracking-tight">{item.title}</h3>
                                                     {item.selectedVariants && Object.keys(item.selectedVariants).length > 0 && (
                                                         <div className="flex flex-wrap gap-1 mt-1.5">
                                                             {Object.values(item.selectedVariants).map(v => (
@@ -240,18 +240,18 @@ const CartBar = () => {
                                                         </div>
                                                     )}
                                                 </div>
-                                                <p className="font-black text-gray-900 text-lg tracking-tighter">৳{item.salePrice || item.price}</p>
+                                                <p className="font-semibold text-gray-900 text-lg tracking-tighter">৳{item.salePrice || item.price}</p>
                                             </div>
                                             <div className="flex items-center justify-between mt-3">
                                                 <div className="flex items-center gap-3 bg-pink-50/50 rounded-xl px-3 py-1.5 border border-pink-100">
                                                     <button 
                                                         onClick={() => decreaseQuantity(item.cartItemId)}
-                                                        className="text-pink-400 hover:text-pink-600 font-black text-lg cursor-pointer transition-colors"
+                                                        className="text-pink-400 hover:text-pink-600 font-semibold text-lg cursor-pointer transition-colors"
                                                     >-</button>
-                                                    <span className="text-sm font-black w-6 text-center text-gray-900">{item.quantity}</span>
+                                                    <span className="text-sm font-semibold w-6 text-center text-gray-900">{item.quantity}</span>
                                                     <button 
                                                         onClick={() => addToCart(item)}
-                                                        className="text-pink-400 hover:text-pink-600 font-black text-lg cursor-pointer transition-colors"
+                                                        className="text-pink-400 hover:text-pink-600 font-semibold text-lg cursor-pointer transition-colors"
                                                     >+</button>
                                                 </div>
                                                 <div className="flex items-center gap-2">
@@ -278,7 +278,6 @@ const CartBar = () => {
                                 ))
                             )}
 
-                            {/* Variant Editor Overlay */}
                             <AnimatePresence>
                                 {editingItem && (
                                     <VariantEditor 
@@ -289,19 +288,18 @@ const CartBar = () => {
                             </AnimatePresence>
                         </div>
 
-                        {/* Footer / Summary */}
                         {cart?.items?.length > 0 && (
-                            <div className="p-8 bg-white border-t border-pink-100 space-y-6 shadow-[0_-20px_60px_rgba(236,72,153,0.08)] relative z-20">
-                                <div className="space-y-3">
-                                    <div className="flex justify-between text-xs font-black uppercase tracking-widest text-gray-400">
+                            <div className="p-4 bg-white border-t border-pink-100 space-y-6 shadow-[0_-20px_60px_rgba(236,72,153,0.08)] relative z-20">
+                                <div className="space-y-1">
+                                    <div className="flex justify-between text-xs font-semibold uppercase tracking-widest text-gray-400">
                                         <span>Subtotal</span>
                                         <span>৳{subTotal}</span>
                                     </div>
-                                    <div className="flex justify-between text-xs font-black uppercase tracking-widest text-emerald-500">
+                                    <div className="flex justify-between text-xs font-semibold uppercase tracking-widest text-emerald-500">
                                         <span>Discount</span>
                                         <span>-৳{totalDiscount}</span>
                                     </div>
-                                    <div className="flex justify-between text-3xl font-black text-gray-900 pt-4 border-t border-pink-50">
+                                    <div className="flex justify-between text-3xl font-semibold text-gray-900 pt-4 border-t border-pink-50">
                                         <span>Total</span>
                                         <span className='tracking-tighter text-pink-500'>৳{totalPrice}</span>
                                     </div>
@@ -310,13 +308,13 @@ const CartBar = () => {
                                     <Link 
                                         href="/checkout" 
                                         onClick={() => setCartBar(false)}
-                                        className="w-full py-5 bg-pink-500 text-white text-center rounded-2xl font-black text-sm uppercase tracking-[0.2em] shadow-xl shadow-pink-500/25 hover:bg-pink-600 transition-all active:scale-[0.98]"
+                                        className="w-full py-5 bg-pink-500 text-white text-center rounded-2xl font-semibold text-sm uppercase tracking-[0.2em] shadow-xl shadow-pink-500/25 hover:bg-pink-600 transition-all active:scale-[0.98]"
                                     >
                                         Checkout Now
                                     </Link>
                                     <button 
                                         onClick={() => clearCart()}
-                                        className="text-[10px] font-black text-gray-300 hover:text-rose-500 uppercase tracking-[0.2em] transition-colors cursor-pointer text-center"
+                                        className="text-[10px] font-semibold text-gray-300 hover:text-rose-500 uppercase tracking-[0.2em] transition-colors cursor-pointer text-center"
                                     >
                                         Clear Cart
                                     </button>

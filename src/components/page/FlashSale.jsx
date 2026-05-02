@@ -66,7 +66,7 @@ const FlashSale = () => {
             return (
               <div 
                 key={item.id} 
-                className={`flex flex-col ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-12 lg:gap-24`}
+                className={`flex flex-col ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-6 lg:gap-24`}
               >
                
                 <motion.div 
@@ -95,7 +95,7 @@ const FlashSale = () => {
                   initial={{ opacity: 0, y: 20 }} 
                   whileInView={{ opacity: 1, y: 0 }} 
                   transition={{ duration: 0.6, delay: 0.2 }} 
-                  className='w-full md:w-1/2 space-y-6 text-center md:text-left'
+                  className='w-full space-y-2 text-center md:text-left'
                 >
                   <div className='space-y-2'>
                     <span className='text-[10px] font-black uppercase text-pink-600 tracking-widest'>{item.category_name}</span>

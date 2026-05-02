@@ -11,10 +11,26 @@ export async function GET(req) {
     }
 
     const { rows } = await pool.query(
-      `SELECT w.*, t.status as tenant_status, t.expires_at 
-       FROM websites w 
-       JOIN tenants t ON w.tenant_id = t.tenant_id 
-       WHERE w.tenant_id = $1 LIMIT 1`,
+      `SELECT 
+         w.*,
+         t.name        AS tenant_name,
+         t.domain      AS tenant_domain,
+         t.subdomain   AS tenant_subdomain,
+         t.status      AS tenant_status,
+         t.expires_at  AS tenant_expires_at,
+         s.subscription_id,
+         s.status      AS subscription_status,
+         s.is_lifetime,
+         s.cancel_at_period_end,
+         s.current_period_start,
+         s.current_period_end
+       FROM websites w
+       JOIN tenants t ON w.tenant_id = t.tenant_id
+       LEFT JOIN subscriptions s ON s.tenant_id = t.tenant_id
+         AND s.status IN ('active','trialing','past_due')
+       WHERE w.tenant_id = $1
+       ORDER BY s.current_period_end DESC NULLS LAST
+       LIMIT 1`,
       [tenant.tenant_id]
     );
 
@@ -24,7 +40,7 @@ export async function GET(req) {
         message: "Website profile not found. Showing tenant info only.",
         payload: {
           tenant_status: tenant.status,
-          expires_at: tenant.expires_at
+          tenant_expires_at: tenant.expires_at
         },
       }, { status: 200 });
     }

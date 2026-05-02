@@ -30,7 +30,7 @@ const Intro = () => {
   if (!item) return null
 
   return (
-    <section className='relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-white'>
+    <section className='relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-white py-12'>
       
       {/* Subtle Background Accent */}
       <div className="absolute top-0 right-0 w-1/2 h-full bg-gray-50/50 -skew-x-12 translate-x-1/4 -z-10" />
@@ -90,7 +90,7 @@ const Intro = () => {
               initial={{ x: 20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.8 }}
-              className="absolute -bottom-8 -right-8 bg-white p-6 rounded-2xl shadow-2xl border border-gray-50"
+              className="absolute -bottom-8 -right-8 bg-white p-6 rounded-2xl  border border-gray-50"
             >
               <p className="text-gray-400 text-[10px] font-semibold uppercase tracking-widest mb-1">Today's Special</p>
               <p className="text-sm font-semibold text-gray-900 mb-2 line-clamp-1">{item.title}</p>

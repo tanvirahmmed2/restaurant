@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import toast from 'react-hot-toast'
-import { MdSave, MdLanguage, MdBusiness, MdShare, MdPalette, MdCardMembership, MdWarning } from 'react-icons/md'
+import { MdSave, MdLanguage, MdBusiness, MdShare, MdPalette, MdCardMembership } from 'react-icons/md'
 
 const AdminSettings = () => {
     const [loading, setLoading] = useState(true)
@@ -23,7 +23,12 @@ const AdminSettings = () => {
         primary_color: '#000000',
         secondary_color: '#ffffff',
         tenant_status: 'active',
-        expires_at: null
+        tenant_expires_at: null,
+        subscription_status: null,
+        is_lifetime: false,
+        cancel_at_period_end: false,
+        current_period_start: null,
+        current_period_end: null
     })
 
     const fetchWebsite = async () => {
@@ -43,8 +48,7 @@ const AdminSettings = () => {
         fetchWebsite()
     }, [])
 
-    const daysRemaining = website.expires_at ? Math.ceil((new Date(website.expires_at) - new Date()) / (1000 * 60 * 60 * 24)) : null
-    const showExpiryAlert = daysRemaining !== null && daysRemaining <= 10 && daysRemaining > 0
+    // Subscription expiry is stored in state but intentionally not displayed in the UI
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -76,17 +80,7 @@ const AdminSettings = () => {
 
     return (
         <div className="w-full max-w-5xl mx-auto flex flex-col gap-8 animate-in fade-in duration-700">
-            {showExpiryAlert && (
-                <div className="bg-rose-50 border border-rose-100 p-4 rounded-2xl flex items-center gap-4 animate-bounce">
-                    <div className="p-3 bg-rose-500 text-white rounded-xl shadow-lg shadow-rose-200">
-                        <MdWarning size={24} />
-                    </div>
-                    <div>
-                        <p className="text-rose-900 font-bold tracking-tight">Subscription Expiring Soon!</p>
-                        <p className="text-rose-600 text-sm font-medium">Your subscription will expire in <span className="font-black underline">{daysRemaining} days</span>. Please renew to avoid service interruption.</p>
-                    </div>
-                </div>
-            )}
+
 
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div className="flex flex-col gap-1">
@@ -115,17 +109,25 @@ const AdminSettings = () => {
                     </div>
                     <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="flex flex-col gap-2 p-6 bg-slate-50 rounded-2xl border border-slate-100">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Current Status</label>
+                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Account Status</label>
                             <p className="text-xl font-black text-slate-900 capitalize">{website.tenant_status}</p>
                             <p className="text-xs text-slate-500 font-medium italic">Your account is currently in good standing.</p>
                         </div>
-                        <div className={`flex flex-col gap-2 p-6 rounded-2xl border ${showExpiryAlert ? 'bg-rose-50 border-rose-100' : 'bg-pink-50 border-pink-100'}`}>
-                            <label className={`text-[10px] font-black uppercase tracking-widest ${showExpiryAlert ? 'text-rose-400' : 'text-pink-400'}`}>Expiration Date</label>
-                            <p className={`text-xl font-black ${showExpiryAlert ? 'text-rose-600' : 'text-pink-600'}`}>
-                                {website.expires_at ? new Date(website.expires_at).toLocaleDateString(undefined, { dateStyle: 'long' }) : 'N/A'}
+                        <div className="flex flex-col gap-2 p-6 bg-pink-50 border border-pink-100 rounded-2xl">
+                            <label className="text-[10px] font-black uppercase tracking-widest text-pink-400">Subscription Expires</label>
+                            <p className="text-xl font-black text-pink-600">
+                                {website.is_lifetime
+                                    ? 'No Expiry'
+                                    : website.current_period_end
+                                        ? new Date(website.current_period_end).toLocaleDateString(undefined, { dateStyle: 'long' })
+                                        : 'N/A'}
                             </p>
-                            <p className={`text-xs font-bold ${showExpiryAlert ? 'text-rose-500' : 'text-pink-500'}`}>
-                                {daysRemaining !== null ? `${daysRemaining} days remaining` : 'No expiration set'}
+                            <p className="text-xs font-bold text-pink-500">
+                                {website.is_lifetime
+                                    ? 'Lifetime access — never expires'
+                                    : website.current_period_end
+                                        ? `${Math.ceil((new Date(website.current_period_end) - new Date()) / (1000 * 60 * 60 * 24))} days remaining`
+                                        : 'No active subscription'}
                             </p>
                         </div>
                     </div>

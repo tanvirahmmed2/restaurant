@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import React, { useContext, useState, useEffect } from 'react'
 import Profile from '../buttons/Profile'
-import Sidebar from './Sidebar'
+
 import { FaBars, FaShoppingCart } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import Logout from '../buttons/Logout'
@@ -10,8 +10,7 @@ import { Context } from '../context/Context'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const Navbar = () => {
-  const { siteData, cartBar, setCartBar, userData, cart } = useContext(Context)
-  const [isSidebar, setIsSidebar] = useState(false)
+  const { siteData, cartBar, setCartBar, userData, cart, mobileSidebar, setMobileSidebar } = useContext(Context)
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
@@ -102,14 +101,12 @@ const Navbar = () => {
         
         {/* Mobile Toggle */}
         <button 
-          onClick={() => setIsSidebar(!isSidebar)} 
+          onClick={() => setMobileSidebar(!mobileSidebar)} 
           className='p-2 text-gray-900 block md:hidden cursor-pointer'
         >
-          {isSidebar ? <RxCross2 size={24} /> : <FaBars size={24} />}
+          {mobileSidebar ? <RxCross2 size={24} /> : <FaBars size={24} />}
         </button>
       </div>
-
-      <Sidebar {...{ isSidebar, setIsSidebar }} />
     </nav>
   )
 }

@@ -16,6 +16,7 @@ export const ContextProvider = ({ children }) => {
 
   const [manageSidebar, setManageSidebar] = useState(false)
   const [cartBar, setCartBar]= useState(false)
+  const [mobileSidebar, setMobileSidebar] = useState(false)
   const [updateUserBox,setUpdateUserBox]= useState(false)
 
   const [siteLoading, setSiteLoading] = useState(true)
@@ -250,7 +251,7 @@ export const ContextProvider = ({ children }) => {
   }, [cart])
 
   const contextValue = {
-    manageSidebar, setManageSidebar, cartBar, setCartBar, updateUserBox, setUpdateUserBox,
+    manageSidebar, setManageSidebar, cartBar, setCartBar, mobileSidebar, setMobileSidebar, updateUserBox, setUpdateUserBox,
     cart, siteData, userData, subTotal, totalPrice, totalDiscount,
     categories,
     fetchCategories, addToCart, removeFromCart, decreaseQuantity, clearCart, fetchCart, updateCartItemVariant
@@ -263,7 +264,7 @@ export const ContextProvider = ({ children }) => {
 
   if (siteLoading) {
     return (
-      <div className="fixed inset-0 bg-white flex items-center justify-center z-[9999]">
+      <div className="fixed inset-0 bg-white flex items-center justify-center z-9999">
         <div className="w-10 h-10 border-4 border-pink-100 border-t-pink-600 rounded-full animate-spin"></div>
       </div>
     )

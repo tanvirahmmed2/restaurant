@@ -4,6 +4,7 @@ import axios from 'axios'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
+import { MdDelete, MdPendingActions, MdRateReview } from 'react-icons/md'
 
 const PendingOrder = () => {
   const [orders, setOrders] = useState([])

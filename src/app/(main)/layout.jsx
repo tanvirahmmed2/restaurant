@@ -1,6 +1,8 @@
 import CartBar from "@/components/bar/CartBar";
 import Footer from "@/components/bar/Footer";
 import Navbar from "@/components/bar/Navbar";
+import Sidebar from "@/components/bar/Sidebar";
+
 
 export default function MainLayout({ children }) {
   return (
@@ -9,7 +11,9 @@ export default function MainLayout({ children }) {
       <main className="flex-grow w-full flex flex-col">
         {children}
       </main>
+      <Sidebar />
       <CartBar/>
+
       <Footer/>
     </div>
   )

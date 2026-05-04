@@ -10,8 +10,8 @@ const Main = () => {
     <div className='w-full overflow-hidden min-h-screen flex flex-col items-center justify-center '>
       <Intro/>
       <FlashSale/>
-      <Review/>
       <Latest/>
+      <Review/>
       <About/>
     </div>
   )

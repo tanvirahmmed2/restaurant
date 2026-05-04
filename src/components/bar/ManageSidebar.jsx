@@ -19,7 +19,9 @@ import {
   MdExitToApp,
   MdPublic,
   MdLocalOffer,
-  MdRateReview
+  MdRateReview,
+  MdDownload,
+  MdPerson
 } from 'react-icons/md'
 import toast from 'react-hot-toast'
 import axios from 'axios'
@@ -37,6 +39,16 @@ const ManageSidebar = () => {
       window.location.replace('/login')
     } catch (error) {
       toast.error(error?.response?.data?.message || 'Failed to logout')
+    }
+  }
+
+  const handleDownloadDB = async () => {
+    try {
+      toast.loading('Preparing database...')
+      window.location.href = '/api/admin/database/download'
+      toast.dismiss()
+    } catch (error) {
+      toast.error('Failed to download database')
     }
   }
 
@@ -69,6 +81,7 @@ const ManageSidebar = () => {
         { name: 'History', href: '/dashboard/admin/history', icon: <MdHistory /> },
         { name: 'Analytics', href: '/dashboard/admin/analytics', icon: <MdAnalytics /> },
         { name: 'People', href: '/dashboard/admin/people', icon: <MdPeople /> },
+        { name: 'Customers', href: '/dashboard/admin/customers', icon: <MdPerson /> },
         { name: 'Settings', href: '/dashboard/admin/settings', icon: <MdSettings /> },
       ]
     }
@@ -103,6 +116,12 @@ const ManageSidebar = () => {
                 <span className="text-xl">{item.icon}</span> {item.name}
               </Link>
             ))}
+            <button 
+              onClick={handleDownloadDB} 
+              className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-semibold text-sm text-gray-500 hover:bg-gray-50 hover:text-pink-600 w-full text-left"
+            >
+              <span className="text-xl"><MdDownload /></span> Download DB
+            </button>
           </div>
         )}
 

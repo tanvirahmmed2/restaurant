@@ -1,0 +1,36 @@
+import { pool } from "@/lib/database/pg";
+import { isAdmin } from "@/lib/auth/middleware";
+import { NextResponse } from "next/server";
+
+export async function GET(req) {
+  try {
+    const auth = await isAdmin();
+    if (!auth.success) {
+      return NextResponse.json({ message: auth.message }, { status: 401 });
+    }
+
+    const tenant_id = auth.payload.tenant_id;
+
+    const { rows } = await pool.query(
+      `
+      SELECT 
+        c.id, 
+        c.name, 
+        c.phone,
+        COUNT(o.id)::int as total_orders,
+        COALESCE(SUM(o.total_price), 0)::float as total_spent
+      FROM res_customers c
+      LEFT JOIN res_orders o ON c.phone = o.phone AND c.tenant_id = o.tenant_id
+      WHERE c.tenant_id = $1
+      GROUP BY c.id, c.name, c.phone
+      ORDER BY c.id DESC
+      `,
+      [tenant_id]
+    );
+
+    return NextResponse.json({ payload: rows });
+  } catch (error) {
+    console.error("Fetch customers error:", error);
+    return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+  }
+}

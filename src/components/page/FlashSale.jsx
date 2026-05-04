@@ -26,25 +26,71 @@ const FlashSale = () => {
 
   if (!products || products.length === 0) return null
 
-  return (
-    <section className='w-full py-24 bg-white'>
-      <div className='max-w-7xl mx-auto px-6 space-y-16'>
-        
-        <div className='flex flex-col md:flex-row md:items-end justify-between gap-6'>
-          <div className='space-y-4'>
-            <div className='flex items-center gap-2 text-red-500 font-black uppercase tracking-[0.3em] text-[10px]'>
-              <MdTimer className='animate-pulse text-lg' />
-              Limited Time Offer
-            </div>
-            <h2 className='text-5xl font-black text-gray-900 tracking-tight'>Flash Sale!</h2>
-          </div>
-          <Link href={'/flashsale'} className='px-8 py-3 bg-gray-50 text-gray-900 rounded-full font-bold text-sm hover:bg-pink-500 hover:text-white transition-all shadow-sm'>
-            View All Offers
-          </Link>
-        </div>
+  // Motion Variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.1
+      }
+    }
+  }
 
-        <div className='flex flex-col gap-32'>
-          {products.map((item, index) => {
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: [0.16, 1, 0.3, 1]
+      }
+    }
+  }
+
+  const imageVariants = (index) => ({
+    hidden: { opacity: 0, scale: 0.8, rotate: index % 2 === 0 ? -5 : 5 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      rotate: 0,
+      transition: {
+        duration: 1.2,
+        ease: [0.16, 1, 0.3, 1]
+      }
+    }
+  })
+
+  return (
+    <section className='w-full py-32 bg-white overflow-hidden'>
+      <div className='max-w-7xl mx-auto px-6 space-y-24'>
+        
+        {/* Header Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false }}
+          transition={{ duration: 0.8 }}
+          className='flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-gray-100 pb-12'
+        >
+          <div className='space-y-4'>
+            <div className='flex items-center gap-3 text-pink-600 font-sans font-bold uppercase tracking-[0.4em] text-[10px]'>
+              <MdTimer className='animate-pulse text-lg' />
+              Limited Time Curations
+            </div>
+            <h2 className='text-5xl md:text-6xl font-serif text-gray-900 tracking-tight'>
+              Chef's <span className='italic font-normal text-gray-400'>Specials</span>
+            </h2>
+          </div>
+          <Link href='/flashsale' className='group flex items-center gap-2 font-sans font-bold text-[10px] uppercase tracking-widest text-gray-400 hover:text-pink-600 transition-colors'>
+            View All Offers <span className='group-hover:translate-x-1 transition-transform duration-300'>→</span>
+          </Link>
+        </motion.div>
+
+        <div className='space-y-40'>
+          {products.slice(0, 4).map((item, index) => {
             const hasDiscount = item.discount !== 0 && item.discount !== null;
 
             let variantAdjustment = 0;
@@ -66,62 +112,86 @@ const FlashSale = () => {
             return (
               <div 
                 key={item.id} 
-                className={`flex flex-col ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-6 lg:gap-24`}
+                className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-16 lg:gap-24`}
               >
-               
                 <motion.div 
-                  initial={{ opacity: 0,y:-20  }} 
-                  whileInView={{ opacity: 1,y:0 }} 
-                  transition={{duration: 0.6, delay: 0.2  }} 
-                  className='w-full md:w-1/2 relative'
+                  variants={imageVariants(index)}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: false, amount: 0.3 }}
+                  className='w-full md:w-1/2 lg:w-full relative'
                 >
-                  <div className='absolute inset-0 bg-pink-100 rounded-full scale-110 -z-10 blur-3xl opacity-20' />
-                  <Link href={`/menu/${item.slug}`} className='block relative aspect-square group'>
+                  <div className='relative aspect-square overflow-hidden rounded-full shadow-[0_50px_100px_-20px_rgba(0,0,0,0.2)] border-8 border-gray-50'>
                     <Image 
                       src={item.image} 
                       alt={item.title} 
-                      width={600} 
-                      height={600} 
-                      className='w-full h-full object-cover rounded-[60px] shadow-2xl transition-transform duration-700 group-hover:scale-[1.02]' 
+                      fill
+                      priority={index === 0}
+                      className='object-cover transition-transform duration-1000 hover:scale-110' 
                     />
-                    <div className='absolute -top-6 -right-6 w-24 h-24 bg-red-500 text-white rounded-full flex flex-col items-center justify-center shadow-xl rotate-12 group-hover:rotate-0 transition-transform'>
-                      <span className='text-xs font-black uppercase tracking-tighter'>Save</span>
-                      <span className='text-2xl font-black'>৳{item.discount}</span>
-                    </div>
-                  </Link>
+                  </div>
+                  {hasDiscount && (
+                     <motion.div 
+                      initial={{ opacity: 0, scale: 0, rotate: -20 }}
+                      whileInView={{ opacity: 1, scale: 1, rotate: -12 }}
+                      viewport={{ once: false }}
+                      transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
+                      className='absolute -top-4 -left-4 bg-pink-600 text-white px-6 py-3 rounded-xl shadow-[0_20px_40px_-10px_rgba(219,39,119,0.4)] z-20'
+                     >
+                        <span className='text-xs font-bold uppercase tracking-widest'>Save ৳{item.discount}</span>
+                     </motion.div>
+                  )}
+                  {/* Decorative Circle */}
+                  <div className={`absolute -z-10 top-1/2 -translate-y-1/2 ${index % 2 === 0 ? '-left-20' : '-right-20'} w-80 h-80 bg-pink-50 rounded-full blur-3xl opacity-50`} />
                 </motion.div>
 
                 <motion.div 
-                  initial={{ opacity: 0, y: 20 }} 
-                  whileInView={{ opacity: 1, y: 0 }} 
-                  transition={{ duration: 0.6, delay: 0.2 }} 
-                  className='w-full space-y-2 text-center md:text-left'
+                  variants={containerVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: false, amount: 0.3 }}
+                  className='w-full  flex flex-col items-center lg:items-start text-center lg:text-left'
                 >
-                  <div className='space-y-2'>
-                    <span className='text-[10px] font-black uppercase text-pink-600 tracking-widest'>{item.category_name}</span>
-                    <h3 className='text-4xl font-black text-gray-900 leading-tight'>{item.title}</h3>
-                  </div>
+                  <motion.div variants={itemVariants} className='space-y-4 mb-8'>
+                    <span className='text-[10px] font-bold uppercase text-pink-600 tracking-[0.4em]'>{item.category_name}</span>
+                    <h2 className='text-5xl md:text-6xl lg:text-7xl font-serif text-gray-900 leading-[1.1] tracking-tight'>
+                      {item.title}
+                    </h2>
+                  </motion.div>
                   
-                  <p className='text-gray-500 text-lg leading-relaxed max-w-md'>
-                    {item.description || "Indulge in our chef's special creation, crafted with passion and the finest seasonal ingredients for an unforgettable taste."}
-                  </p>
+                  <motion.p 
+                    variants={itemVariants}
+                    className='text-gray-500 text-lg md:text-xl leading-relaxed font-light max-w-lg mb-10'
+                  >
+                    {item.description || "A masterpiece of flavor, crafted with hand-picked seasonal ingredients and refined culinary techniques."}
+                  </motion.p>
 
-                  <div className='flex items-center justify-center md:justify-start gap-4'>
-                    <div className='flex flex-col'>
-                      <span className='text-sm text-gray-300 line-through font-bold'>৳{baseWithVariant.toFixed(2)}</span>
-                      <span className='text-4xl font-black text-gray-900'>৳{currentPrice.toFixed(2)}</span>
+                  <motion.div 
+                    variants={itemVariants}
+                    className='flex flex-col gap-2 items-center lg:items-start mb-12'
+                  >
+                    {hasDiscount && <span className='text-sm line-through text-gray-300 font-sans font-medium'>৳{Number(baseWithVariant).toFixed(2)}</span>}
+                    <div className='flex items-center gap-3'>
+                       <span className='text-5xl md:text-6xl font-sans font-medium text-gray-900 tracking-tighter'>৳{Number(currentPrice).toFixed(2)}</span>
+                       <span className='px-3 py-1 bg-pink-50 text-pink-600 text-[10px] font-bold rounded-full uppercase tracking-widest'>Special Price</span>
                     </div>
-                  </div>
+                  </motion.div>
 
-                  <div className='pt-4'>
+                  <motion.div 
+                    variants={itemVariants}
+                    className='w-full flex justify-center lg:justify-start'
+                  >
                     <button 
                       onClick={() => addToCart({ ...item, price: baseWithVariant, selectedVariants: defaultVariants })} 
-                      className='group flex items-center justify-center md:justify-start gap-4 px-10 py-5 bg-pink-500 text-white rounded-2xl font-black hover:bg-pink-600 transition-all shadow-xl shadow-pink-900/10 active:scale-95 w-full md:w-auto'
+                      className='group relative px-14 py-6 bg-gray-900 text-white rounded-full font-sans font-bold text-xs uppercase tracking-widest overflow-hidden transition-all duration-500 hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.3)] active:scale-95 flex items-center justify-center gap-4'
                     >
-                      <BiCartDownload size={24} />
-                      ADD TO CART
+                      <span className='relative z-10 flex items-center gap-3 text-sm'>
+                        <BiCartDownload size={24} />
+                        Add to Cart
+                      </span>
+                      <div className='absolute inset-0 bg-pink-600 translate-y-full group-hover:translate-y-0 transition-transform duration-500' />
                     </button>
-                  </div>
+                  </motion.div>
                 </motion.div>
               </div>
             )

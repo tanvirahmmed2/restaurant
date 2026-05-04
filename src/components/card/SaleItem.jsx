@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { Context } from '../context/Context'
 import { MdClose } from 'react-icons/md'
 
-const SaleItem = ({item}) => {
+const SaleItem = ({ item }) => {
     const { addToCart } = useContext(Context)
     const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -88,19 +88,19 @@ const SaleItem = ({item}) => {
 
     return (
         <>
-            <motion.div 
-                initial={{ opacity: 0 }} 
-                animate={{ opacity: 1 }} 
-                onClick={handleCardClick} 
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                onClick={handleCardClick}
                 className='w-full flex flex-col bg-white rounded-xl overflow-hidden border border-gray-100 hover:border-pink-500 transition-all cursor-pointer group relative'
             >
                 <div className='relative w-full aspect-[4/3] overflow-hidden bg-gray-50'>
-                    <Image 
-                        src={item.image} 
-                        alt={item.title} 
-                        width={200} 
-                        height={150} 
-                        className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-500' 
+                    <Image
+                        src={item.image}
+                        alt={item.title}
+                        width={200}
+                        height={150}
+                        className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-500'
                     />
                     {item.discount > 0 && (
                         <div className='absolute top-2 left-2 bg-pink-500 text-white text-[8px] font-semibold uppercase px-2 py-0.5 rounded'>
@@ -128,17 +128,17 @@ const SaleItem = ({item}) => {
             <AnimatePresence>
                 {isModalOpen && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                        <motion.div 
-                            initial={{ opacity: 0 }} 
-                            animate={{ opacity: 1 }} 
-                            exit={{ opacity: 0 }} 
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
                             onClick={(e) => { e.stopPropagation(); setIsModalOpen(false); }}
                             className="absolute inset-0 bg-pink-500/40 backdrop-blur-sm"
                         />
-                        <motion.div 
-                            initial={{ opacity: 0, scale: 0.95, y: 10 }} 
-                            animate={{ opacity: 1, scale: 1, y: 0 }} 
-                            exit={{ opacity: 0, scale: 0.95, y: 10 }} 
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 10 }}
                             onClick={(e) => e.stopPropagation()}
                             className="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh]"
                         >
@@ -147,7 +147,7 @@ const SaleItem = ({item}) => {
                                     <h3 className="font-bold text-gray-900">{item.title}</h3>
                                     <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold mt-0.5">Customize Item</p>
                                 </div>
-                                <button 
+                                <button
                                     onClick={(e) => { e.stopPropagation(); setIsModalOpen(false); }}
                                     className="p-2 text-gray-400 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
                                 >
@@ -167,17 +167,15 @@ const SaleItem = ({item}) => {
                                                 <button
                                                     key={v.id}
                                                     onClick={(e) => handleVariantSelect(groupName, v, e)}
-                                                    className={`px-3 py-2 text-xs font-semibold rounded-lg border transition-all text-left flex flex-col gap-0.5 ${
-                                                        selectedVariants[groupName]?.id === v.id
+                                                    className={`px-3 py-2 text-xs font-semibold rounded-lg border transition-all text-left flex flex-col gap-0.5 ${selectedVariants[groupName]?.id === v.id
                                                             ? 'border-pink-500 bg-pink-500 text-white shadow-md'
                                                             : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50'
-                                                    }`}
+                                                        }`}
                                                 >
                                                     <span className="truncate">{v.value}</span>
                                                     {v.price_adjustment > 0 && (
-                                                        <span className={`text-[9px] ${
-                                                            selectedVariants[groupName]?.id === v.id ? 'text-white/70' : 'text-pink-500'
-                                                        }`}>
+                                                        <span className={`text-[9px] ${selectedVariants[groupName]?.id === v.id ? 'text-white/70' : 'text-pink-500'
+                                                            }`}>
                                                             +৳{v.price_adjustment}
                                                         </span>
                                                     )}
@@ -198,7 +196,7 @@ const SaleItem = ({item}) => {
                                         )}
                                     </div>
                                 </div>
-                                <button 
+                                <button
                                     onClick={handleModalAddToCart}
                                     className="px-6 py-2.5 bg-pink-500 text-white text-xs font-bold uppercase tracking-widest rounded-xl hover:bg-pink-600 transition-colors shadow-lg shadow-pink-900/10 active:scale-95"
                                 >

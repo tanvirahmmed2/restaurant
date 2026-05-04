@@ -43,7 +43,7 @@ const Navbar = () => {
           className='text-xl font-bold tracking-tight text-gray-900 flex items-center gap-3'
         >
          
-          {siteData?.name || 'Grand Kitchen'}
+          {siteData?.name }
         </Link>
 
         <div className='hidden md:flex flex-row items-center gap-8'>

@@ -30,107 +30,124 @@ const Intro = () => {
   if (!item) return null
 
   return (
-    <section className='relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-white py-12'>
+    <section className='relative w-full min-h-screen bg-[#fafafa] flex items-center justify-center py-20 px-6 overflow-hidden'>
       
-      {/* Subtle Background Accent */}
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-gray-50/50 -skew-x-12 translate-x-1/4 -z-10" />
-
-      <div className='max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center z-10'>
+      {/* Background accents */}
+      <div className='absolute top-0 right-0 w-1/3 h-full bg-pink-50/50 -skew-x-12 translate-x-1/4 -z-10' />
+      
+      <div className='max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-16 items-center'>
         
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }} 
-          animate={{ opacity: 1, y: 0 }} 
-          transition={{ duration: 0.8 }}
-          className='text-center lg:text-left space-y-10'
-        >
-          <div className="space-y-4">
-            <div className='inline-block px-4 py-1 bg-pink-500 text-white text-[10px] font-semibold uppercase tracking-[0.3em] rounded-full'>
-              {siteData?.name || 'Grand Kitchen'}
+        {/* Left Column: Text Content */}
+        <div className='lg:col-span-5 space-y-12 z-10'>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className='space-y-6'
+          >
+            <div className='flex items-center gap-4'>
+              <span className='h-px w-8 bg-pink-500' />
+              <span className='text-[10px] font-bold text-pink-500 uppercase tracking-[0.4em]'>
+                {siteData?.name || 'EST. 2024'}
+              </span>
             </div>
-            <h1 className='text-6xl md:text-8xl font-semibold text-gray-900 leading-[0.9] tracking-tight'>
+            
+            <h1 className='text-6xl md:text-8xl font-serif text-gray-900 leading-[0.9] tracking-tight'>
               Taste the <br />
-              <span className='text-gray-300 italic'>Extraordinary</span>
+              <span className='italic font-normal text-pink-500/80'>Extraordinary</span>
             </h1>
-          </div>
 
-          <p className='text-gray-500 text-lg md:text-xl font-medium max-w-lg leading-relaxed mx-auto lg:mx-0'>
-            {siteData?.meta_description || "Experience culinary excellence with our curated selection of fine dishes and seasonal flavors."}
-          </p>
+            <p className='text-gray-500 text-lg md:text-xl font-light max-w-md leading-relaxed'>
+              {siteData?.meta_description || "Experience culinary excellence with our curated selection of fine dishes and seasonal flavors."}
+            </p>
+          </motion.div>
 
-          <div className='flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4'>
-            <Link href='/menu' className='px-10 py-4 bg-pink-500 text-white rounded-xl font-semibold text-sm hover:bg-pink-600 transition-all shadow-xl shadow-pink-900/10 active:scale-[0.98] uppercase tracking-widest'>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.8 }}
+            className='flex flex-wrap gap-5'
+          >
+            <Link href='/menu' className='px-10 py-4 bg-gray-900 text-white rounded-full font-sans font-bold text-xs uppercase tracking-widest hover:bg-pink-600 transition-all shadow-xl shadow-gray-900/10 active:scale-95'>
               View Menu
             </Link>
-            
-            <Link href='/reservation' className='px-10 py-4 border border-gray-100 text-gray-900 bg-white rounded-xl font-semibold text-sm hover:bg-gray-50 transition-all uppercase tracking-widest'>
+            <Link href='/reservation' className='px-10 py-4 border border-gray-200 text-gray-900 bg-white rounded-full font-sans font-bold text-xs uppercase tracking-widest hover:bg-gray-50 transition-all active:scale-95'>
               Reservation
             </Link>
-          </div>
-        </motion.div>
+          </motion.div>
 
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.2 }}
-          className='relative'
-        >
-          <div className='relative w-full aspect-square max-w-lg mx-auto'>
-            <div className='absolute inset-0 bg-gray-100 rounded-[3rem] rotate-6 -z-10 scale-95' />
-            <div className='absolute inset-0 bg-pink-500/5 rounded-[3rem] -rotate-3 -z-10 scale-105' />
-            
-            <Image 
-              src={item.image} 
-              alt={item.title} 
-              width={600} 
-              height={600} 
-              className='w-full h-full object-cover rounded-[3rem] shadow-2xl grayscale-[0.2] hover:grayscale-0 transition-all duration-700'
-            />
-            
+          {/* Social Proof / Tiny Details */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className='flex gap-10 pt-4 border-t border-gray-100'
+          >
+            <div className='space-y-1'>
+              <p className='text-xs font-bold text-gray-400 uppercase tracking-widest'>Ingredients</p>
+              <p className='text-sm font-serif italic text-gray-800'>100% Organic & Local</p>
+            </div>
+            <div className='space-y-1'>
+              <p className='text-xs font-bold text-gray-400 uppercase tracking-widest'>Service</p>
+              <p className='text-sm font-serif italic text-gray-800'>Chef's Special Touch</p>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Right Column: Dynamic Image Layout */}
+        <div className='lg:col-span-7 relative'>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            className='relative flex items-center justify-center lg:justify-end'
+          >
+            {/* Main Image with Decorative Frame */}
+            <div className='relative w-full aspect-[4/5] max-w-lg overflow-hidden rounded-[3rem] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.2)]'>
+              <Image 
+                src={item.image} 
+                alt={item.title} 
+                fill 
+                className='object-cover hover:scale-105 transition-transform duration-1000'
+              />
+              <div className='absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none' />
+            </div>
+
+            {/* Overlapping Card */}
             <motion.div 
-              initial={{ x: 20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.8 }}
-              className="absolute -bottom-8 -right-8 bg-white p-6 rounded-2xl  border border-gray-50"
+              whileHover={{ y: -5 }}
+              className='absolute -bottom-10 left-0 lg:-left-16 bg-white p-8 rounded-[2rem] shadow-2xl border border-gray-50 max-w-[280px] z-20'
             >
-              <p className="text-gray-400 text-[10px] font-semibold uppercase tracking-widest mb-1">Today's Special</p>
-              <p className="text-sm font-semibold text-gray-900 mb-2 line-clamp-1">{item.title}</p>
-              
-              {(() => {
-                const hasDiscount = item.discount !== 0 && item.discount !== null;
-                let variantAdjustment = 0;
-                const defaultVariants = {};
-                if (item.variants) {
-                  item.variants.forEach(v => {
-                    if (!defaultVariants[v.name] || v.is_default) {
-                      defaultVariants[v.name] = v;
-                    }
-                  });
-                  Object.values(defaultVariants).forEach(v => {
-                    variantAdjustment += Number(v.price_adjustment || 0);
-                  });
-                }
-                const baseWithVariant = Number(item.price) + variantAdjustment;
-                const currentPrice = hasDiscount ? baseWithVariant - Number(item.discount) : baseWithVariant;
+              <div className='space-y-4'>
+                <div className='inline-block px-3 py-1 bg-pink-50 text-pink-500 text-[9px] font-bold uppercase tracking-widest rounded-full'>
+                  Today's Choice
+                </div>
+                <h3 className='text-xl font-serif text-gray-900 leading-tight'>{item.title}</h3>
                 
-                return (
-                  <div className='flex flex-col gap-0'>
-                    {hasDiscount && <p className='text-[10px] line-through text-gray-400'>৳{baseWithVariant.toFixed(2)}</p>}
-                    <p className="text-2xl font-semibold text-black tracking-tight">
-                      ৳{currentPrice.toFixed(2)}
-                    </p>
-                  </div>
-                );
-              })()}
+                <div className='flex items-baseline gap-2'>
+                  <span className='text-2xl font-sans font-medium text-gray-900'>৳{Number(item.price - (item.discount || 0)).toFixed(2)}</span>
+                  {item.discount > 0 && <span className='text-xs line-through text-gray-300'>৳{Number(item.price).toFixed(2)}</span>}
+                </div>
+
+                <Link href={`/menu?id=${item.id}`} className='block w-full pt-4 text-[10px] font-bold text-pink-500 uppercase tracking-widest hover:text-pink-600 transition-colors'>
+                  See Details →
+                </Link>
+              </div>
             </motion.div>
-          </div>
-        </motion.div>
+
+            {/* Decorative element */}
+            <div className='absolute -top-10 right-0 w-32 h-32 border-t-2 border-r-2 border-pink-100 rounded-tr-[3rem] -z-10' />
+          </motion.div>
+        </div>
 
       </div>
 
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-20">
-        <p className='text-[10px] font-semibold uppercase tracking-[0.5em] vertical-text'>Scroll</p>
-        <div className="w-px h-12 bg-pink-500" />
+      {/* Floating Scroll Guide */}
+      <div className='absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-30'>
+         <p className='text-[10px] font-bold uppercase tracking-[0.5em] [writing-mode:vertical-lr] text-gray-400'>Scroll</p>
+         <div className='w-px h-12 bg-gradient-to-b from-pink-500 to-transparent' />
       </div>
+
     </section>
   )
 }

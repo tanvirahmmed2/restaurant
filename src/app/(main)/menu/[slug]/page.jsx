@@ -20,7 +20,7 @@ const SingleProduct = async ({ params }) => {
     <div className='w-full min-h-screen bg-slate-50 pb-20'>
       <div className='w-full bg-slate-700 h-64 relative' />
 
-      <div className='max-w-5xl mx-auto px-4 -mt-32 relative z-10'>
+      <div className='max-w-7xl mx-auto px-4 -mt-32 relative z-10'>
         <ItemDetails product={product} />
 
         <SameCategoryProducts id={product.category_id} />

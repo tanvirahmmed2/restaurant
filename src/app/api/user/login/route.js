@@ -1,5 +1,4 @@
 import { pool } from "@/lib/database/pg";
-import { getTenant } from "@/lib/database/tenant";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -7,11 +6,6 @@ import { JWT_SECRET, NODE_ENV } from "@/lib/database/secret";
 
 export async function POST(req) {
   try {
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { email, password } = await req.json();
 
     if (!email || !password) {
@@ -22,14 +16,14 @@ export async function POST(req) {
     }
 
     const { rows } = await pool.query(
-      "SELECT * FROM res_users WHERE email = $1 AND tenant_id = $2 LIMIT 1",
-      [email, tenant.tenant_id]
+      "SELECT * FROM users WHERE email = $1 LIMIT 1",
+      [email]
     );
 
     if (rows.length === 0) {
       return NextResponse.json({
         success: false,
-        message: "No account found with this email for this tenant",
+        message: "No account found with this email",
       }, { status: 400 });
     }
 
@@ -51,7 +45,7 @@ export async function POST(req) {
       }, { status: 400 });
     }
 
-    const payload = { id: user.id, email: user.email, role: user.role, tenant_id: user.tenant_id };
+    const payload = { id: user.id, email: user.email, role: user.role };
 
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
 

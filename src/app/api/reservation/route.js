@@ -1,5 +1,4 @@
 import { pool } from "@/lib/database/pg";
-import { getTenant } from "@/lib/database/tenant";
 import { NextResponse } from "next/server";
 import { isManager } from "@/lib/auth/middleware";
 
@@ -10,14 +9,8 @@ export async function GET(req) {
       return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
     }
 
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { rows } = await pool.query(
-      "SELECT * FROM res_reservations WHERE tenant_id = $1 ORDER BY res_date DESC",
-      [tenant.tenant_id]
+      "SELECT * FROM reservations ORDER BY res_date DESC"
     );
 
     return NextResponse.json({
@@ -33,20 +26,15 @@ export async function GET(req) {
 
 export async function POST(req) {
   try {
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { name, email, date, table, member, message } = await req.json();
     if (!name || !email || !date || !member || !table) {
       return NextResponse.json({ success: false, message: "Please fill all information" }, { status: 400 });
     }
 
     const { rows: newRes } = await pool.query(
-      `INSERT INTO res_reservations (tenant_id, name, email, res_date, member_count, table_no, message) 
-      VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-      [tenant.tenant_id, name, email, date, member, table, message || ""]
+      `INSERT INTO reservations (name, email, res_date, member_count, table_no, message) 
+      VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+      [name, email, date, member, table, message || ""]
     );
 
     return NextResponse.json({
@@ -67,26 +55,21 @@ export async function DELETE(req) {
       return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
     }
 
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { id } = await req.json();
     if (!id) {
       return NextResponse.json({ success: false, message: "Id not found" }, { status: 400 });
     }
 
     const { rows } = await pool.query(
-      "SELECT id FROM res_reservations WHERE id = $1 AND tenant_id = $2 LIMIT 1",
-      [id, tenant.tenant_id]
+      "SELECT id FROM reservations WHERE id = $1 LIMIT 1",
+      [id]
     );
 
     if (rows.length === 0) {
-      return NextResponse.json({ success: false, message: "Reservation not found for this tenant" }, { status: 404 });
+      return NextResponse.json({ success: false, message: "Reservation not found" }, { status: 404 });
     }
 
-    await pool.query("DELETE FROM res_reservations WHERE id = $1", [id]);
+    await pool.query("DELETE FROM reservations WHERE id = $1", [id]);
 
     return NextResponse.json({
       success: true,

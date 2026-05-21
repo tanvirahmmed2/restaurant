@@ -1,20 +1,13 @@
 import cloudinary from "@/lib/database/cloudinary";
 import { pool } from "@/lib/database/pg";
-import { getTenant } from "@/lib/database/tenant";
 import { NextResponse } from "next/server";
 import slugify from "slugify";
 import { isManager } from "@/lib/auth/middleware";
 
 export async function GET(req) {
   try {
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { rows } = await pool.query(
-      "SELECT * FROM res_categories WHERE tenant_id = $1 ORDER BY created_at DESC",
-      [tenant.tenant_id]
+      "SELECT * FROM categories ORDER BY created_at DESC"
     );
 
     return NextResponse.json({
@@ -34,11 +27,6 @@ export async function POST(req) {
       return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
     }
 
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const formData = await req.formData();
     const name = formData.get("name");
 
@@ -48,14 +36,14 @@ export async function POST(req) {
 
     const slug = slugify(name, { lower: true, strict: true });
 
-    // Check if category exists for this tenant
+    // Check if category exists
     const { rows: existingCat } = await pool.query(
-      "SELECT id FROM res_categories WHERE slug = $1 AND tenant_id = $2 LIMIT 1",
-      [slug, tenant.tenant_id]
+      "SELECT id FROM categories WHERE slug = $1 LIMIT 1",
+      [slug]
     );
 
     if (existingCat.length > 0) {
-      return NextResponse.json({ success: false, message: "Category already exists for this tenant" }, { status: 400 });
+      return NextResponse.json({ success: false, message: "Category already exists" }, { status: 400 });
     }
 
     const imageFile = formData.get("image");
@@ -82,8 +70,8 @@ export async function POST(req) {
     });
 
     const { rows: newCat } = await pool.query(
-      "INSERT INTO res_categories (tenant_id, name, slug, image, image_id) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-      [tenant.tenant_id, name, slug, cloudImage.secure_url, cloudImage.public_id]
+      "INSERT INTO categories (name, slug, image, image_id) VALUES ($1, $2, $3, $4) RETURNING *",
+      [name, slug, cloudImage.secure_url, cloudImage.public_id]
     );
 
     return NextResponse.json({
@@ -104,23 +92,18 @@ export async function DELETE(req) {
       return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
     }
 
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { id } = await req.json();
     if (!id) {
       return NextResponse.json({ success: false, message: "Id not found" }, { status: 400 });
     }
 
     const { rows } = await pool.query(
-      "SELECT * FROM res_categories WHERE id = $1 AND tenant_id = $2 LIMIT 1",
-      [id, tenant.tenant_id]
+      "SELECT * FROM categories WHERE id = $1 LIMIT 1",
+      [id]
     );
 
     if (rows.length === 0) {
-      return NextResponse.json({ success: false, message: "Category not found for this tenant" }, { status: 404 });
+      return NextResponse.json({ success: false, message: "Category not found" }, { status: 404 });
     }
 
     const cat = rows[0];
@@ -129,7 +112,7 @@ export async function DELETE(req) {
       await cloudinary.uploader.destroy(cat.image_id);
     }
 
-    await pool.query("DELETE FROM res_categories WHERE id = $1", [id]);
+    await pool.query("DELETE FROM categories WHERE id = $1", [id]);
 
     return NextResponse.json({
       success: true,

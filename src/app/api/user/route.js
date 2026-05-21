@@ -1,16 +1,10 @@
 import { pool } from "@/lib/database/pg";
-import { getTenant } from "@/lib/database/tenant";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { isLogin } from "@/lib/auth/middleware";
 
 export async function POST(req) {
   try {
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { name, email, password, phone } = await req.json();
     if (!name || !email || !password || !phone) {
       return NextResponse.json({ success: false, message: "Please fill all information" }, { status: 400 });
@@ -20,21 +14,21 @@ export async function POST(req) {
       return NextResponse.json({ success: false, message: "Please enter a valid phone number" }, { status: 400 });
     }
 
-    // Check if user exists for this tenant
+    // Check if user exists
     const { rows: existingUser } = await pool.query(
-      "SELECT * FROM res_users WHERE (email = $1 OR phone = $2) AND tenant_id = $3 LIMIT 1",
-      [email, phone, tenant.tenant_id]
+      "SELECT * FROM users WHERE email = $1 OR phone = $2 LIMIT 1",
+      [email, phone]
     );
 
     if (existingUser.length > 0) {
-      return NextResponse.json({ success: false, message: "User already exists with this email/phone for this tenant" }, { status: 400 });
+      return NextResponse.json({ success: false, message: "User already exists with this email/phone" }, { status: 400 });
     }
 
     const hashedPass = await bcrypt.hash(password, 10);
 
     const { rows: newUser } = await pool.query(
-      "INSERT INTO res_users (tenant_id, name, email, password, phone) VALUES ($1, $2, $3, $4, $5) RETURNING id, name, email, phone, role",
-      [tenant.tenant_id, name, email, hashedPass, phone]
+      "INSERT INTO users (name, email, password, phone) VALUES ($1, $2, $3, $4) RETURNING id, name, email, phone, role",
+      [name, email, hashedPass, phone]
     );
 
     return NextResponse.json({
@@ -80,7 +74,7 @@ export async function PATCH(req) {
     }
 
     const { rows: currentUserRows } = await pool.query(
-      "SELECT * FROM res_users WHERE id = $1 LIMIT 1",
+      "SELECT * FROM users WHERE id = $1 LIMIT 1",
       [authenticatedUser.id]
     );
 
@@ -113,7 +107,7 @@ export async function PATCH(req) {
     }
 
     const { rows: updatedUser } = await pool.query(
-      "UPDATE res_users SET name = $1, email = $2, password = $3 WHERE id = $4 RETURNING id, name, email, phone, role",
+      "UPDATE users SET name = $1, email = $2, password = $3 WHERE id = $4 RETURNING id, name, email, phone, role",
       [newName, newEmail, finalPassword, authenticatedUser.id]
     );
 
@@ -135,17 +129,11 @@ export async function DELETE(req) {
       return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
     }
 
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const user = auth.payload;
 
     if (user.role === "admin") {
       const { rows: adminRows } = await pool.query(
-        "SELECT id FROM res_users WHERE role = 'admin' AND tenant_id = $1",
-        [tenant.tenant_id]
+        "SELECT id FROM users WHERE role = 'admin'"
       );
 
       if (adminRows.length === 1) {
@@ -156,7 +144,7 @@ export async function DELETE(req) {
       }
     }
 
-    await pool.query("DELETE FROM res_users WHERE id = $1", [user.id]);
+    await pool.query("DELETE FROM users WHERE id = $1", [user.id]);
 
     const res = NextResponse.json({
       success: true,

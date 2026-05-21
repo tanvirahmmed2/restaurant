@@ -1,5 +1,4 @@
 import { pool } from "@/lib/database/pg";
-import { getTenant } from "@/lib/database/tenant";
 import { NextResponse } from "next/server";
 import { isSales } from "@/lib/auth/middleware";
 
@@ -11,11 +10,6 @@ export async function POST(req) {
       return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
     }
 
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { order_id, amount, method, transaction_id } = await req.json();
 
     if (!order_id || !amount) {
@@ -24,10 +18,10 @@ export async function POST(req) {
 
     await client.query("BEGIN");
 
-    // 1. Verify order belongs to tenant
+    // 1. Verify order exists
     const { rows: orderRows } = await client.query(
-      "SELECT id FROM res_orders WHERE id = $1 AND tenant_id = $2 LIMIT 1",
-      [order_id, tenant.tenant_id]
+      "SELECT id FROM orders WHERE id = $1 LIMIT 1",
+      [order_id]
     );
 
     if (orderRows.length === 0) {
@@ -37,14 +31,14 @@ export async function POST(req) {
 
     // 2. Insert Payment
     const { rows: paymentRows } = await client.query(
-      `INSERT INTO res_payments (tenant_id, order_id, amount, method, transaction_id, status) 
-      VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [tenant.tenant_id, order_id, amount, method || "cash", transaction_id || "", "completed"]
+      `INSERT INTO payments (order_id, amount, method, transaction_id, status) 
+      VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+      [order_id, amount, method || "cash", transaction_id || "", "completed"]
     );
 
     // 3. Update Order Status
     await client.query(
-      "UPDATE res_orders SET payment_status = $1, status = $2 WHERE id = $3",
+      "UPDATE orders SET payment_status = $1, status = $2 WHERE id = $3",
       ["paid", "accepted", order_id]
     );
 
@@ -71,14 +65,8 @@ export async function GET(req) {
       return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
     }
 
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { rows } = await pool.query(
-      "SELECT p.*, o.name as customer_name FROM res_payments p LEFT JOIN res_orders o ON p.order_id = o.id WHERE p.tenant_id = $1 ORDER BY p.created_at DESC",
-      [tenant.tenant_id]
+      "SELECT p.*, o.name as customer_name FROM payments p LEFT JOIN orders o ON p.order_id = o.id ORDER BY p.created_at DESC"
     );
 
     return NextResponse.json({

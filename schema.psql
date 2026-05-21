@@ -1,123 +1,12 @@
-never change schema
--- =====================================================
--- TENANTS
--- =====================================================
-CREATE TABLE tenants (
-  tenant_id SERIAL PRIMARY KEY,
-  name TEXT NOT NULL,
-
-  owner_id INT REFERENCES users(user_id),
-
-  domain TEXT UNIQUE,
-  subdomain TEXT UNIQUE,
-
-  status TEXT DEFAULT 'active'
-    CHECK (status IN ('active','suspended','expired')),
-
-  expires_at TIMESTAMP,
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE tenant_users (
-  id SERIAL PRIMARY KEY,
-  tenant_id INT REFERENCES tenants(tenant_id),
-  user_id INT REFERENCES users(user_id),
-
-  role TEXT DEFAULT 'member'
-    CHECK (role IN ('owner','admin','member')),
-
-  created_at TIMESTAMP DEFAULT now(),
-  UNIQUE(tenant_id, user_id)
-);
-
--- =====================================================
--- WEBSITES
--- =====================================================
-CREATE TABLE public.websites (
-  website_id SERIAL PRIMARY KEY,
-
-  tenant_id INTEGER REFERENCES tenants(tenant_id),
-
-  name TEXT,
-  domain TEXT UNIQUE,
-  theme TEXT,
-
-  status TEXT DEFAULT 'development'
-    CHECK (status IN ('active','development','maintenance','suspended')),
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now(),
-
-  -- Business Info
-  business_name TEXT,
-  logo TEXT,
-  favicon TEXT,
-
-  -- Contact
-  email TEXT,
-  phone TEXT,
-  address TEXT,
-  city TEXT,
-  country TEXT,
-
-  -- SEO
-  meta_title TEXT,
-  meta_description TEXT,
-
-
-  -- Social
-  facebook TEXT,
-  instagram TEXT,
-  linkedin TEXT,
-  youtube TEXT,
-
-  -- UI
-  primary_color TEXT DEFAULT '#10b981',
-  secondary_color TEXT DEFAULT '#ffffff',
-
-  -- Flags
-  is_public BOOLEAN DEFAULT TRUE,
-  is_store_enabled BOOLEAN DEFAULT TRUE
-);
-
-
--- =====================================================
-CREATE TABLE subscriptions (
-  subscription_id SERIAL PRIMARY KEY,
-  user_id INT REFERENCES users(user_id),
-  package_id INT REFERENCES packages(package_id),
-  tenant_id INT,
-
-  purchase_id INT REFERENCES purchases(purchase_id),
-
-  stripe_subscription_id TEXT UNIQUE,
-
-  status TEXT DEFAULT 'active'
-    CHECK (status IN ('active','past_due','canceled','unpaid','trialing','expired','refunded','pending')),
-
-  current_period_start TIMESTAMP DEFAULT now(),
-  current_period_end TIMESTAMP,
-
-  cancel_at_period_end BOOLEAN DEFAULT FALSE,
-  is_lifetime BOOLEAN DEFAULT FALSE,
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-
-
-
 ---
 -- 1. USER & IDENTITY MANAGEMENT
 ---
 
-CREATE TABLE res_users (
+CREATE TABLE users (
   id SERIAL PRIMARY KEY,
-  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
 
   name VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE,
   phone VARCHAR(50) NOT NULL,
 
   password VARCHAR(255) NOT NULL,
@@ -134,18 +23,16 @@ CREATE TABLE res_users (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE res_customers (
+CREATE TABLE customers (
   id SERIAL PRIMARY KEY,
-  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
 
   name VARCHAR(255) DEFAULT 'guest',
   phone VARCHAR(50)
 );
 
 
-CREATE TABLE res_categories (
+CREATE TABLE categories (
   id SERIAL PRIMARY KEY,
-  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
 
   name VARCHAR(255) NOT NULL,
   image TEXT,
@@ -156,11 +43,10 @@ CREATE TABLE res_categories (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE res_items (
+CREATE TABLE items (
   id SERIAL PRIMARY KEY,
-  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
 
-  category_id INT REFERENCES res_categories(id) ON DELETE CASCADE,
+  category_id INT REFERENCES categories(id) ON DELETE CASCADE,
 
   title VARCHAR(255) NOT NULL,
   slug VARCHAR(255) UNIQUE,
@@ -178,9 +64,8 @@ CREATE TABLE res_items (
 );
 
 
-CREATE TABLE res_orders (
+CREATE TABLE orders (
   id SERIAL PRIMARY KEY,
-  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
 
   name VARCHAR(255),
   phone VARCHAR(50),
@@ -203,12 +88,11 @@ CREATE TABLE res_orders (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE res_order_items (
+CREATE TABLE order_items (
   id SERIAL PRIMARY KEY,
-  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
 
-  order_id INT REFERENCES res_orders(id) ON DELETE CASCADE,
-  product_id INT REFERENCES res_items(id),
+  order_id INT REFERENCES orders(id) ON DELETE CASCADE,
+  product_id INT REFERENCES items(id),
 
   title VARCHAR(255),
   quantity INT NOT NULL,
@@ -217,11 +101,10 @@ CREATE TABLE res_order_items (
 );
 
 
-CREATE TABLE res_payments (
+CREATE TABLE payments (
   id SERIAL PRIMARY KEY,
-  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
 
-  order_id INT REFERENCES res_orders(id),
+  order_id INT REFERENCES orders(id),
 
   amount DECIMAL(12,2) NOT NULL,
   method VARCHAR(50),
@@ -232,24 +115,22 @@ CREATE TABLE res_payments (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE res_expenses (
+CREATE TABLE expenses (
   id SERIAL PRIMARY KEY,
-  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
 
   title VARCHAR(255),
   note TEXT,
   amount DECIMAL(12,2),
 
-  created_by INT REFERENCES res_users(id),
+  created_by INT REFERENCES users(id),
 
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 
 
-CREATE TABLE res_reservations (
+CREATE TABLE reservations (
   id SERIAL PRIMARY KEY,
-  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
 
   name VARCHAR(255),
   email VARCHAR(255),
@@ -265,9 +146,8 @@ CREATE TABLE res_reservations (
 
 
 
-CREATE TABLE res_support_tickets (
+CREATE TABLE support_tickets (
   id SERIAL PRIMARY KEY,
-  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
 
   name VARCHAR(255),
   email VARCHAR(255),
@@ -279,9 +159,8 @@ CREATE TABLE res_support_tickets (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE res_reviews (
+CREATE TABLE reviews (
   id SERIAL PRIMARY KEY,
-  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
 
   name VARCHAR(255),
   email VARCHAR(255),
@@ -289,9 +168,8 @@ CREATE TABLE res_reviews (
   rating INT CHECK (rating BETWEEN 1 AND 5)
 );
 
-CREATE TABLE res_offers (
+CREATE TABLE offers (
   id SERIAL PRIMARY KEY,
-  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
 
   title VARCHAR(255) NOT NULL,
   description TEXT,
@@ -307,11 +185,10 @@ CREATE TABLE res_offers (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE res_item_variants (
+CREATE TABLE item_variants (
   id SERIAL PRIMARY KEY,
-  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
 
-  item_id INT REFERENCES res_items(id) ON DELETE CASCADE,
+  item_id INT REFERENCES items(id) ON DELETE CASCADE,
 
   name VARCHAR(255) NOT NULL,        -- e.g. Size / Add-on
   value VARCHAR(255) NOT NULL,       -- e.g. Large / Cheese
@@ -322,12 +199,11 @@ CREATE TABLE res_item_variants (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE res_order_item_variants (
+CREATE TABLE order_item_variants (
   id SERIAL PRIMARY KEY,
-  tenant_id INT REFERENCES tenants(tenant_id) ON DELETE CASCADE,
 
-  order_item_id INT REFERENCES res_order_items(id) ON DELETE CASCADE,
-  variant_id INT REFERENCES res_item_variants(id),
+  order_item_id INT REFERENCES order_items(id) ON DELETE CASCADE,
+  variant_id INT REFERENCES item_variants(id),
 
   name VARCHAR(255),   -- snapshot (e.g. Size)
   value VARCHAR(255),  -- snapshot (e.g. Large)
@@ -335,6 +211,31 @@ CREATE TABLE res_order_item_variants (
   price_adjustment DECIMAL(12,2) DEFAULT 0
 );
 
-CREATE INDEX idx_res_items_slug ON res_items(slug);
-CREATE INDEX idx_res_categories_slug ON res_categories(slug);
-CREATE INDEX idx_res_orders_tenant ON res_orders(tenant_id);
+CREATE INDEX idx_items_slug ON items(slug);
+CREATE INDEX idx_categories_slug ON categories(slug);
+CREATE INDEX idx_orders_status ON orders(status);
+
+CREATE TABLE website (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255),
+  business_name VARCHAR(255),
+  logo TEXT,
+  favicon TEXT,
+  email VARCHAR(255),
+  phone VARCHAR(50),
+  address TEXT,
+  city VARCHAR(100),
+  country VARCHAR(100),
+  meta_title VARCHAR(255),
+  meta_description TEXT,
+  facebook TEXT,
+  instagram TEXT,
+  linkedin TEXT,
+  youtube TEXT,
+  primary_color VARCHAR(50) DEFAULT '#000000',
+  secondary_color VARCHAR(50) DEFAULT '#ffffff',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  -- 🔒 ENFORCE SINGLE ROW CONSTRAINT
+  one_row_constraint CHAR(1) DEFAULT 'X' UNIQUE CHECK (one_row_constraint = 'X')
+);

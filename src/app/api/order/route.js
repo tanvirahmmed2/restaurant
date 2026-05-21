@@ -1,5 +1,4 @@
 import { pool } from "@/lib/database/pg";
-import { getTenant } from "@/lib/database/tenant";
 import { NextResponse } from "next/server";
 import { isSales } from "@/lib/auth/middleware";
 
@@ -10,21 +9,15 @@ export async function GET(req) {
       return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
     }
 
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { rows: orders } = await pool.query(
-      "SELECT * FROM res_orders WHERE tenant_id = $1 ORDER BY created_at DESC",
-      [tenant.tenant_id]
+      "SELECT * FROM orders ORDER BY created_at DESC"
     );
 
     if (orders.length > 0) {
       const orderIds = orders.map(o => o.id);
       const { rows: itemRows } = await pool.query(
-        "SELECT * FROM res_order_items WHERE tenant_id = $1 AND order_id = ANY($2)",
-        [tenant.tenant_id, orderIds]
+        "SELECT * FROM order_items WHERE order_id = ANY($1)",
+        [orderIds]
       );
       
       orders.forEach(order => {
@@ -50,11 +43,6 @@ export async function GET(req) {
 export async function POST(req) {
   const client = await pool.connect();
   try {
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const data = await req.json();
     const {
       phone,
@@ -81,16 +69,16 @@ export async function POST(req) {
 
     // 1. Handle Customer
     const { rows: existingCustomer } = await client.query(
-      "SELECT name FROM res_customers WHERE phone = $1 AND tenant_id = $2 LIMIT 1",
-      [customerPhone, tenant.tenant_id]
+      "SELECT name FROM customers WHERE phone = $1 LIMIT 1",
+      [customerPhone]
     );
 
     if (existingCustomer.length > 0) {
       customerName = existingCustomer[0].name;
     } else {
       await client.query(
-        "INSERT INTO res_customers (tenant_id, phone, name) VALUES ($1, $2, $3)",
-        [tenant.tenant_id, customerPhone, "guest"]
+        "INSERT INTO customers (phone, name) VALUES ($1, $2)",
+        [customerPhone, "guest"]
       );
     }
 
@@ -99,12 +87,11 @@ export async function POST(req) {
 
     // 2. Insert Order
     const { rows: orderRows } = await client.query(
-      `INSERT INTO res_orders 
-      (tenant_id, name, phone, delivery_method, table_no, sub_total, total_discount, total_price, payment_method, status, transaction_id, payment_status) 
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) 
+      `INSERT INTO orders 
+      (name, phone, delivery_method, table_no, sub_total, total_discount, total_price, payment_method, status, transaction_id, payment_status) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) 
       RETURNING id`,
       [
-        tenant.tenant_id,
         customerName,
         customerPhone,
         delivery_method || "takein",
@@ -132,10 +119,9 @@ export async function POST(req) {
       }
 
       const { rows: itemRows } = await client.query(
-        `INSERT INTO res_order_items (tenant_id, order_id, product_id, title, quantity, price, discount) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`,
+        `INSERT INTO order_items (order_id, product_id, title, quantity, price, discount) 
+        VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
         [
-          tenant.tenant_id,
           orderId,
           item.id || item._id, 
           finalTitle,
@@ -151,10 +137,9 @@ export async function POST(req) {
       if (item.selectedVariants) {
         for (const variant of Object.values(item.selectedVariants)) {
           await client.query(
-            `INSERT INTO res_order_item_variants (tenant_id, order_item_id, variant_id, name, value, price_adjustment) 
-            VALUES ($1, $2, $3, $4, $5, $6)`,
+            `INSERT INTO order_item_variants (order_item_id, variant_id, name, value, price_adjustment) 
+            VALUES ($1, $2, $3, $4, $5)`,
             [
-              tenant.tenant_id,
               orderItemId,
               variant.id,
               variant.name,
@@ -189,26 +174,21 @@ export async function DELETE(req) {
       return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
     }
 
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { id } = await req.json();
     if (!id) {
       return NextResponse.json({ success: false, message: "Id not found" }, { status: 400 });
     }
 
     const { rows } = await pool.query(
-      "SELECT id FROM res_orders WHERE id = $1 AND tenant_id = $2 LIMIT 1",
-      [id, tenant.tenant_id]
+      "SELECT id FROM orders WHERE id = $1 LIMIT 1",
+      [id]
     );
 
     if (rows.length === 0) {
-      return NextResponse.json({ success: false, message: "Order not found for this tenant" }, { status: 404 });
+      return NextResponse.json({ success: false, message: "Order not found" }, { status: 404 });
     }
 
-    await pool.query("DELETE FROM res_orders WHERE id = $1", [id]);
+    await pool.query("DELETE FROM orders WHERE id = $1", [id]);
 
     return NextResponse.json({ success: true, message: "Successfully deleted order" }, { status: 200 });
 

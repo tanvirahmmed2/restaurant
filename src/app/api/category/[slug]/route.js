@@ -1,14 +1,8 @@
 import { pool } from "@/lib/database/pg";
-import { getTenant } from "@/lib/database/tenant";
 import { NextResponse } from "next/server";
 
 export async function GET(req, { params }) {
   try {
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { slug } = await params;
     if (!slug) {
       return NextResponse.json({ success: false, message: "Slug not found" }, { status: 400 });
@@ -16,8 +10,8 @@ export async function GET(req, { params }) {
 
     // Find category by slug
     const { rows: catRows } = await pool.query(
-      "SELECT id, name, slug FROM res_categories WHERE slug ILIKE $1 AND tenant_id = $2 LIMIT 1",
-      [slug, tenant.tenant_id]
+      "SELECT id, name, slug FROM categories WHERE slug ILIKE $1 LIMIT 1",
+      [slug]
     );
 
     if (catRows.length === 0) {
@@ -29,11 +23,11 @@ export async function GET(req, { params }) {
     // Fetch products for this category
     const { rows: products } = await pool.query(
       `SELECT i.*, c.name as category_name, c.slug as category_slug 
-       FROM res_items i
-       JOIN res_categories c ON i.category_id = c.id
-       WHERE i.category_id = $1 AND i.tenant_id = $2 
+       FROM items i
+       JOIN categories c ON i.category_id = c.id
+       WHERE i.category_id = $1 
        ORDER BY i.created_at DESC`,
-      [categoryId, tenant.tenant_id]
+      [categoryId]
     );
 
     return NextResponse.json({

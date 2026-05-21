@@ -10,8 +10,6 @@ export async function GET(req) {
       return NextResponse.json({ message: auth.message }, { status: 401 });
     }
 
-    const tenant_id = auth.payload.tenant_id;
-
     const { rows } = await pool.query(
       `
       SELECT 
@@ -20,13 +18,11 @@ export async function GET(req) {
         c.phone as "Phone",
         COUNT(o.id)::int as "Total Orders",
         COALESCE(SUM(o.total_price), 0)::float as "Total Spent (BDT)"
-      FROM res_customers c
-      LEFT JOIN res_orders o ON c.phone = o.phone AND c.tenant_id = o.tenant_id
-      WHERE c.tenant_id = $1
+      FROM customers c
+      LEFT JOIN orders o ON c.phone = o.phone
       GROUP BY c.id, c.name, c.phone
       ORDER BY c.id DESC
-      `,
-      [tenant_id]
+      `
     );
 
     // Create workbook and worksheet
@@ -49,3 +45,4 @@ export async function GET(req) {
     return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
   }
 }
+

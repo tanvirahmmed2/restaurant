@@ -1,5 +1,4 @@
 import { pool } from "@/lib/database/pg";
-import { getTenant } from "@/lib/database/tenant";
 import { NextResponse } from "next/server";
 import slugify from "slugify";
 import { isManager } from "@/lib/auth/middleware";
@@ -9,11 +8,6 @@ export async function POST(req) {
     const auth = await isManager();
     if (!auth.success) {
       return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
-    }
-
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
     }
 
     const { title, description, price, discount, id, variants } = await req.json();
@@ -26,14 +20,14 @@ export async function POST(req) {
     }
 
     const { rows } = await pool.query(
-      "SELECT id FROM res_items WHERE id = $1 AND tenant_id = $2",
-      [id, tenant.tenant_id]
+      "SELECT id FROM items WHERE id = $1",
+      [id]
     );
 
     if (rows.length === 0) {
       return NextResponse.json({
         success: false,
-        message: "Product not found for this tenant",
+        message: "Product not found",
       }, { status: 404 });
     }
 
@@ -41,20 +35,20 @@ export async function POST(req) {
 
     // Update item info
     await pool.query(
-      `UPDATE res_items 
+      `UPDATE items 
        SET title = $1, slug = $2, description = $3, price = $4, discount = $5, updated_at = CURRENT_TIMESTAMP 
-       WHERE id = $6 AND tenant_id = $7`,
-      [title, newSlug, description, price, discount || 0, id, tenant.tenant_id]
+       WHERE id = $6`,
+      [title, newSlug, description, price, discount || 0, id]
     );
 
     // Sync variants: Delete existing and re-insert
-    await pool.query("DELETE FROM res_item_variants WHERE item_id = $1 AND tenant_id = $2", [id, tenant.tenant_id]);
+    await pool.query("DELETE FROM item_variants WHERE item_id = $1", [id]);
 
     if (Array.isArray(variants) && variants.length > 0) {
       for (const variant of variants) {
         await pool.query(
-          "INSERT INTO res_item_variants (tenant_id, item_id, name, value, price_adjustment, is_default) VALUES ($1, $2, $3, $4, $5, $6)",
-          [tenant.tenant_id, id, variant.name, variant.value, Number(variant.price_adjustment) || 0, variant.is_default || false]
+          "INSERT INTO item_variants (item_id, name, value, price_adjustment, is_default) VALUES ($1, $2, $3, $4, $5)",
+          [id, variant.name, variant.value, Number(variant.price_adjustment) || 0, variant.is_default || false]
         );
       }
     }

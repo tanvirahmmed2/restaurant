@@ -1,5 +1,4 @@
 import { pool } from "@/lib/database/pg";
-import { getTenant } from "@/lib/database/tenant";
 import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/auth/middleware";
 
@@ -10,40 +9,29 @@ export async function GET(req) {
       return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
     }
 
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { rows: orderStats } = await pool.query(
       `SELECT COUNT(id) as total_orders, COALESCE(SUM(total_price), 0) as total_revenue 
-       FROM res_orders 
-       WHERE tenant_id = $1 AND status != 'canceled'`,
-      [tenant.tenant_id]
+       FROM orders 
+       WHERE status != 'canceled'`
     );
 
     // 2. Pending Orders
     const { rows: pendingStats } = await pool.query(
       `SELECT COUNT(id) as pending_orders 
-       FROM res_orders 
-       WHERE tenant_id = $1 AND status = 'pending'`,
-      [tenant.tenant_id]
+       FROM orders 
+       WHERE status = 'pending'`
     );
 
     // 3. Total Customers
     const { rows: customerStats } = await pool.query(
       `SELECT COUNT(id) as total_customers 
-       FROM res_customers 
-       WHERE tenant_id = $1`,
-      [tenant.tenant_id]
+       FROM customers`
     );
 
     // 4. Total Items
     const { rows: itemStats } = await pool.query(
       `SELECT COUNT(id) as total_items 
-       FROM res_items 
-       WHERE tenant_id = $1`,
-      [tenant.tenant_id]
+       FROM items`
     );
 
     const payload = {

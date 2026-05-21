@@ -1,25 +1,19 @@
 import cloudinary from "@/lib/database/cloudinary";
 import { pool } from "@/lib/database/pg";
-import { getTenant } from "@/lib/database/tenant";
 import { NextResponse } from "next/server";
 import slugify from "slugify";
 import { isManager } from "@/lib/auth/middleware";
 
 export async function GET(req) {
   try {
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { searchParams } = new URL(req.url);
     const category_id = searchParams.get("q");
 
-    let query = "SELECT p.*, c.name as category_name, c.slug as category_slug FROM res_items p LEFT JOIN res_categories c ON p.category_id = c.id WHERE p.tenant_id = $1";
-    let params = [tenant.tenant_id];
+    let query = "SELECT p.*, c.name as category_name, c.slug as category_slug FROM items p LEFT JOIN categories c ON p.category_id = c.id WHERE 1=1";
+    let params = [];
 
     if (category_id) {
-      query += " AND p.category_id = $2";
+      query += " AND p.category_id = $1";
       params.push(category_id);
     }
 
@@ -32,8 +26,8 @@ export async function GET(req) {
     let variantsMap = {};
     if (itemIds.length > 0) {
       const { rows: variants } = await pool.query(
-        "SELECT * FROM res_item_variants WHERE item_id = ANY($1) AND tenant_id = $2",
-        [itemIds, tenant.tenant_id]
+        "SELECT * FROM item_variants WHERE item_id = ANY($1)",
+        [itemIds]
       );
       variants.forEach(v => {
         if (!variantsMap[v.item_id]) variantsMap[v.item_id] = [];
@@ -68,11 +62,6 @@ export async function POST(req) {
       return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
     }
 
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const formData = await req.formData();
     const title = formData.get("title");
     const description = formData.get("description");
@@ -91,14 +80,14 @@ export async function POST(req) {
 
     const slug = slugify(title, { lower: true, strict: true });
 
-    // Check if product exists for this tenant
+    // Check if product exists
     const { rows: existingProduct } = await pool.query(
-      "SELECT id FROM res_items WHERE slug = $1 AND tenant_id = $2 LIMIT 1",
-      [slug, tenant.tenant_id]
+      "SELECT id FROM items WHERE slug = $1 LIMIT 1",
+      [slug]
     );
 
     if (existingProduct.length > 0) {
-      return NextResponse.json({ success: false, message: "Product already exists for this tenant" }, { status: 400 });
+      return NextResponse.json({ success: false, message: "Product already exists" }, { status: 400 });
     }
 
     const arrayBuffer = await imageFile.arrayBuffer();
@@ -121,8 +110,8 @@ export async function POST(req) {
     });
 
     const { rows: newProduct } = await pool.query(
-      "INSERT INTO res_items (tenant_id, category_id, title, slug, description, price, discount, image, image_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
-      [tenant.tenant_id, category_id, title, slug, description, price, discount, cloudImage.secure_url, cloudImage.public_id]
+      "INSERT INTO items (category_id, title, slug, description, price, discount, image, image_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
+      [category_id, title, slug, description, price, discount, cloudImage.secure_url, cloudImage.public_id]
     );
 
     const product = newProduct[0];
@@ -135,8 +124,8 @@ export async function POST(req) {
         if (Array.isArray(variants) && variants.length > 0) {
           for (const variant of variants) {
             await pool.query(
-              "INSERT INTO res_item_variants (tenant_id, item_id, name, value, price_adjustment, is_default) VALUES ($1, $2, $3, $4, $5, $6)",
-              [tenant.tenant_id, product.id, variant.name, variant.value, Number(variant.price_adjustment) || 0, variant.is_default || false]
+              "INSERT INTO item_variants (item_id, name, value, price_adjustment, is_default) VALUES ($1, $2, $3, $4, $5)",
+              [product.id, variant.name, variant.value, Number(variant.price_adjustment) || 0, variant.is_default || false]
             );
           }
         }
@@ -167,23 +156,18 @@ export async function DELETE(req) {
       return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
     }
 
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { id } = await req.json();
     if (!id) {
       return NextResponse.json({ success: false, message: "Id not found" }, { status: 400 });
     }
 
     const { rows } = await pool.query(
-      "SELECT * FROM res_items WHERE id = $1 AND tenant_id = $2 LIMIT 1",
-      [id, tenant.tenant_id]
+      "SELECT * FROM items WHERE id = $1 LIMIT 1",
+      [id]
     );
 
     if (rows.length === 0) {
-      return NextResponse.json({ success: false, message: "Product not found for this tenant" }, { status: 404 });
+      return NextResponse.json({ success: false, message: "Product not found" }, { status: 404 });
     }
 
     const product = rows[0];
@@ -192,7 +176,7 @@ export async function DELETE(req) {
       await cloudinary.uploader.destroy(product.image_id);
     }
 
-    await pool.query("DELETE FROM res_items WHERE id = $1", [id]);
+    await pool.query("DELETE FROM items WHERE id = $1", [id]);
 
     return NextResponse.json({
       success: true,

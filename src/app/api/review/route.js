@@ -1,18 +1,11 @@
 import { pool } from "@/lib/database/pg";
-import { getTenant } from "@/lib/database/tenant";
 import { NextResponse } from "next/server";
 import { isManager } from "@/lib/auth/middleware";
 
 export async function GET(req) {
   try {
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { rows } = await pool.query(
-      "SELECT * FROM res_reviews WHERE tenant_id = $1 ORDER BY id DESC",
-      [tenant.tenant_id]
+      "SELECT * FROM reviews ORDER BY id DESC"
     );
 
     return NextResponse.json({
@@ -28,29 +21,24 @@ export async function GET(req) {
 
 export async function POST(req) {
   try {
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { name, email, comment, rating } = await req.json();
     if (!name || !email || !comment || !rating) {
       return NextResponse.json({ success: false, message: "Please provide all information" }, { status: 400 });
     }
 
-    // Enforce one review per email per tenant
+    // Enforce one review per email
     const { rows: existing } = await pool.query(
-      "SELECT id FROM res_reviews WHERE email = $1 AND tenant_id = $2 LIMIT 1",
-      [email, tenant.tenant_id]
+      "SELECT id FROM reviews WHERE email = $1 LIMIT 1",
+      [email]
     );
 
     if (existing.length > 0) {
-      return NextResponse.json({ success: false, message: "Review already submitted with this email for this restaurant" }, { status: 400 });
+      return NextResponse.json({ success: false, message: "Review already submitted with this email" }, { status: 400 });
     }
 
     const { rows: newReview } = await pool.query(
-      "INSERT INTO res_reviews (tenant_id, name, email, comment, rating) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-      [tenant.tenant_id, name, email, comment, rating]
+      "INSERT INTO reviews (name, email, comment, rating) VALUES ($1, $2, $3, $4) RETURNING *",
+      [name, email, comment, rating]
     );
 
     return NextResponse.json({
@@ -71,26 +59,21 @@ export async function DELETE(req) {
       return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
     }
 
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { id } = await req.json();
     if (!id) {
       return NextResponse.json({ success: false, message: "Id not found" }, { status: 400 });
     }
 
     const { rows } = await pool.query(
-      "SELECT id FROM res_reviews WHERE id = $1 AND tenant_id = $2 LIMIT 1",
-      [id, tenant.tenant_id]
+      "SELECT id FROM reviews WHERE id = $1 LIMIT 1",
+      [id]
     );
 
     if (rows.length === 0) {
-      return NextResponse.json({ success: false, message: "Review not found for this tenant" }, { status: 404 });
+      return NextResponse.json({ success: false, message: "Review not found" }, { status: 404 });
     }
 
-    await pool.query("DELETE FROM res_reviews WHERE id = $1", [id]);
+    await pool.query("DELETE FROM reviews WHERE id = $1", [id]);
 
     return NextResponse.json({
       success: true,

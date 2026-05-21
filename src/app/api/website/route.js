@@ -1,48 +1,19 @@
 import { pool } from "@/lib/database/pg";
-import { getTenant } from "@/lib/database/tenant";
 import { NextResponse } from "next/server";
 import { isManager } from "@/lib/auth/middleware";
 
 export async function GET(req) {
   try {
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { rows } = await pool.query(
-      `SELECT 
-         w.*,
-         t.name        AS tenant_name,
-         t.domain      AS tenant_domain,
-         t.subdomain   AS tenant_subdomain,
-         t.status      AS tenant_status,
-         t.expires_at  AS tenant_expires_at,
-         s.subscription_id,
-         s.status      AS subscription_status,
-         s.is_lifetime,
-         s.cancel_at_period_end,
-         s.current_period_start,
-         s.current_period_end
-       FROM websites w
-       JOIN tenants t ON w.tenant_id = t.tenant_id
-       LEFT JOIN subscriptions s ON s.tenant_id = t.tenant_id
-         AND s.status IN ('active','trialing','past_due')
-       WHERE w.tenant_id = $1
-       ORDER BY s.current_period_end DESC NULLS LAST
-       LIMIT 1`,
-      [tenant.tenant_id]
+      "SELECT * FROM website LIMIT 1"
     );
 
     if (rows.length === 0) {
       return NextResponse.json({
-        success: true,
-        message: "Website profile not found. Showing tenant info only.",
-        payload: {
-          tenant_status: tenant.status,
-          tenant_expires_at: tenant.expires_at
-        },
-      }, { status: 200 });
+        success: false,
+        message: "Website not configured yet",
+        payload: null,
+      }, { status: 404 });
     }
 
     return NextResponse.json({
@@ -67,30 +38,12 @@ export async function POST(req) {
       return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
     }
 
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const body = await req.json();
 
-    const { rows: existing } = await pool.query(
-      "SELECT website_id FROM websites WHERE tenant_id = $1 LIMIT 1",
-      [tenant.tenant_id]
-    );
-
-    if (existing.length === 0) {
-      return NextResponse.json({ 
-        success: false, 
-        message: "Website profile does not exist for this tenant. Creation via API is disabled." 
-      }, { status: 403 });
-    }
-
     const allowedFields = [
-      'name', 'domain', 'theme', 'status', 'business_name', 'logo', 'favicon',
+      'name', 'business_name', 'logo', 'favicon',
       'email', 'phone', 'address', 'city', 'country', 'meta_title', 'meta_description',
-      'facebook', 'instagram', 'linkedin', 'youtube', 'primary_color', 'secondary_color',
-      'is_public', 'is_store_enabled'
+      'facebook', 'instagram', 'linkedin', 'youtube', 'primary_color', 'secondary_color'
     ];
 
     const updates = {};
@@ -104,17 +57,27 @@ export async function POST(req) {
       return NextResponse.json({ success: false, message: "No valid fields provided for update" }, { status: 400 });
     }
 
+    const { rows: existing } = await pool.query("SELECT id FROM website LIMIT 1");
+
+    if (existing.length === 0) {
+      return NextResponse.json(
+        { success: false, message: "Website not initialized. Please seed the database first." },
+        { status: 404 }
+      );
+    }
+
+    // Update-only — never insert a second row
     const columns = Object.keys(updates);
     const setClause = columns.map((col, idx) => `${col} = $${idx + 2}`).join(", ");
     const values = Object.values(updates);
-
-    const query = `UPDATE websites SET ${setClause}, updated_at = NOW() WHERE tenant_id = $1 RETURNING *`;
-    const { rows: updatedWebsite } = await pool.query(query, [tenant.tenant_id, ...values]);
+    const query = `UPDATE website SET ${setClause}, updated_at = NOW() WHERE id = $1 RETURNING *`;
+    const { rows } = await pool.query(query, [existing[0].id, ...values]);
+    const updatedWebsite = rows[0];
 
     return NextResponse.json({
       success: true,
       message: "Website details updated successfully",
-      payload: updatedWebsite[0],
+      payload: updatedWebsite,
     }, { status: 200 });
 
   } catch (error) {

@@ -1,5 +1,4 @@
 import { pool } from "@/lib/database/pg";
-import { getTenant } from "@/lib/database/tenant";
 import { NextResponse } from "next/server";
 import { isManager } from "@/lib/auth/middleware";
 
@@ -10,14 +9,8 @@ export async function GET(req) {
       return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
     }
 
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { rows } = await pool.query(
-      "SELECT e.*, u.name as creator_name FROM res_expenses e LEFT JOIN res_users u ON e.created_by = u.id WHERE e.tenant_id = $1 ORDER BY e.created_at DESC",
-      [tenant.tenant_id]
+      "SELECT e.*, u.name as creator_name FROM expenses e LEFT JOIN users u ON e.created_by = u.id ORDER BY e.created_at DESC"
     );
 
     return NextResponse.json({
@@ -37,11 +30,6 @@ export async function POST(req) {
       return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
     }
 
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { title, note, amount } = await req.json();
     if (!title || !amount) {
       return NextResponse.json({ success: false, message: "Title and amount are required" }, { status: 400 });
@@ -50,8 +38,8 @@ export async function POST(req) {
     const user = auth.payload;
 
     const { rows: newExpense } = await pool.query(
-      "INSERT INTO res_expenses (tenant_id, title, note, amount, created_by) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-      [tenant.tenant_id, title, note, amount, user.id]
+      "INSERT INTO expenses (title, note, amount, created_by) VALUES ($1, $2, $3, $4) RETURNING *",
+      [title, note, amount, user.id]
     );
 
     return NextResponse.json({
@@ -72,26 +60,21 @@ export async function DELETE(req) {
       return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
     }
 
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { id } = await req.json();
     if (!id) {
       return NextResponse.json({ success: false, message: "Id not found" }, { status: 400 });
     }
 
     const { rows } = await pool.query(
-      "SELECT id FROM res_expenses WHERE id = $1 AND tenant_id = $2 LIMIT 1",
-      [id, tenant.tenant_id]
+      "SELECT id FROM expenses WHERE id = $1 LIMIT 1",
+      [id]
     );
 
     if (rows.length === 0) {
-      return NextResponse.json({ success: false, message: "Expense record not found for this tenant" }, { status: 404 });
+      return NextResponse.json({ success: false, message: "Expense record not found" }, { status: 404 });
     }
 
-    await pool.query("DELETE FROM res_expenses WHERE id = $1", [id]);
+    await pool.query("DELETE FROM expenses WHERE id = $1", [id]);
 
     return NextResponse.json({
       success: true,

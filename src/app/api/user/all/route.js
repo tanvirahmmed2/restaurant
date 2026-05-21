@@ -1,5 +1,4 @@
 import { pool } from "@/lib/database/pg";
-import { getTenant } from "@/lib/database/tenant";
 import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/auth/middleware";
 
@@ -10,15 +9,10 @@ export async function GET(req) {
       return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
     }
 
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { searchParams } = new URL(req.url);
     const filterRole = searchParams.get('role');
 
-    let query = "SELECT id, name, email, role, is_banned, created_at FROM res_users WHERE tenant_id = $1";
+    let query = "SELECT id, name, email, role, is_banned, created_at FROM users WHERE 1=1";
     
     if (filterRole === 'management') {
       query += " AND role IN ('admin', 'manager', 'sales')";
@@ -26,7 +20,7 @@ export async function GET(req) {
     
     query += " ORDER BY created_at DESC";
 
-    const { rows } = await pool.query(query, [tenant.tenant_id]);
+    const { rows } = await pool.query(query);
 
     return NextResponse.json({
       success: true,

@@ -1,14 +1,8 @@
 import { pool } from "@/lib/database/pg";
-import { getTenant } from "@/lib/database/tenant";
 import { NextResponse } from "next/server";
 
 export async function GET(req, { params }) {
   try {
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { id } = await params;
     if (!id) {
       return NextResponse.json({ success: false, message: "Order ID is required" }, { status: 400 });
@@ -16,8 +10,8 @@ export async function GET(req, { params }) {
 
     // Fetch order details
     const { rows: orderRows } = await pool.query(
-      "SELECT * FROM res_orders WHERE id = $1 AND tenant_id = $2 LIMIT 1",
-      [id, tenant.tenant_id]
+      "SELECT * FROM orders WHERE id = $1 LIMIT 1",
+      [id]
     );
 
     if (orderRows.length === 0) {
@@ -28,8 +22,8 @@ export async function GET(req, { params }) {
 
     // Fetch order items
     const { rows: itemRows } = await pool.query(
-      "SELECT * FROM res_order_items WHERE order_id = $1 AND tenant_id = $2",
-      [id, tenant.tenant_id]
+      "SELECT * FROM order_items WHERE order_id = $1",
+      [id]
     );
 
     // Fetch variants for all items in this order
@@ -38,8 +32,8 @@ export async function GET(req, { params }) {
     
     if (itemIds.length > 0) {
       const { rows: variantRows } = await pool.query(
-        "SELECT * FROM res_order_item_variants WHERE order_item_id = ANY($1) AND tenant_id = $2",
-        [itemIds, tenant.tenant_id]
+        "SELECT * FROM order_item_variants WHERE order_item_id = ANY($1)",
+        [itemIds]
       );
       
       variantRows.forEach(v => {

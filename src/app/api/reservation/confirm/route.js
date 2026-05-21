@@ -1,22 +1,22 @@
 import { pool } from "@/lib/database/pg";
-import { getTenant } from "@/lib/database/tenant";
 import { NextResponse } from "next/server";
+import { isManager } from "@/lib/auth/middleware";
 
 export async function POST(req) {
   try {
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
+    const auth = await isManager();
+    if (!auth.success) {
+      return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
     }
 
     const { id } = await req.json();
     if (!id) {
-      return NextResponse.json({ success: false, message: "ID is required" }, { status: 400 });
+      return NextResponse.json({ success: false, message: "Id not found" }, { status: 400 });
     }
 
     const { rowCount } = await pool.query(
-      "UPDATE res_reservations SET status = 'confirmed' WHERE id = $1 AND tenant_id = $2",
-      [id, tenant.tenant_id]
+      "UPDATE reservations SET status = 'confirmed' WHERE id = $1",
+      [id]
     );
 
     if (rowCount === 0) {

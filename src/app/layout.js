@@ -4,18 +4,14 @@ import { ContextProvider } from "@/components/context/Context";
 
 
 import { headers } from "next/headers";
-import { getTenant } from "@/lib/database/tenant";
 
 export async function generateMetadata() {
-  const host = (await headers()).get("host");
-  const tenant = await getTenant({ headers: new Map([["host", host]]) });
-
   return {
-    title: tenant?.website_name || tenant?.name || "Restaurant",
-    description: tenant?.meta_description || "Exceptional culinary experience.",
+    title: "Restaurant",
+    description: "Exceptional culinary experience.",
     openGraph: {
-      title: tenant?.website_name || tenant?.name || "Restaurant",
-      description: tenant?.meta_description || "Exceptional culinary experience.",
+      title: "Restaurant",
+      description: "Exceptional culinary experience.",
     },
   };
 }

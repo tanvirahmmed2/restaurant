@@ -1,22 +1,16 @@
 import { pool } from "@/lib/database/pg";
-import { getTenant } from "@/lib/database/tenant";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
   try {
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { id } = await req.json();
     if (!id) {
       return NextResponse.json({ success: false, message: "ID not found" }, { status: 400 });
     }
 
     const { rowCount } = await pool.query(
-      "UPDATE res_orders SET status = 'cancelled', payment_status = 'unpaid' WHERE id = $1 AND tenant_id = $2",
-      [id, tenant.tenant_id]
+      "UPDATE orders SET status = 'cancelled', payment_status = 'unpaid' WHERE id = $1",
+      [id]
     );
 
     if (rowCount === 0) {

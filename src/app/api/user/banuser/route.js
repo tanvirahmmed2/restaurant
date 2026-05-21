@@ -1,5 +1,4 @@
 import { pool } from "@/lib/database/pg";
-import { getTenant } from "@/lib/database/tenant";
 import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/auth/middleware";
 
@@ -10,19 +9,14 @@ export async function POST(req) {
       return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
     }
 
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { id } = await req.json();
     if (!id) {
       return NextResponse.json({ success: false, message: "Id not found" }, { status: 400 });
     }
 
     const { rows: users } = await pool.query(
-      "SELECT id, role, is_banned FROM res_users WHERE id = $1 AND tenant_id = $2 LIMIT 1",
-      [id, tenant.tenant_id]
+      "SELECT id, role, is_banned FROM users WHERE id = $1 LIMIT 1",
+      [id]
     );
 
     if (users.length === 0) {
@@ -41,7 +35,7 @@ export async function POST(req) {
     const newBanStatus = !user.is_banned;
 
     await pool.query(
-      "UPDATE res_users SET is_banned = $1 WHERE id = $2",
+      "UPDATE users SET is_banned = $1 WHERE id = $2",
       [newBanStatus, id]
     );
 

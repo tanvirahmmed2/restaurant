@@ -1,5 +1,4 @@
 import { pool } from "@/lib/database/pg";
-import { getTenant } from "@/lib/database/tenant";
 import { NextResponse } from "next/server";
 import { isManager } from "@/lib/auth/middleware";
 
@@ -10,14 +9,8 @@ export async function GET(req) {
       return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
     }
 
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { rows } = await pool.query(
-      "SELECT * FROM res_support_tickets WHERE tenant_id = $1 ORDER BY created_at DESC",
-      [tenant.tenant_id]
+      "SELECT * FROM support_tickets ORDER BY created_at DESC"
     );
 
     return NextResponse.json({
@@ -33,19 +26,14 @@ export async function GET(req) {
 
 export async function POST(req) {
   try {
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { name, email, subject, message } = await req.json();
     if (!name || !email || !subject || !message) {
       return NextResponse.json({ success: false, message: "Please fill all information" }, { status: 400 });
     }
 
     const { rows: newSupport } = await pool.query(
-      "INSERT INTO res_support_tickets (tenant_id, name, email, subject, message) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-      [tenant.tenant_id, name, email, subject, message]
+      "INSERT INTO support_tickets (name, email, subject, message) VALUES ($1, $2, $3, $4) RETURNING *",
+      [name, email, subject, message]
     );
 
     return NextResponse.json({
@@ -66,26 +54,21 @@ export async function DELETE(req) {
       return NextResponse.json({ success: false, message: auth.message }, { status: 401 });
     }
 
-    const tenant = await getTenant(req);
-    if (!tenant) {
-      return NextResponse.json({ success: false, message: "Tenant not found" }, { status: 404 });
-    }
-
     const { id } = await req.json();
     if (!id) {
       return NextResponse.json({ success: false, message: "Id not found" }, { status: 400 });
     }
 
     const { rows } = await pool.query(
-      "SELECT id FROM res_support_tickets WHERE id = $1 AND tenant_id = $2 LIMIT 1",
-      [id, tenant.tenant_id]
+      "SELECT id FROM support_tickets WHERE id = $1 LIMIT 1",
+      [id]
     );
 
     if (rows.length === 0) {
-      return NextResponse.json({ success: false, message: "Support data not found for this tenant" }, { status: 404 });
+      return NextResponse.json({ success: false, message: "Support data not found" }, { status: 404 });
     }
 
-    await pool.query("DELETE FROM res_support_tickets WHERE id = $1", [id]);
+    await pool.query("DELETE FROM support_tickets WHERE id = $1", [id]);
 
     return NextResponse.json({
       success: true,

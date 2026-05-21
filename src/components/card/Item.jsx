@@ -39,7 +39,7 @@ const Item = ({ item }) => {
       whileInView={{ opacity: 1, y: 0 }} 
       viewport={{ once: true }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} 
-      className='group relative bg-white flex flex-col rounded-md overflow-hidden transition-all duration-500 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] border border-gray-50'
+      className='group relative bg-white flex flex-col rounded-md overflow-hidden transition-all duration-500 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] border border-gray-50'
     >
       <Link href={`/menu/${item.slug}`} className='relative aspect-4/5 overflow-hidden bg-gray-50'>
         <Image 
@@ -60,7 +60,7 @@ const Item = ({ item }) => {
         <div className='absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500' />
       </Link>
 
-      <div className='p-6 pt-5 flex flex-col gap-4'>
+      <div className='p-3 pt-5 flex flex-col gap-4'>
         <div className='space-y-1.5'>
           <div className='flex items-center justify-between'>
             <span className='text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]'>{item.category_name}</span>
@@ -71,7 +71,7 @@ const Item = ({ item }) => {
                 </div>
             )}
           </div>
-          <Link href={`/menu/${item.slug}`} className='text-xl font-serif text-gray-900 hover:text-pink-600 transition-colors line-clamp-1 leading-tight'>
+          <Link href={`/menu/${item.slug}`} className='text-lg font-serif text-gray-900 hover:text-pink-600 transition-colors line-clamp-1 leading-tight'>
             {item.title}
           </Link>
         </div>
@@ -79,14 +79,14 @@ const Item = ({ item }) => {
         <div className='flex items-center justify-between'>
           <div className='flex flex-col'>
             {hasDiscount && (
-              <p className='text-[10px] line-through text-gray-300 font-sans'>৳{baseWithVariant.toFixed(2)}</p>
+              <p className='text-[10px] line-through text-pink-300 font-sans'>৳{baseWithVariant.toFixed(2)}</p>
             )}
             <p className='text-2xl font-sans font-medium text-gray-900 tracking-tight'>৳{currentPrice.toFixed(2)}</p>
           </div>
           
           <button 
             onClick={handleAddToCart}
-            className='w-12 h-12 hidden group-hover:flex transition ease-in-out duration-700 bg-gray-900 text-white rounded-2xl items-center justify-center hover:bg-pink-600  active:scale-90 shadow-lg shadow-gray-950/10'
+            className='w-12 h-12 flex transition ease-in-out duration-700 rounded-2xl items-center justify-center   active:scale-90 '
           >
             <BiCartDownload size={22} />
           </button>

@@ -79,7 +79,7 @@ const UserOrderForm = () => {
 
     if (cart?.items?.length === 0) {
         return (
-            <div className='w-full md:w-1/2 min-h-[60vh] p-10 flex flex-col items-center justify-center gap-10 pt-20 px-6 bg-white rounded-[3rem] shadow-2xl'>
+            <div className='w-full md:w-1/2 min-h-[60vh] p-10 flex flex-col items-center justify-center gap-10 pt-20 px-6 bg-white rounded-[3rem]'>
                 <div className='w-32 h-32 bg-slate-50 rounded-[3rem] flex items-center justify-center text-6xl shadow-inner'>🥣</div>
                 <div className='text-center space-y-4'>
                     <h2 className='text-4xl font-semibold text-slate-900 tracking-tighter'>The kitchen is quiet...</h2>
@@ -91,10 +91,9 @@ const UserOrderForm = () => {
     }
 
     return (
-        <div className='w-full min-h-screen bg-slate-50/30 pt-32 pb-24 px-6'>
-            <div className='max-w-7xl mx-auto flex flex-col gap-16'>
+        <div className='w-full min-h-screen bg-slate-50/30  p-6'>
+            <div className='max-w-7xl mx-auto flex flex-col gap-6'>
                 
-                {/* Header */}
                 <div className='flex items-center gap-6'>
                     <Link href="/menu" className='p-4 bg-white rounded-2xl border border-slate-100 text-slate-300 hover:text-pink-600 hover:shadow-2xl transition-all'>
                         <MdArrowBack size={28} />
@@ -105,9 +104,9 @@ const UserOrderForm = () => {
                     </div>
                 </div>
 
-                <div className='grid grid-cols-1 lg:grid-cols-12 gap-16 items-start'>
+                <div className='grid grid-cols-1 lg:grid-cols-12 gap-6 items-start'>
                     
-                    <div className='lg:col-span-7 flex flex-col gap-12'>
+                    <div className='lg:col-span-7 flex flex-col gap-6'>
                         
                         <section className='bg-white p-4 rounded-[2.5rem] border border-slate-100 shadow-2xl shadow-pink-900/2 space-y-8'>
                             <div className='flex items-center gap-4 border-b border-slate-50 pb-6'>
@@ -126,7 +125,6 @@ const UserOrderForm = () => {
                             </div>
                         </section>
 
-                        {/* 2. Order Items */}
                         <section className='space-y-2'>
                             <div className='flex items-center justify-between px-2'>
                                 <div className='flex items-center gap-3'>
@@ -137,7 +135,7 @@ const UserOrderForm = () => {
                             </div>
                             <div className='flex flex-col gap-5'>
                                 {cart?.items.map((item) => (
-                                    <div key={item.cartItemId} className='bg-white p-2 rounded-[2.5rem] border border-slate-100 shadow-2xl shadow-pink-900/[0.01] flex items-center gap-8 group hover:shadow-2xl hover:shadow-pink-900/[0.03] transition-all duration-500'>
+                                    <div key={item.cartItemId} className='bg-white p-2 rounded-lg border border-slate-100 shadow w-full flex items-center gap-8 group  transition-all duration-500'>
                                         <div className='w-28 h-28 rounded-2xl overflow-hidden shadow-sm shrink-0 bg-slate-50'>
                                             <Image src={item?.image} alt={item.title} width={150} height={150} className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-700' />
                                         </div>

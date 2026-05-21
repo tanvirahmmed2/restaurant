@@ -54,7 +54,7 @@ const Intro = () => {
             
             <h1 className='text-6xl md:text-8xl font-serif text-gray-900 leading-[0.9] tracking-tight'>
               Taste the <br />
-              <span className='italic font-normal text-pink-500/80'>Extraordinary</span>
+              <span className=' font-normal text-pink-500/80'>Extraordinary</span>
             </h1>
 
             <p className='text-gray-500 text-lg md:text-xl font-light max-w-md leading-relaxed'>
@@ -68,10 +68,10 @@ const Intro = () => {
             transition={{ delay: 0.3, duration: 0.8 }}
             className='flex flex-wrap gap-5'
           >
-            <Link href='/menu' className='px-10 py-4 bg-gray-900 text-white rounded-full font-sans font-bold text-xs uppercase tracking-widest hover:bg-pink-600 transition-all shadow-xl shadow-gray-900/10 active:scale-95'>
+            <Link href='/menu' className='px-10 py-4 bg-gray-900 text-white rounded-full  font-bold text-xs uppercase tracking-widest hover:bg-pink-600 transition-all shadow-xl shadow-gray-900/10 active:scale-95'>
               View Menu
             </Link>
-            <Link href='/reservation' className='px-10 py-4 border border-gray-200 text-gray-900 bg-white rounded-full font-sans font-bold text-xs uppercase tracking-widest hover:bg-gray-50 transition-all active:scale-95'>
+            <Link href='/reservation' className='px-10 py-4 border border-gray-200 text-gray-900 bg-white rounded-full  font-bold text-xs uppercase tracking-widest hover:bg-gray-50 transition-all active:scale-95'>
               Reservation
             </Link>
           </motion.div>
@@ -85,16 +85,15 @@ const Intro = () => {
           >
             <div className='space-y-1'>
               <p className='text-xs font-bold text-gray-400 uppercase tracking-widest'>Ingredients</p>
-              <p className='text-sm font-serif italic text-gray-800'>100% Organic & Local</p>
+              <p className='text-sm font-serif  text-gray-800'>100% Organic & Local</p>
             </div>
             <div className='space-y-1'>
               <p className='text-xs font-bold text-gray-400 uppercase tracking-widest'>Service</p>
-              <p className='text-sm font-serif italic text-gray-800'>Chef's Special Touch</p>
+              <p className='text-sm font-serif  text-gray-800'>Chef&apos;s Special Touch</p>
             </div>
           </motion.div>
         </div>
 
-        {/* Right Column: Dynamic Image Layout */}
         <div className='lg:col-span-7 relative'>
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
@@ -102,30 +101,29 @@ const Intro = () => {
             transition={{ duration: 1.2, ease: "easeOut" }}
             className='relative flex items-center justify-center lg:justify-end'
           >
-            {/* Main Image with Decorative Frame */}
-            <div className='relative w-full aspect-[4/5] max-w-lg overflow-hidden rounded-[3rem] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.2)]'>
+            
+            <div className='relative w-full aspect-square max-w-lg overflow-hidden rounded-[3rem] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.2)]'>
               <Image 
                 src={item.image} 
                 alt={item.title} 
                 fill 
                 className='object-cover hover:scale-105 transition-transform duration-1000'
               />
-              <div className='absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none' />
+              <div className='absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent pointer-events-none' />
             </div>
 
-            {/* Overlapping Card */}
             <motion.div 
               whileHover={{ y: -5 }}
-              className='absolute -bottom-10 left-0 lg:-left-16 bg-white p-8 rounded-[2rem] shadow-2xl border border-gray-50 max-w-[280px] z-20'
+              className='absolute -bottom-10 left-0 lg:-left-16 bg-white p-8 rounded-lg shadow-2xl border border-gray-50 max-w-[280px] z-20'
             >
               <div className='space-y-4'>
                 <div className='inline-block px-3 py-1 bg-pink-50 text-pink-500 text-[9px] font-bold uppercase tracking-widest rounded-full'>
-                  Today's Choice
+                  Today&apos;s Choice
                 </div>
                 <h3 className='text-xl font-serif text-gray-900 leading-tight'>{item.title}</h3>
                 
                 <div className='flex items-baseline gap-2'>
-                  <span className='text-2xl font-sans font-medium text-gray-900'>৳{Number(item.price - (item.discount || 0)).toFixed(2)}</span>
+                  <span className='text-2xl  font-medium text-gray-900'>৳{Number(item.price - (item.discount || 0)).toFixed(2)}</span>
                   {item.discount > 0 && <span className='text-xs line-through text-gray-300'>৳{Number(item.price).toFixed(2)}</span>}
                 </div>
 
@@ -135,17 +133,15 @@ const Intro = () => {
               </div>
             </motion.div>
 
-            {/* Decorative element */}
             <div className='absolute -top-10 right-0 w-32 h-32 border-t-2 border-r-2 border-pink-100 rounded-tr-[3rem] -z-10' />
           </motion.div>
         </div>
 
       </div>
 
-      {/* Floating Scroll Guide */}
       <div className='absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-30'>
          <p className='text-[10px] font-bold uppercase tracking-[0.5em] [writing-mode:vertical-lr] text-gray-400'>Scroll</p>
-         <div className='w-px h-12 bg-gradient-to-b from-pink-500 to-transparent' />
+         <div className='w-px h-12 bg-linear-to-b from-pink-500 to-transparent' />
       </div>
 
     </section>

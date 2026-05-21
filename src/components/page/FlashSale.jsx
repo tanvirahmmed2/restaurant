@@ -26,7 +26,6 @@ const FlashSale = () => {
 
   if (!products || products.length === 0) return null
 
-  // Motion Variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -67,7 +66,6 @@ const FlashSale = () => {
     <section className='w-full py-32 bg-white overflow-hidden'>
       <div className='max-w-7xl mx-auto px-6 space-y-24'>
         
-        {/* Header Section */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -81,7 +79,7 @@ const FlashSale = () => {
               Limited Time Curations
             </div>
             <h2 className='text-5xl md:text-6xl font-serif text-gray-900 tracking-tight'>
-              Chef's <span className='italic font-normal text-gray-400'>Specials</span>
+              Chef&apos;s <span className='italic font-normal text-gray-400'>Specials</span>
             </h2>
           </div>
           <Link href='/flashsale' className='group flex items-center gap-2 font-sans font-bold text-[10px] uppercase tracking-widest text-gray-400 hover:text-pink-600 transition-colors'>
@@ -119,7 +117,7 @@ const FlashSale = () => {
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: false, amount: 0.3 }}
-                  className='w-full md:w-1/2 lg:w-full relative'
+                  className='w-full md:w-1/2 lg:w-3/5 relative'
                 >
                   <div className='relative aspect-square overflow-hidden rounded-full shadow-[0_50px_100px_-20px_rgba(0,0,0,0.2)] border-8 border-gray-50'>
                     <Image 
@@ -141,7 +139,6 @@ const FlashSale = () => {
                         <span className='text-xs font-bold uppercase tracking-widest'>Save ৳{item.discount}</span>
                      </motion.div>
                   )}
-                  {/* Decorative Circle */}
                   <div className={`absolute -z-10 top-1/2 -translate-y-1/2 ${index % 2 === 0 ? '-left-20' : '-right-20'} w-80 h-80 bg-pink-50 rounded-full blur-3xl opacity-50`} />
                 </motion.div>
 
@@ -154,14 +151,14 @@ const FlashSale = () => {
                 >
                   <motion.div variants={itemVariants} className='space-y-4 mb-8'>
                     <span className='text-[10px] font-bold uppercase text-pink-600 tracking-[0.4em]'>{item.category_name}</span>
-                    <h2 className='text-5xl md:text-6xl lg:text-7xl font-serif text-gray-900 leading-[1.1] tracking-tight'>
+                    <h2 className='text-5xl md:text-6xl font-serif text-gray-900 leading-[1.1] tracking-tight'>
                       {item.title}
                     </h2>
                   </motion.div>
                   
                   <motion.p 
                     variants={itemVariants}
-                    className='text-gray-500 text-lg md:text-xl leading-relaxed font-light max-w-lg mb-10'
+                    className='text-gray-500 text-lg leading-relaxed font-light max-w-lg mb-10'
                   >
                     {item.description || "A masterpiece of flavor, crafted with hand-picked seasonal ingredients and refined culinary techniques."}
                   </motion.p>
@@ -183,7 +180,7 @@ const FlashSale = () => {
                   >
                     <button 
                       onClick={() => addToCart({ ...item, price: baseWithVariant, selectedVariants: defaultVariants })} 
-                      className='group relative px-14 py-6 bg-gray-900 text-white rounded-full font-sans font-bold text-xs uppercase tracking-widest overflow-hidden transition-all duration-500 hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.3)] active:scale-95 flex items-center justify-center gap-4'
+                      className='group relative px-14 py-3 bg-gray-900 text-white rounded-full font-sans font-bold text-xs uppercase tracking-widest overflow-hidden transition-all duration-500 hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.3)] active:scale-95 flex items-center justify-center gap-4'
                     >
                       <span className='relative z-10 flex items-center gap-3 text-sm'>
                         <BiCartDownload size={24} />

@@ -146,6 +146,7 @@ const UserOrderForm = () => {
                                                     {item.selectedVariants && (
                                                         <div className="flex flex-wrap gap-1.5 mt-2">
                                                             {Object.values(item.selectedVariants).map(v => (
+                                                                
                                                                 <span key={v.id} className='text-[9px] font-semibold text-pink-500 uppercase tracking-wider bg-pink-50 px-2 py-0.5 rounded-full'>
                                                                     {v.value}
                                                                 </span>

@@ -215,27 +215,3 @@ CREATE INDEX idx_items_slug ON items(slug);
 CREATE INDEX idx_categories_slug ON categories(slug);
 CREATE INDEX idx_orders_status ON orders(status);
 
-CREATE TABLE website (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(255),
-  business_name VARCHAR(255),
-  logo TEXT,
-  favicon TEXT,
-  email VARCHAR(255),
-  phone VARCHAR(50),
-  address TEXT,
-  city VARCHAR(100),
-  country VARCHAR(100),
-  meta_title VARCHAR(255),
-  meta_description TEXT,
-  facebook TEXT,
-  instagram TEXT,
-  linkedin TEXT,
-  youtube TEXT,
-  primary_color VARCHAR(50) DEFAULT '#000000',
-  secondary_color VARCHAR(50) DEFAULT '#ffffff',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  -- 🔒 ENFORCE SINGLE ROW CONSTRAINT
-  one_row_constraint CHAR(1) DEFAULT 'X' UNIQUE CHECK (one_row_constraint = 'X')
-);
